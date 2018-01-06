@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D2101F0C-E2ED-4D17-BCAA-9789AC0450DB}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="..\module\etl\CgtEtlTool.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\module\etl_service\CgtEtlService.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="CgtEtlTool">
+        <MSBuild Projects="..\module\etl\CgtEtlTool.dproj"/>
+    </Target>
+    <Target Name="CgtEtlTool:Clean">
+        <MSBuild Projects="..\module\etl\CgtEtlTool.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlTool:Make">
+        <MSBuild Projects="..\module\etl\CgtEtlTool.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CgtEtlService">
+        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj"/>
+    </Target>
+    <Target Name="CgtEtlService:Clean">
+        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlService:Make">
+        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="CgtEtlTool;CgtEtlService"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

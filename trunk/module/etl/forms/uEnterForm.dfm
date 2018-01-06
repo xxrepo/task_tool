@@ -1,0 +1,66 @@
+inherited EnterForm: TEnterForm
+  BorderStyle = bsToolWindow
+  Caption = #37319#36141#36890#21516#27493#24037#20855
+  ClientHeight = 270
+  ClientWidth = 506
+  OnCreate = FormCreate
+  ExplicitWidth = 512
+  ExplicitHeight = 299
+  PixelsPerInch = 96
+  TextHeight = 17
+  object lbl1: TLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 40
+    Width = 500
+    Height = 29
+    Margins.Top = 40
+    Align = alTop
+    Alignment = taCenter
+    Caption = #37319#36141#36890#25968#25454#21516#27493#24037#20855
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ExplicitWidth = 216
+  end
+  object lblVersion: TLabel
+    AlignWithMargins = True
+    Left = 3
+    Top = 75
+    Width = 500
+    Height = 23
+    Align = alTop
+    Alignment = taCenter
+    Caption = 'Ver'#65306'1.0.0'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    ExplicitWidth = 89
+  end
+  object btnServiceControl: TBitBtn
+    Left = 120
+    Top = 144
+    Width = 107
+    Height = 53
+    Caption = #26381#21153#25511#21046
+    ModalResult = 1
+    TabOrder = 1
+    OnClick = btnServiceControlClick
+  end
+  object btnProjectDesign: TBitBtn
+    Left = 268
+    Top = 144
+    Width = 105
+    Height = 53
+    Caption = #39033#30446#35774#32622
+    ModalResult = 1
+    TabOrder = 0
+    OnClick = btnProjectDesignClick
+  end
+end
