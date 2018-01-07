@@ -48,10 +48,27 @@ procedure TForm1.idhttpsrvrJobDispatchCommandGet(AContext: TIdContext;
 var
   LRequest: string;
   LResponseInfoExt: TIdHttpResponseInfoExt;
+  LStringStream: TStringStream;
 begin
   LRequest := 'GET File: ' + ARequestInfo.Document;
   LRequest := LRequest + '; Params: ' + ARequestInfo.QueryParams;
   LRequest := LRequest + '; Command: ' + ARequestInfo.Command;
+
+  if ARequestInfo.Command = 'POST' then
+  begin
+    if ARequestInfo.PostStream <> nil then
+    begin
+      LStringStream := TStringStream.Create;
+      try
+        ARequestInfo.PostStream.Seek(0, 0);
+        LStringStream.LoadFromStream(ARequestInfo.PostStream);
+        LRequest := LRequest + '; Data: ' + UTF8Decode(LStringStream.DataString);
+      finally
+        LStringStream.Free;
+      end;
+
+    end;
+  end;
 
   LResponseInfoExt := AResponseInfo as TIdHttpResponseInfoExt;
 
