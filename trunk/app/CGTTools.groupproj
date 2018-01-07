@@ -9,6 +9,9 @@
         <Projects Include="..\module\etl_service\CgtEtlService.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\http\CgtHttpServer.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="CgtEtlService:Make">
         <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CgtHttpServer">
+        <MSBuild Projects="..\module\http\CgtHttpServer.dproj"/>
+    </Target>
+    <Target Name="CgtHttpServer:Clean">
+        <MSBuild Projects="..\module\http\CgtHttpServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtHttpServer:Make">
+        <MSBuild Projects="..\module\http\CgtHttpServer.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtHttpServer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtHttpServer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtHttpServer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
