@@ -79,7 +79,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>D:\dev\delphi\task_tool\bin\debug</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -95,7 +95,7 @@
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_ExeOutput>D:\dev\delphi\task_tool\bin\release</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
@@ -155,9 +155,9 @@
         <DCCReference Include="steps\uStepDatasetSpliter.pas"/>
         <DCCReference Include="steps\uStepDefines.pas"/>
         <DCCReference Include="steps\uStepFormFactory.pas"/>
-        <DCCReference Include="steps\uStepFieldsOper.pas"/>
-        <DCCReference Include="steps\uStepFieldsOperForm.pas">
-            <Form>StepFieldsOperForm</Form>
+        <DCCReference Include="steps\uStepFastReport.pas"/>
+        <DCCReference Include="steps\uStepFastReportForm.pas">
+            <Form>StepFastReportForm</Form>
         </DCCReference>
         <DCCReference Include="steps\uStepHttpRequest.pas"/>
         <DCCReference Include="steps\uStepHttpRequestForm.pas">
@@ -221,6 +221,17 @@
             <Form>GlobalVarSettingForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="steps\uStepFormSettings.pas"/>
+        <DCCReference Include="steps\uStepFieldsOper.pas"/>
+        <DCCReference Include="steps\uStepFieldsOperForm.pas">
+            <Form>StepFieldsOperForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\uStepJsonDataSet.pas"/>
+        <DCCReference Include="steps\uStepJsonDataSetForm.pas">
+            <Form>StepJsonDataSetForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -247,13 +258,13 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="2">
-                <DeployFile LocalName="..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CgtEtlTool.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CgtEtlTool.exe</RemoteName>
                         <Overwrite>true</Overwrite>

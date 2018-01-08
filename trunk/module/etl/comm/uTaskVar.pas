@@ -17,6 +17,7 @@ type
   private
     FOwner: TObject;
     FStepDataList: TStringList;
+    FRegistedObjectList: TStringList;
   public
     TaskVarRec: TTaskVarRec;
     GlobalVar: TGlobalVar;
@@ -28,6 +29,8 @@ type
 
     function RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
     function GetStepData(ADataRef: string): TStepData;
+    function RegObject(ARef: string; AObject: TObject): Integer;
+    function GetObject(ARef: string): TObject;
 
     constructor Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
     destructor Destroy; override;
@@ -53,6 +56,8 @@ begin
                        TaskVarRec.RunBasePath + 'task_log\'+ TaskVarRec.TaskName,
                        '_yyyymmdd');
   FStepDataList := TStringList.Create;
+  FRegistedObjectList := TStringList.Create;
+
   DbConMgr := TDbConMgr.Create;
   DbConMgr.LoadDbConfigs(TaskVarRec.DbsFileName);
 end;
@@ -64,6 +69,8 @@ var
   LStepData: TStepDataStore;
 begin
   DbConMgr.Free;
+  FRegistedObjectList.Free;
+
   for i := 0 to FStepDataList.Count - 1 do
   begin
     LStepData := TStepDataStore(FStepDataList.Objects[i]);
@@ -114,6 +121,34 @@ begin
   LStepData.DataRef := ADataRef;
   LStepData.Value := ADataValue;
   Result := FStepDataList.AddObject(ADataRef, LStepData);
+end;
+
+
+function TTaskVar.GetObject(ARef: string): TObject;
+var
+  idx: Integer;
+  LStepData: TStepDataStore;
+begin
+  Result := nil;
+  idx := FRegistedObjectList.IndexOf(ARef);
+  if idx > -1 then
+  begin
+    Result := FRegistedObjectList.Objects[idx];
+  end;
+end;
+
+
+function TTaskVar.RegObject(ARef: string; AObject: TObject): Integer;
+var
+  Idx: Integer;
+begin
+  Idx := FRegistedObjectList.IndexOf(ARef);
+  if Idx > -1 then
+  begin
+    FRegistedObjectList.Delete(Idx);
+  end;
+
+  Result := FRegistedObjectList.AddObject(ARef, AObject);
 end;
 
 end.

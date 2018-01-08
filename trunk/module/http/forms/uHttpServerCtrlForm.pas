@@ -50,9 +50,9 @@ var
   LResponseInfoExt: TIdHttpResponseInfoExt;
   LStringStream: TStringStream;
 begin
-  LRequest := 'GET File: ' + ARequestInfo.Document;
+  LRequest := 'Command: ' + ARequestInfo.Command;
+  LRequest := LRequest + '; GET File: ' + ARequestInfo.Document;
   LRequest := LRequest + '; Params: ' + ARequestInfo.QueryParams;
-  LRequest := LRequest + '; Command: ' + ARequestInfo.Command;
 
   if ARequestInfo.Command = 'POST' then
   begin
@@ -91,10 +91,10 @@ procedure TForm1.idhttpsrvrJobDispatchCommandOther(AContext: TIdContext;
 var
   LRequest: string;
 begin
-  LRequest := 'OTHER File: ' + ARequestInfo.Document;
+  LRequest := 'Command: ' + ARequestInfo.Command;
+  LRequest := LRequest + '; GET File: ' + ARequestInfo.Document;
   LRequest := LRequest + '; Params: ' + ARequestInfo.QueryParams;
-  LRequest := LRequest + '; Command: ' + ARequestInfo.Command;
-  LRequest := LRequest + '; Post Data: ' + ARequestInfo.FormParams;
+  LRequest := LRequest + '; Data: ' + ARequestInfo.FormParams;
   //ARequestInfo.PostStream.Seek(0, 0);
 
 

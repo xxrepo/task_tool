@@ -26,6 +26,7 @@ uses
    , uStepDatasetSpliterForm
    , uStepSubTaskForm
    , uStepConditionForm
+   , uStepJsonDataSetForm
    , uStepVarDefineForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;

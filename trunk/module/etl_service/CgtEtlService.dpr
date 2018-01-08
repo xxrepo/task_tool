@@ -21,7 +21,7 @@ uses
   uStepDatasetSpliter in '..\etl\steps\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
-  uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
+  uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepHttpRequest in '..\etl\steps\uStepHttpRequest.pas',
   uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
   uStepQuery in '..\etl\steps\uStepQuery.pas',

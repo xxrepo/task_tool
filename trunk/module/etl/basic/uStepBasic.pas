@@ -45,7 +45,7 @@ type
     function GetStepDataFrom(ADataRef: string): TStepData; overload;
 
     function GetParamValue(AParamConfig: TJSONObject): Variant; overload;
-    function GetParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; overload;
+    function GetParamValue(AParamRef: string; AParamType: string; ADefaultValue: Variant): Variant; overload;
     function GetSelfParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; virtual;
   public
     property StepConfig: TStepConfig read FStepConfig write FStepConfig;
