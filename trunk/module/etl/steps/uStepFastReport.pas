@@ -69,22 +69,44 @@ end;
 
 
 procedure TStepFastReport.StartSelf;
+var
+  LDBDataSet: TfrxDBDataset;
+  LDBDataSetsJsonArray: TJSONArray;
+  LDBDataSetConfigJson: TJSONObject;
+  i: Integer;
 begin
   try
     CheckTaskStatus;
 
     FReport := TfrxReport.Create(nil);
+
     //创建datasets
-    //FReport.DataSets.Add();
+    LDBDataSetsJsonArray := TJSONObject.ParseJSONValue(FDBDataSetsConfigStr) as TJSONArray;
+    if LDBDataSetsJsonArray <> nil then
+    begin
+      for i := 0 to LDBDataSetsJsonArray.Count - 1 do
+      begin
+        LDBDataSetConfigJson := LDBDataSetsJsonArray.Items[i] as TJSONObject;
+
+        LDBDataSet := TfrxDBDataset.Create(FReport);
+        LDBDataSet.DataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_ref')));
+
+        FReport.DataSets.Add(LDBDataSet);
+      end;
+    end;
 
     //创建加载各个variables
 
     //加载Report_file
+    FReport.LoadFromFile(GetRealAbsolutePath(FReportFile));
 
     //根据预览进行打印输出，运行在service的情况下不能提供预览功能，只能直接输出到指定的文件夹
+    FReport.PrepareReport;
 
+    FReport.ShowReport;
   finally
-
+    if LDBDataSetsJsonArray <> nil then
+      FreeAndNil(LDBDataSetsJsonArray);
   end;
 end;
 

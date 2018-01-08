@@ -21,7 +21,6 @@ uses
   uStepDatasetSpliter in '..\etl\steps\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
-  uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepHttpRequest in '..\etl\steps\uStepHttpRequest.pas',
   uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
   uStepQuery in '..\etl\steps\uStepQuery.pas',
@@ -33,7 +32,11 @@ uses
   uStepWriteTxtFile in '..\etl\steps\uStepWriteTxtFile.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
-  uGlobalVar in '..\etl\comm\uGlobalVar.pas';
+  uGlobalVar in '..\etl\comm\uGlobalVar.pas',
+  uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
+  uStepFormSettings in '..\etl\steps\uStepFormSettings.pas',
+  uStepFastReport in '..\etl\steps\uStepFastReport.pas',
+  uStepJsonDataSet in '..\etl\steps\uStepJsonDataSet.pas';
 
 {$R *.RES}
 

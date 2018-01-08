@@ -36,8 +36,6 @@ uses
   uStepDatasetSpliter in 'steps\uStepDatasetSpliter.pas',
   uStepDefines in 'steps\uStepDefines.pas',
   uStepFormFactory in 'steps\uStepFormFactory.pas',
-  uStepFastReport in 'steps\uStepFastReport.pas',
-  uStepFastReportForm in 'steps\uStepFastReportForm.pas' {StepFastReportForm},
   uStepHttpRequest in 'steps\uStepHttpRequest.pas',
   uStepHttpRequestForm in 'steps\uStepHttpRequestForm.pas' {StepHttpRequestForm},
   uStepVarDefine in 'steps\uStepVarDefine.pas',
@@ -69,9 +67,11 @@ uses
   uServiceRunner in '..\etl_service\uServiceRunner.pas',
   uGlobalVar in 'comm\uGlobalVar.pas',
   uGlobalVarSettingForm in 'forms\uGlobalVarSettingForm.pas' {GlobalVarSettingForm},
-  uStepFormSettings in 'steps\uStepFormSettings.pas',
   uStepFieldsOper in 'steps\uStepFieldsOper.pas',
   uStepFieldsOperForm in 'steps\uStepFieldsOperForm.pas' {StepFieldsOperForm},
+  uStepFastReport in 'steps\uStepFastReport.pas',
+  uStepFastReportForm in 'steps\uStepFastReportForm.pas' {StepFastReportForm},
+  uStepFormSettings in 'steps\uStepFormSettings.pas',
   uStepJsonDataSet in 'steps\uStepJsonDataSet.pas',
   uStepJsonDataSetForm in 'steps\uStepJsonDataSetForm.pas' {StepJsonDataSetForm};
 
@@ -90,6 +90,9 @@ begin
   FileCritical := TCriticalSection.Create;
 
   Application.CreateForm(TProjectForm, ProjectForm);
+  Application.CreateForm(TStepFieldsOperForm, StepFieldsOperForm);
+  Application.CreateForm(TStepFastReportForm, StepFastReportForm);
+  Application.CreateForm(TStepJsonDataSetForm, StepJsonDataSetForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

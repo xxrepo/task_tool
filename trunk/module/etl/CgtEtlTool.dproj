@@ -155,10 +155,6 @@
         <DCCReference Include="steps\uStepDatasetSpliter.pas"/>
         <DCCReference Include="steps\uStepDefines.pas"/>
         <DCCReference Include="steps\uStepFormFactory.pas"/>
-        <DCCReference Include="steps\uStepFastReport.pas"/>
-        <DCCReference Include="steps\uStepFastReportForm.pas">
-            <Form>StepFastReportForm</Form>
-        </DCCReference>
         <DCCReference Include="steps\uStepHttpRequest.pas"/>
         <DCCReference Include="steps\uStepHttpRequestForm.pas">
             <Form>StepHttpRequestForm</Form>
@@ -221,12 +217,17 @@
             <Form>GlobalVarSettingForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\uStepFormSettings.pas"/>
         <DCCReference Include="steps\uStepFieldsOper.pas"/>
         <DCCReference Include="steps\uStepFieldsOperForm.pas">
             <Form>StepFieldsOperForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="steps\uStepFastReport.pas"/>
+        <DCCReference Include="steps\uStepFastReportForm.pas">
+            <Form>StepFastReportForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\uStepFormSettings.pas"/>
         <DCCReference Include="steps\uStepJsonDataSet.pas"/>
         <DCCReference Include="steps\uStepJsonDataSetForm.pas">
             <Form>StepJsonDataSetForm</Form>
@@ -270,27 +271,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -644,12 +630,27 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
