@@ -61,7 +61,7 @@ begin
 
     LStepConfigJson := TJSONObject.ParseJSONValue(LTaskConfigRec.StepsStr) as TJSONObject;
     try
-      StartStep(LStepConfigJson, @FInData, TaskVar);
+      TaskVar.StartStep(LStepConfigJson, @FInData);
     finally
       if LStepConfigJson <> nil then
         LStepConfigJson.Free;

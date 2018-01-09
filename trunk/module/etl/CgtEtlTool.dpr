@@ -72,8 +72,10 @@ uses
   uStepFastReport in 'steps\uStepFastReport.pas',
   uStepFastReportForm in 'steps\uStepFastReportForm.pas' {StepFastReportForm},
   uStepFormSettings in 'steps\uStepFormSettings.pas',
-  uStepJsonDataSet in 'steps\uStepJsonDataSet.pas',
-  uStepJsonDataSetForm in 'steps\uStepJsonDataSetForm.pas' {StepJsonDataSetForm};
+  uStepJson2DataSet in 'steps\uStepJson2DataSet.pas',
+  uStepJson2DataSetForm in 'steps\uStepJson2DataSetForm.pas' {StepJsonDataSetForm},
+  uDBQueryResultForm in 'steps\database\uDBQueryResultForm.pas' {DBQueryResultForm},
+  uBasicLogForm in '..\..\core\basic\uBasicLogForm.pas' {BasicLogForm};
 
 {$R *.res}
 
@@ -90,9 +92,7 @@ begin
   FileCritical := TCriticalSection.Create;
 
   Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TStepFieldsOperForm, StepFieldsOperForm);
-  Application.CreateForm(TStepFastReportForm, StepFastReportForm);
-  Application.CreateForm(TStepJsonDataSetForm, StepJsonDataSetForm);
+  Application.CreateForm(TBasicLogForm, BasicLogForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

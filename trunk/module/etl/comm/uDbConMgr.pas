@@ -59,8 +59,6 @@ end;
 
 
 procedure TDbConMgr.LoadDbConfigs(ADBsConfigFile: string);
-var
-  LDbConfigFile: TStringList;
 begin
   if FDBConfigsJson <> nil then
     FreeAndNil(FDBConfigsJson);

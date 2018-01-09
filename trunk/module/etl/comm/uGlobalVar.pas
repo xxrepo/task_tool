@@ -44,8 +44,6 @@ end;
 
 function TGlobalVar.GetParamValue(AParamRef, AParamType: string;
   ADefault: Variant): Variant;
-var
-  i: Integer;
 begin
   FCritical.Enter;
   try

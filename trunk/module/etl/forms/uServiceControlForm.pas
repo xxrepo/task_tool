@@ -91,8 +91,6 @@ begin
 end;
 
 procedure TServiceControlForm.btnTestServiceClick(Sender: TObject);
-var
-  LServicePath: string;
 begin
   inherited;
   if ServiceRunner <> nil then

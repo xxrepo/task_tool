@@ -5,7 +5,7 @@ interface
 uses System.JSON, System.SysUtils;
 
 type
-  TTaskRunStatus = (trsUnknown, trsRunning, trsStop);
+  TTaskRunStatus = (trsUnknown, trsRunning, trsStop, trsSuspend);
 
   TTaskCongfigRec = record
     FileName: string;
@@ -57,6 +57,7 @@ type
     function GetConfigJsonStr: string;
     procedure SetConfigJsonStr(const Value: string);
   public
+    StepId: Integer;
     StepType: TStepType;
     StepTitle: string;
     Description: string;

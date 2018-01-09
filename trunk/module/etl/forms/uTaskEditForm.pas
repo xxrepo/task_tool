@@ -8,10 +8,11 @@ uses
   RzSplit, RzButton, Vcl.StdCtrls, RzLstBox, RzShellDialogs, Vcl.ComCtrls,
   RzListVw, Vcl.Menus, RzCommon, Data.DB, Datasnap.DBClient, DBGridEhGrouping,
   ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh,
-  DBGridEh, RzTreeVw, System.JSON, uStepDefines, Vcl.Mask, RzEdit, RzBtnEdt, uTask;
+  DBGridEh, RzTreeVw, System.JSON, uStepDefines, Vcl.Mask, RzEdit, RzBtnEdt, uTask,
+  Vcl.Buttons, uBasicLogForm;
 
 type
-  TTaskEditForm = class(TBasicForm)
+  TTaskEditForm = class(TBasicLogForm)
     rzpnlTop: TRzPanel;
     rzstsbrMain: TRzStatusBar;
     rzbtbtnSave: TRzBitBtn;
@@ -27,6 +28,8 @@ type
     PasteNode: TMenuItem;
     N4: TMenuItem;
     dlgOpenTask: TOpenDialog;
+    N1: TMenuItem;
+    RunToStep: TMenuItem;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -43,7 +46,7 @@ type
       var AllowCollapse: Boolean);
     procedure CopyNodeClick(Sender: TObject);
     procedure PasteNodeClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
+    procedure RunToStepClick(Sender: TObject);
   private
     procedure MakeTaskTree(ATaskStepsJsonStr: string);
     function GetNodeData(ANode: TTreeNode): TJSONObject;
@@ -66,7 +69,7 @@ implementation
 
 uses
   uDefines, uFunctions, uStepTypeSelectForm, uDatabasesForm, uStepBasicForm, uStepFormFactory,
-  uFileUtil, uDesignTimeDefines, Vcl.Clipbrd;
+  uFileUtil, uDesignTimeDefines, Vcl.Clipbrd, uStepBasic;
 
 {$R *.dfm}
 
@@ -111,7 +114,8 @@ end;
 
 procedure TTaskEditForm.StepAddClick(Sender: TObject);
 var
-  LForm: TStepBasicForm;
+  LStep: TStepBasic;
+  LStepDefine: TStepDefine;
   LNode: TTreeNode;
   LStepData: TStepConfig;
   LStepConfigJson: TJSONObject;
@@ -127,33 +131,59 @@ begin
   try
     if ShowModal = mrOk then
     begin
-      //根据StepType启用不同的Steps属性设置窗口
-      LForm := TStepFormFactory.GetStepSettingForm(StepType, CurrentTask.TaskVar);
-      if LForm <> nil then
+      //添加时，直接生成对应的Step加入到树节点中
+      LStep := TStepFormFactory.GetStep(StepType, CurrentTask.TaskVar);
+      if LStep <> nil then
       begin
-        //LForm.ParseStepConfig('');
-        if LForm.ShowModal = mrOk then
-        begin
-          LStepConfigJson := TJSONObject.Create;
-          try
-            //执行画布添加节点
-            LStepData := TStepConfig.Create;
-            LStepData.StepType := StepType;
-            LStepData.StepTitle := LForm.Step.StepConfig.StepTitle;
-            LStepData.Description := LForm.Step.StepConfig.Description;
-            LStepData.RegDataToTask := LForm.Step.StepConfig.RegDataToTask;
+        LStepConfigJson := TJSONObject.Create;
+        LStepDefine := TStepFormFactory.GetStepDefine(StepType);
+        LStep.StepConfig.StepTitle := LStepDefine.StepTypeName;
+        try
+          //执行画布添加节点
+          LStepData := TStepConfig.Create;
+          LStepData.StepType := StepType;
+          LStepData.StepTitle := LStep.StepConfig.StepTitle;
+          LStepData.Description := LStep.StepConfig.Description;
+          LStepData.RegDataToTask := LStep.StepConfig.RegDataToTask;
 
-            LForm.Step.MakeStepConfigJson(LStepConfigJson);
-            LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
+          LStep.MakeStepConfigJson(LStepConfigJson);
+          LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
 
-            chktrTaskSteps.Items.AddChildObject(LNode, LForm.Step.StepConfig.StepTitle, LStepData);
-            chktrTaskSteps.FullExpand;
-          finally
-            LStepConfigJson.Free;
-          end;
+          chktrTaskSteps.Items.AddChildObject(LNode, LStep.StepConfig.StepTitle, LStepData);
+          chktrTaskSteps.FullExpand;
+        finally
+          LStepConfigJson.Free;
+          LStep.Free;
         end;
-        LForm.Free;
       end;
+
+      //根据StepType启用不同的Steps属性设置窗口
+//      LForm := TStepFormFactory.GetStepSettingForm(StepType, CurrentTask.TaskVar);
+//      if LForm <> nil then
+//      begin
+//        //LForm.ParseStepConfig('');
+//        if LForm.ShowModal = mrOk then
+//        begin
+//          LStepConfigJson := TJSONObject.Create;
+//          try
+//            //执行画布添加节点
+//            LStepData := TStepConfig.Create;
+//            LStepData.StepType := StepType;
+//            LStepData.StepTitle := LForm.Step.StepConfig.StepTitle;
+//            LStepData.Description := LForm.Step.StepConfig.Description;
+//            LStepData.RegDataToTask := LForm.Step.StepConfig.RegDataToTask;
+//
+//            LForm.Step.MakeStepConfigJson(LStepConfigJson);
+//            LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
+//
+//            chktrTaskSteps.Items.AddChildObject(LNode, LForm.Step.StepConfig.StepTitle, LStepData);
+//            chktrTaskSteps.FullExpand;
+//          finally
+//            LStepConfigJson.Free;
+//          end;
+//        end;
+//        LForm.Free;
+//      end;
     end;
   finally
     Free;
@@ -185,6 +215,7 @@ begin
 
   LData := TStepConfig(ANode.Data);
   Result := TJSONObject.Create;
+  Result.AddPair(TJSONPair.Create('step_abs_id', IntToStr(ANode.AbsoluteIndex)));
   Result.AddPair(TJSONPair.Create('step_title', LData.StepTitle));
   Result.AddPair(TJSONPair.Create('description', LData.Description));
   Result.AddPair(TJSONPair.Create('reg_data_to_task', BoolToStr(LData.RegDataToTask)));
@@ -251,26 +282,39 @@ begin
   if chktrTaskSteps.Selected = nil then Exit;
 
   LStepData := TStepConfig(chktrTaskSteps.Selected.Data);
+
   //根据StepData创建Step
   LForm := TStepFormFactory.GetStepSettingForm(LStepData.StepType, CurrentTask.TaskVar);
   if LForm <> nil then
   begin
-    LForm.ParseStepConfig(LStepData.ConfigJsonStr);
+    CurrentTask.TaskVar.DesignToStep(chktrTaskSteps.Selected.AbsoluteIndex);
+    CurrentTask.Start;
+    LForm.GetStepFromStepStack;
 
-    if LForm.ShowModal = mrOk then
+    if LForm.Step = nil then
     begin
-      //更新画布节点的参数信息
-      LStepConfigJson := TJSONObject.Create;
-      try
-        LStepData.StepTitle := LForm.Step.StepConfig.StepTitle;
-        LForm.Step.MakeStepConfigJson(LStepConfigJson);
-        LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
-      finally
-        LStepConfigJson.Free;
+      ShowMsg('请保存后重新打开任务');
+    end
+    else
+    begin
+      LForm.ParseStepConfig(LStepData.ConfigJsonStr);
+
+      if LForm.ShowModal = mrOk then
+      begin
+        //更新画布节点的参数信息
+        LStepConfigJson := TJSONObject.Create;
+        try
+          LStepData.StepTitle := LForm.Step.StepConfig.StepTitle;
+          LForm.Step.MakeStepConfigJson(LStepConfigJson);
+          LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
+        finally
+          LStepConfigJson.Free;
+        end;
+
+
+        chktrTaskSteps.Selected.Text := LStepData.StepTitle;
       end;
 
-
-      chktrTaskSteps.Selected.Text := LStepData.StepTitle;
     end;
     LForm.Free;
   end;
@@ -336,8 +380,8 @@ begin
   LTaskConfigRec.RunBasePath := CurrentProjectRec.RootPath;
   LTaskConfigRec.DBsConfigFile := CurrentProjectRec.DbsFile;
 
-
   CurrentTask := TTask.Create(LTaskConfigRec);
+
   MakeTaskTree(CurrentTask.TaskConfigRec.StepsStr);
   Self.Caption := Self.Caption + ' -- ' + CurrentTask.TaskConfigRec.TaskName;
 end;
@@ -364,12 +408,6 @@ begin
     FreeAndNil(CurrentTask);
 end;
 
-procedure TTaskEditForm.FormDestroy(Sender: TObject);
-begin
-  inherited;
-  if CurrentTask <> nil then
-    CurrentTask.Free;
-end;
 
 //实现画图
 procedure TTaskEditForm.MakeTaskTree(ATaskStepsJsonStr: string);
@@ -403,6 +441,32 @@ begin
   end;
 end;
 
+procedure TTaskEditForm.RunToStepClick(Sender: TObject);
+begin
+  inherited;
+  if chktrTaskSteps.Selected = nil then Exit;
+
+  rzspltrLogForm.LowerRight.Visible := True;
+
+  CurrentTask.TaskVar.Logger.NoticeHandle := Handle;
+
+  try
+    //LJob.Task.TaskVar.GlobalVar := FGlobalVar;
+    //LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
+    try
+      CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Selected.AbsoluteIndex);
+      CurrentTask.Start;
+    except
+      on E: Exception do
+      begin
+        AppLogger.Fatal('执行工作异常退出，原因：' + E.Message);
+      end;
+    end;
+  finally
+
+  end;
+end;
+
 procedure TTaskEditForm.AddTreeChildNode(AParentNode: TTreeNode; AChildrenJson: TJsonArray);
 var
   i: Integer;
@@ -426,6 +490,7 @@ begin
 
     LNode := chktrTaskSteps.Items.AddChildObject(AParentNode, LStepConfig.StepTitle, LStepConfig);
     LNode.StateIndex := StrToInt(GetJsonObjectValue(LChild, 'step_status', '0'));
+    LStepConfig.StepId := LNode.AbsoluteIndex;
 
     //如果有子节点，还需要遍历添加子节点
     if (LChild.GetValue('sub_steps') <> nil) then

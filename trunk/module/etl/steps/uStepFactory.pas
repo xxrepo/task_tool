@@ -9,9 +9,9 @@ type
   TStepFactory = class
   protected
     class function GetSysStepDefines: TJSONArray;
-    class function GetStepDefine(AStepType: TStepType): TStepDefine; static;
   public
     class function GetSysStepDefinesStr: string;
+    class function GetStepDefine(AStepType: TStepType): TStepDefine; static;
     class function GetStep(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasic; overload;
   end;
 
@@ -30,7 +30,8 @@ uses
   uStepCondition,
   uStepVarDefine,
   uStepFileDelete,
-  uStepJsonDataSet;
+  uStepJson2DataSet,
+  uStepFastReport;
 
 var
   SysSteps: TJSONArray;
@@ -109,6 +110,10 @@ begin
       60020:
       begin
         Result := TStepVarDefine.Create(ATaskVar);
+      end;
+      70010:
+      begin
+        Result := TStepFastReport.Create(ATaskVar);
       end;
     end;
   end;
@@ -306,8 +311,8 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type', 'PRINT_FASTREPORT'));
   LRowJson.AddPair(TJSONPair.Create('step_type_id', '70010'));
   LRowJson.AddPair(TJSONPair.Create('step_type_name', 'FastReport¥Ú”°'));
-  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepHttpRequest'));
-  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepHttpRequestForm'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFastReport'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFastReportForm'));
   SysSteps.AddElement(LRowJson);
 
 

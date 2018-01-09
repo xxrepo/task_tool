@@ -2,6 +2,7 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
   Caption = 'Json'#36716'DataSet'
   ClientHeight = 530
   OnCreate = FormCreate
+  ExplicitWidth = 320
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 17
@@ -174,7 +175,7 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
       object chkCreateDataSource: TCheckBox
         Left = 142
         Top = 291
-        Width = 203
+        Width = 379
         Height = 17
         Caption = #21019#24314#25968#25454#28304'(DataSource)'
         TabOrder = 9

@@ -3,7 +3,7 @@ unit uTask;
 interface
 
 uses
-  uTaskVar, System.JSON, uStepBasic, uStepDefines, System.SysUtils, System.Classes;
+  uTaskVar, System.JSON, uStepBasic, uStepDefines, System.SysUtils, System.Classes, System.Contnrs;
 
 type
   TTaskUtil = class
@@ -24,6 +24,7 @@ type
 
     //运行
     procedure Start;
+
 
   end;
 
@@ -87,6 +88,7 @@ var
   LTaskVarRec: TTaskVarRec;
 begin
   inherited Create;
+
   TaskConfigRec := ATaskCongfigRec;
   LTaskVarRec.FileName := TaskConfigRec.FileName;
   LTaskVarRec.DbsFileName := TaskConfigRec.DBsConfigFile;
@@ -114,9 +116,10 @@ begin
   try
     TaskVar.TaskVarRec.TaskName := TaskConfigRec.TaskName;
     TaskVar.TaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
-    TaskVar.TaskStatus := trsRunning;
     try
-      StartStep(LTaskConfigJson, @LInitInData, TaskVar);
+      //清空调用栈
+      TaskVar.InitStartContext;
+      TaskVar.StartStep(LTaskConfigJson, @LInitInData);
     except
       on E: StepException do
       begin

@@ -23,10 +23,12 @@ type
     lblParams: TLabel;
     dbgrdhInputParams: TDBGridEh;
     btnParseSqlParams: TBitBtn;
+    btnPreview: TBitBtn;
     procedure btnDbConfigClick(Sender: TObject);
     procedure btnParseSqlParamsClick(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure btnPreviewClick(Sender: TObject);
   private
     procedure ReLoadDBs;
   protected
@@ -43,7 +45,7 @@ var
 implementation
 
 uses
-  uStepQuery, uDbConMgr, uDesignTimeDefines, uDatabasesForm, uFunctions;
+  uStepQuery, uDbConMgr, uDesignTimeDefines, uDatabasesForm, uFunctions, uDBQueryResultForm;
 
 {$R *.dfm}
 
@@ -99,6 +101,23 @@ begin
     cdsInputParams.FieldByName('param_type').AsString := 'string';
     cdsInputParams.FieldByName('default_value').AsString := '';
     cdsInputParams.Post;
+  end;
+end;
+
+procedure TStepQueryForm.btnPreviewClick(Sender: TObject);
+begin
+  inherited;
+  with TDBQueryResultForm.Create(nil) do
+  try
+    if mmoQuerySQL.SelLength > 0 then
+      redtSQL.Text := mmoQuerySQL.SelText
+    else
+      redtSQL.Text := mmoQuerySQL.Text;
+    DBConTitle := cbbDbCon.Text;
+    DBConMgr := TaskVar.DbConMgr;
+    ShowModal;
+  finally
+    Free;
   end;
 end;
 

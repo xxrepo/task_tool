@@ -1,4 +1,4 @@
-unit uStepJsonDataSetForm;
+unit uStepJson2DataSetForm;
 
 interface
 
@@ -44,7 +44,7 @@ var
 
 implementation
 
-uses uFunctions, uDesignTimeDefines, uStepJsonDataSet, uStepFormSettings;
+uses uFunctions, uDesignTimeDefines, uStepJson2DataSet, uStepFormSettings;
 
 {$R *.dfm}
 
@@ -69,8 +69,6 @@ begin
 end;
 
 procedure TStepJsonDataSetForm.FormCreate(Sender: TObject);
-var
-  i: Integer;
 begin
   inherited;
   dbgrdhInputParams.Columns.FindColumnByName('Column_1_data_type').KeyList.Text := TStepFormSettings.GetDataSetFieldTypes.KeyList;

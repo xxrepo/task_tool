@@ -101,7 +101,9 @@ begin
   begin
     SetRichEditLineColor(redtLog, LLine, clWebOrangeRed);
   end
-  else if (Pos('[ERROR]', LMsg) > 0) or (Pos('[FATAL]', LMsg) > 0) then
+  else if (Pos('[ERROR]', LMsg) > 0) or (Pos('[FATAL]', LMsg) > 0)
+          or (Pos('´íÎó', LMsg) > 0) or (Pos('Ê§°Ü', LMsg) > 0)
+          or (Pos('Òì³£', LMsg) > 0)  then
   begin
     SetRichEditLineColor(redtLog, LLine, clWebRed);
   end

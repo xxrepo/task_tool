@@ -31,7 +31,6 @@ type
     FThreadCount: Integer;
     procedure HandleLogRequest(Data: Pointer; AThread: TThread);
     procedure LogToFile(const FileName, LogString: String);
-    procedure Log(const LogText: string; AAlogLevel: TLogLevel = llFatal);
   public
     //通知到对应的窗口
     NoticeHandle: THandle;
@@ -41,6 +40,8 @@ type
     constructor Create(AThreadCount: Integer = 1; const AFilePrefix: string = '';
           const ADtFormat: string = 'yyyymmddhh'; const ALogLevel: TLogLevel = llAll);
     destructor Destroy; override;
+
+    procedure Log(const LogText: string; AAlogLevel: TLogLevel = llFatal);
     procedure Debug(const LogText: string);
     procedure Info(const LogText: string);
     procedure Warn(const LogText: string);

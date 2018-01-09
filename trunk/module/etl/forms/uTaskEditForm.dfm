@@ -1,87 +1,114 @@
 inherited TaskEditForm: TTaskEditForm
   Caption = #39033#30446#20219#21153#35774#35745
-  ClientHeight = 562
-  ClientWidth = 532
+  ClientHeight = 520
+  ClientWidth = 784
   WindowState = wsMaximized
   OnClose = FormClose
-  OnDestroy = FormDestroy
-  ExplicitWidth = 548
-  ExplicitHeight = 601
+  ExplicitWidth = 800
+  ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 17
-  object rzpnlTop: TRzPanel
-    Left = 0
-    Top = 0
-    Width = 532
-    Height = 57
-    Align = alTop
-    BorderOuter = fsFlat
-    TabOrder = 0
-    DesignSize = (
-      532
-      57)
-    object rzbtbtnSave: TRzBitBtn
-      Left = 13
-      Top = 12
-      Width = 81
-      Height = 33
-      Caption = #20445#23384
+  inherited rzspltrLogForm: TRzSplitter
+    Width = 784
+    Height = 501
+    Position = 320
+    Percent = 64
+    LowerRight.Visible = False
+    TabOrder = 1
+    ExplicitTop = 301
+    ExplicitWidth = 784
+    ExplicitHeight = 242
+    UpperLeftControls = (
+      rzpnlTop
+      chktrTaskSteps)
+    LowerRightControls = (
+      redtLog
+      rzpnl3)
+    object rzpnlTop: TRzPanel [0]
+      Left = 0
+      Top = 0
+      Width = 784
+      Height = 57
+      Align = alTop
+      BorderOuter = fsFlat
       TabOrder = 0
-      OnClick = rzbtbtnSaveClick
+      DesignSize = (
+        784
+        57)
+      object rzbtbtnSave: TRzBitBtn
+        Left = 13
+        Top = 12
+        Width = 81
+        Height = 33
+        Caption = #20445#23384
+        TabOrder = 0
+        OnClick = rzbtbtnSaveClick
+      end
+      object rzbtbtnRunSchedual: TRzBitBtn
+        Left = 667
+        Top = 12
+        Width = 86
+        Height = 33
+        Anchors = [akTop, akRight]
+        Caption = #21478#23384#20026'...'
+        TabOrder = 1
+        Visible = False
+      end
     end
-    object rzbtbtnRunSchedual: TRzBitBtn
-      Left = 415
-      Top = 12
-      Width = 86
-      Height = 33
-      Anchors = [akTop, akRight]
-      Caption = #21478#23384#20026'...'
+    object chktrTaskSteps: TRzCheckTree [1]
+      Left = 0
+      Top = 57
+      Width = 784
+      Height = 444
+      Align = alClient
+      AutoExpand = True
+      BorderStyle = bsNone
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      Indent = 19
+      ParentFont = False
+      PopupMenu = pmTaskSteps
+      RightClickSelect = True
+      SelectionPen.Color = clSkyBlue
+      StateImages = chktrTaskSteps.CheckImages
       TabOrder = 1
-      Visible = False
+      OnCollapsing = chktrTaskStepsCollapsing
+      OnDblClick = chktrTaskStepsDblClick
+      OnDeletion = chktrTaskStepsDeletion
+      OnDragDrop = chktrTaskStepsDragDrop
+      OnDragOver = chktrTaskStepsDragOver
+      OnMouseDown = chktrTaskStepsMouseDown
+    end
+    inherited redtLog: TRichEdit
+      Width = 784
+      Height = 132
+      ExplicitWidth = 784
+      ExplicitHeight = 132
+    end
+    inherited rzpnl3: TRzPanel
+      Width = 784
+      ExplicitWidth = 784
     end
   end
   object rzstsbrMain: TRzStatusBar
     Left = 0
-    Top = 543
-    Width = 532
+    Top = 501
+    Width = 784
     Height = 19
     BorderInner = fsNone
     BorderOuter = fsNone
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
-    TabOrder = 1
-  end
-  object chktrTaskSteps: TRzCheckTree
-    Left = 0
-    Top = 57
-    Width = 532
-    Height = 486
-    Align = alClient
-    AutoExpand = True
-    BorderStyle = bsNone
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -19
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Indent = 19
-    ParentFont = False
-    PopupMenu = pmTaskSteps
-    RightClickSelect = True
-    SelectionPen.Color = clSkyBlue
-    StateImages = chktrTaskSteps.CheckImages
-    TabOrder = 2
-    OnCollapsing = chktrTaskStepsCollapsing
-    OnDblClick = chktrTaskStepsDblClick
-    OnDeletion = chktrTaskStepsDeletion
-    OnDragDrop = chktrTaskStepsDragDrop
-    OnDragOver = chktrTaskStepsDragOver
-    OnMouseDown = chktrTaskStepsMouseDown
+    TabOrder = 0
+    ExplicitTop = 543
   end
   object pmTaskSteps: TPopupMenu
     OwnerDraw = True
-    Left = 386
-    Top = 191
+    Left = 594
+    Top = 183
     object StepAdd: TMenuItem
       Caption = #28155#21152'Step'
       OnClick = StepAddClick
@@ -95,6 +122,13 @@ inherited TaskEditForm: TTaskEditForm
       OnClick = StepDelClick
     end
     object N2: TMenuItem
+      Caption = '-'
+    end
+    object RunToStep: TMenuItem
+      Caption = #36816#34892#33267#24403#21069'Step'
+      OnClick = RunToStepClick
+    end
+    object N1: TMenuItem
       Caption = '-'
     end
     object CopyNode: TMenuItem
@@ -116,7 +150,7 @@ inherited TaskEditForm: TTaskEditForm
   object dlgOpenTask: TOpenDialog
     DefaultExt = 'task'
     Filter = #20219#21153#25991#20214#65288'*.task'#65289'|*.task'
-    Left = 388
-    Top = 304
+    Left = 600
+    Top = 104
   end
 end

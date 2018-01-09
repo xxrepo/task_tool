@@ -28,6 +28,8 @@ inherited StepQueryForm: TStepQueryForm
     ExplicitHeight = 392
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitWidth = 683
       ExplicitHeight = 365
       object lbl2: TRzLabel [1]
@@ -76,13 +78,18 @@ inherited StepQueryForm: TStepQueryForm
         Style = csDropDownList
         TabOrder = 3
       end
+      object btnPreview: TBitBtn
+        Left = 573
+        Top = 300
+        Width = 82
+        Height = 35
+        Caption = #25191#34892
+        TabOrder = 6
+        OnClick = btnPreviewClick
+      end
     end
     object rztbshtParams: TRzTabSheet
       Caption = 'SQL'#20837#21442#32465#23450
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object lblParams: TLabel
         Left = 40
         Top = 24

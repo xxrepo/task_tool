@@ -2,7 +2,7 @@ unit uThreadSafeFile;
 
 interface
 
-uses System.IniFiles;
+uses System.IniFiles, System.SyncObjs;
 
 type
   TThreadSafeFile = class

@@ -13,6 +13,9 @@ inherited StepWriteTxtFileForm: TStepWriteTxtFileForm
     ExplicitHeight = 284
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
+      ExplicitWidth = 673
       ExplicitHeight = 257
       object lbl2: TLabel [1]
         Left = 52

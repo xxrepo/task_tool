@@ -333,7 +333,6 @@ var
   LJobConfigs: TJSONArray;
   LJobConfigJson: TJSONObject;
   LJobConfig: TJobConfig;
-  LJobs: TStringList;
   i: Integer;
 begin
   Result := False;

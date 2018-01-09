@@ -6,23 +6,17 @@ inherited StepFastReportForm: TStepFastReportForm
   TextHeight = 17
   inherited pnlOper: TPanel
     Top = 406
-    ExplicitTop = 447
-    object btnTest: TButton
-      Left = 12
-      Top = 12
-      Width = 95
-      Height = 37
-      Caption = #27979#35797
-      TabOrder = 2
-      Visible = False
-    end
+    ExplicitTop = 406
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 406
-    ExplicitHeight = 447
+    ExplicitHeight = 406
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitHeight = 420
+      ExplicitLeft = 1
+      ExplicitTop = 24
+      ExplicitWidth = 673
+      ExplicitHeight = 379
       object lbl2: TLabel [1]
         Left = 52
         Top = 112
@@ -87,17 +81,6 @@ inherited StepFastReportForm: TStepFastReportForm
             EditButtons = <>
             FieldName = 'dataset_object_ref'
             Footers = <>
-            PickList.Strings = (
-              'parent.'
-              'self.MAX'
-              'self.MIN'
-              'self.SUM'
-              'self.COUNT'
-              'self.CONCAT'
-              'self.MD5'
-              'task.'
-              'system.time'
-              'system.timestamp')
             Title.Caption = #23454#38469#25968#25454#38598
             Width = 177
           end
@@ -129,7 +112,7 @@ inherited StepFastReportForm: TStepFastReportForm
       object chkPreview: TCheckBox
         Left = 142
         Top = 303
-        Width = 431
+        Width = 463
         Height = 17
         Caption = #25171#21360#21069#39044#35272#65288#22312#26381#21153#31243#24207#20013#35831#25351#23450#36755#20986#33267#29305#23450#25991#20214#22841#65289
         TabOrder = 6
@@ -145,14 +128,24 @@ inherited StepFastReportForm: TStepFastReportForm
         ButtonWidth = 15
         OnButtonClick = btnReportFileButtonClick
       end
+      object btnDesign: TButton
+        Left = 474
+        Top = 108
+        Width = 93
+        Height = 28
+        Caption = #25253#34920#35774#35745
+        TabOrder = 8
+        OnClick = btnDesignClick
+      end
     end
   end
   object cdsParams: TClientDataSet
     PersistDataPacket.Data = {
-      7A0000009619E0BD0100000018000000030000000000030000007A0010667278
+      860000009619E0BD010000001800000003000000000003000000860010667278
       5F646174617365745F6E616D6501004900000001000557494454480200020040
-      0012646174617365745F6F626A6563745F72656604000100000000000B646573
-      6372697074696F6E01004900000001000557494454480200020020000000}
+      0012646174617365745F6F626A6563745F726566010049000000010005574944
+      54480200020040000B6465736372697074696F6E010049000000010005574944
+      54480200020020000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -163,7 +156,8 @@ inherited StepFastReportForm: TStepFastReportForm
       end
       item
         Name = 'dataset_object_ref'
-        DataType = ftInteger
+        DataType = ftString
+        Size = 64
       end
       item
         Name = 'description'
@@ -185,7 +179,7 @@ inherited StepFastReportForm: TStepFastReportForm
     DefaultExt = 'fr3'
     Filter = 'FR3'#25253#34920#25991#20214#65288'*.fr3'#65289'|*.fr3'
     Options = [ofReadOnly, ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-    Left = 519
-    Top = 98
+    Left = 69
+    Top = 256
   end
 end

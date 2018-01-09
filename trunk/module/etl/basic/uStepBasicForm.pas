@@ -26,10 +26,9 @@ type
     TaskVar: TTaskVar;
     Step: TStepBasic;
 
-    function CreateStep(AStepClass: TStepClass): TStepBasic;
-
     //对step进行赋值，同时可以对本form中的字段进行赋值
     procedure ParseStepConfig(AConfigJsonStr: string = ''); virtual;
+    procedure GetStepFromStepStack;
   end;
 
 var
@@ -40,6 +39,18 @@ implementation
 uses uFunctions, uDesignTimeDefines, uFileUtil;
 
 {$R *.dfm}
+
+procedure TStepBasicForm.GetStepFromStepStack;
+var
+  idx: Integer;
+begin
+  idx := TaskVar.StepStack.IndexOf(IntToStr(TaskVar.ToStepId));
+  if idx > -1 then
+  begin
+    Step := TStepBasic(TaskVar.StepStack.Objects[idx]);
+  end;
+end;
+
 
 procedure TStepBasicForm.btnOKClick(Sender: TObject);
 begin
@@ -72,17 +83,11 @@ begin
   Step.StepConfig.RegDataToTask := chkRegDataToTask.Checked;
 end;
 
-
-function TStepBasicForm.CreateStep(AStepClass: TStepClass): TStepBasic;
-begin
-  Result := (AStepClass.NewInstance as TStepBasic).Create(TaskVar);
-end;
-
 procedure TStepBasicForm.FormDestroy(Sender: TObject);
 begin
   inherited;
-  if Step <> nil then
-    FreeAndNil(Step);
+//  if Step <> nil then
+//    FreeAndNil(Step);
 end;
 
 procedure TStepBasicForm.ParseStepConfig(AConfigJsonStr: string);

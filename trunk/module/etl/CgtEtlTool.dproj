@@ -228,9 +228,17 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\uStepFormSettings.pas"/>
-        <DCCReference Include="steps\uStepJsonDataSet.pas"/>
-        <DCCReference Include="steps\uStepJsonDataSetForm.pas">
+        <DCCReference Include="steps\uStepJson2DataSet.pas"/>
+        <DCCReference Include="steps\uStepJson2DataSetForm.pas">
             <Form>StepJsonDataSetForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\database\uDBQueryResultForm.pas">
+            <Form>DBQueryResultForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\core\basic\uBasicLogForm.pas">
+            <Form>BasicLogForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

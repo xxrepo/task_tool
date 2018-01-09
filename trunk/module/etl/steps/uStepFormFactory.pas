@@ -26,7 +26,8 @@ uses
    , uStepDatasetSpliterForm
    , uStepSubTaskForm
    , uStepConditionForm
-   , uStepJsonDataSetForm
+   , uStepJson2DataSetForm
+   , uStepFastReportForm
    , uStepVarDefineForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;
@@ -44,7 +45,8 @@ begin
   begin
     Result := LClass.NewInstance as TStepBasicForm;
     Result := Result.Create(nil);
-    Result.Step := Self.GetStep(AStepType, ATaskVar);
+    Result.TaskVar := ATaskVar;
+    //Result.Step := Self.GetStep(AStepType, ATaskVar);
     Result.edtStepTitle.Text := LStepDefine.StepTypeName;
   end;
 end;

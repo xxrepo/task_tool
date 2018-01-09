@@ -30,7 +30,8 @@ end;
 
 class function TNetUtil.ParamEncodeUtf8(const AValue: string): string;
 begin
-  Result := HTTPEncode(UTF8Encode(AValue))//TNetEncoding.URL.Encode(UTF8Encode(AValue));//(TIdURI.ParamsEncode(AValue, IndyTextEncoding_UTF8));
+  //HTTPEncode(UTF8Encode(AValue))
+  Result := TNetEncoding.URL.Encode(UTF8Encode(AValue));//(TIdURI.ParamsEncode(AValue, IndyTextEncoding_UTF8));
 end;
 
 

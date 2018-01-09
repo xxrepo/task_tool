@@ -3,7 +3,7 @@ unit uStepBasic;
 interface
 
 uses
-  System.JSON, uStepDefines, uTaskVar, System.Classes, System.SysUtils, System.Types;
+  System.JSON, uStepDefines, uTaskVar, System.Classes, System.SysUtils, System.Types, uFileLogger;
 
 type
   TStepClass = class of TStepBasic;
@@ -47,6 +47,8 @@ type
     function GetParamValue(AParamConfig: TJSONObject): Variant; overload;
     function GetParamValue(AParamRef: string; AParamType: string; ADefaultValue: Variant): Variant; overload;
     function GetSelfParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; virtual;
+
+    procedure StartSelfDesign; virtual;
   public
     property StepConfig: TStepConfig read FStepConfig write FStepConfig;
     property SubSteps: TJSONArray read FSubSteps write FSubSteps;
@@ -57,6 +59,7 @@ type
     procedure ParseStepConfig(AConfigJsonStr: string); virtual;
 
     procedure Start; virtual;
+    procedure StartDesign; virtual;
 
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); virtual;
 
@@ -65,64 +68,19 @@ type
 
 
     function GetRealAbsolutePath(APath: string): string;
+    procedure LogMsg(AMsg: string; ALogLevel: TLogLevel = llAll);
   end;
 
   TStepNull = type TStepBasic;
 
-  procedure StartStep(AStepConfigJson: TJSONObject; AInData: PStepData; const ATaskVar: TTaskVar);
+//  procedure StartStep(AStepConfigJson: TJSONObject; AInData: PStepData; const ATaskVar: TTaskVar);
 
 implementation
 
 uses uFunctions, uDefines, uExceptions, uStepFactory, System.StrUtils, uFileUtil;
 
 
-procedure StartStep(AStepConfigJson: TJSONObject; AInData: PStepData; const ATaskVar: TTaskVar);
-var
-  LStep: TStepBasic;
-  LStepType: string;
-begin
-  if AStepConfigJson = nil then
-  begin
-    ATaskVar.Logger.Error('[' + ATaskVar.TaskVarRec.TaskName + ']Step配置解析异常退出');
-    Exit;
-  end;
 
-  //获取当前Step的相关参数
-  try
-    if StrToInt(GetJsonObjectValue(AStepConfigJson, 'step_status', '0')) > 1 then //checked or partialy checked
-    begin
-      //调用工厂类
-      LStepType := GetJsonObjectValue(AStepConfigJson, 'step_type');
-      LStep := TStepFactory.GetStep(LStepType, ATaskVar);
-      if (LStep <> nil) then
-      begin
-        try
-          //处理入参和初始设置
-          LStep.TaskVar := ATaskVar;
-          LStep.InData := AInData^;
-          LStep.SubSteps := AStepConfigJson.GetValue('sub_steps') as TJSONArray;
-          LStep.StepConfig.StepType := GetJsonObjectValue(AStepConfigJson, 'step_type');
-          LStep.StepConfig.StepTitle := GetJsonObjectValue(AStepConfigJson, 'step_title');
-          LStep.StepConfig.StepStatus := StrToInt(GetJsonObjectValue(AStepConfigJson, 'step_status', '0'));
-          LStep.ParseStepConfig(GetJsonObjectValue(AStepConfigJson, 'step_config'));
-
-          ATaskVar.Logger.Debug(LStep.FormatLogMsg('任务执行：入参数据：' + LStep.InData.Data));
-
-          LStep.Start;
-        finally
-          LStep.Free;
-        end;
-      end
-      else
-      begin
-        ATaskVar.Logger.Error('Step Factory中未有匹配到对应的step_type:' + LStepType);
-        raise StopTaskException.Create('Step Factory中未有匹配到对应的step_type:' + LStepType);
-      end;
-    end;
-  finally
-
-  end;
-end;
 
 
 { TStepBasic }
@@ -447,6 +405,11 @@ begin
 end;
 
 
+procedure TStepBasic.LogMsg(AMsg: string; ALogLevel: TLogLevel);
+begin
+  TaskVar.Logger.Log(FormatLogMsg(AMsg), ALogLevel);
+end;
+
 procedure TStepBasic.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   AToConfig.AddPair(TJSONPair.Create('step_title', StepConfig.StepTitle));
@@ -519,9 +482,30 @@ begin
       if (AChildStepTitle <> '')
           and (GetJsonObjectValue(LStepConfigJson, 'step_title') <> AChildStepTitle) then Continue;
 
-      StartStep(LStepConfigJson, @FOutData, TaskVar);
+      TaskVar.StartStep(LStepConfigJson, @FOutData);
     end;
   end;
+end;
+
+
+
+
+//对于Step提供设计阶段的支持，后续可以优化成独立的类
+procedure TStepBasic.StartDesign;
+begin
+  StartSelfDesign;
+
+  //注册数据
+  if FStepConfig.RegDataToTask then
+    RegOutDataToTaskVar;
+
+  StartChildren();
+end;
+
+
+procedure TStepBasic.StartSelfDesign;
+begin
+
 end;
 
 

@@ -8,7 +8,7 @@ uses
   Vcl.Buttons, Vcl.ExtCtrls, Vcl.Mask, RzEdit, RzBtnEdt,
   DBGridEhGrouping, ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, EhLibVCL,
   GridsEh, DBAxisGridsEh, DBGridEh, Vcl.DBCtrls, Data.DB, Datasnap.DBClient,
-  RzLabel;
+  RzLabel, frxClass, frxDesgn, frxBarcode, frxDBSet, frxRich;
 
 type
   TStepFastReportForm = class(TStepBasicForm)
@@ -20,12 +20,13 @@ type
     lblParams: TLabel;
     lbl5: TLabel;
     edtPrinterName: TEdit;
-    btnTest: TButton;
     chkPreview: TCheckBox;
     btnReportFile: TRzButtonEdit;
     dlgOpenFileName: TOpenDialog;
+    btnDesign: TButton;
     procedure btnOKClick(Sender: TObject);
     procedure btnReportFileButtonClick(Sender: TObject);
+    procedure btnDesignClick(Sender: TObject);
   private
     { Private declarations }
   protected
@@ -41,19 +42,13 @@ var
 
 implementation
 
-uses uFunctions, uDesignTimeDefines, uStepFastReport;
+uses uFunctions, uDesignTimeDefines, uStepFastReport, uStepFormSettings;
 
 {$R *.dfm}
 
 procedure TStepFastReportForm.btnOKClick(Sender: TObject);
 begin
   inherited;
-  if Trim(btnReportFile.Text) = '' then
-  begin
-    ShowMsg('报表文件不能为空');
-    Exit;
-  end;
-
   with Step as TStepFastReport do
   begin
     DBDataSetsConfigStr := DataSetToJsonStr(cdsParams);
@@ -74,6 +69,16 @@ begin
   end;
 end;
 
+procedure TStepFastReportForm.btnDesignClick(Sender: TObject);
+var
+  LStep: TStepFastReport;
+begin
+  inherited;
+  LStep := TStepFastReport(Step);
+
+  LStep.Reporter.DesignReport();
+end;
+
 procedure TStepFastReportForm.ParseStepConfig(AConfigJsonStr: string);
 var
   LStep: TStepFastReport;
@@ -85,6 +90,9 @@ begin
   edtPrinterName.Text := LStep.PrinterName;
   btnReportFile.Text := LStep.ReportFile;
   JsonToDataSet(LStep.DBDataSetsConfigStr, cdsParams);
+
+  dbgrdhInputParams.Columns.FindColumnByName('Column_1_dataset_object_ref').PickList.Text :=
+           TStepFormSettings.GetRegistedObjectStrings(TaskVar).PickList;
 end;
 
 

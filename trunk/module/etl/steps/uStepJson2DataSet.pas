@@ -1,4 +1,4 @@
-unit uStepJsonDataSet;
+unit uStepJson2DataSet;
 
 interface
 
@@ -23,6 +23,7 @@ type
 
   protected
     procedure StartSelf; override;
+    procedure StartSelfDesign; override;
 
   public
     destructor Destroy; override;
@@ -91,33 +92,65 @@ begin
 
   LFieldsDefJson := TJSONObject.ParseJSONValue(FFieldsDefStr) as TJSONArray;
   if LFieldsDefJson = nil then Exit;
-  
-  FClientDataSet := TClientDataSet.Create(nil);
-  for i := 0 to LFieldsDefJson.Count - 1 do
-  begin
-    LFieldDefJson := LFieldsDefJson.Items[i] as TJSONObject;
-    if LFieldDefJson = nil then
-      StopExceptionRaise(Self.ClassName + ' 异常：数据集定义错误');
 
-    with FClientDataSet.FieldDefs.AddFieldDef do
+  try
+    FClientDataSet := TClientDataSet.Create(nil);
+    FClientDataSet.Name := 'cds_' + IntToStr(StepConfig.StepId);
+    for i := 0 to LFieldsDefJson.Count - 1 do
     begin
-      Name := GetJsonObjectValue(LFieldDefJson, 'field_name');
-      DataType := TFieldType(GetJsonObjectValue(LFieldDefJson, 'data_type'));
-      if DataType = ftString then
-        Size := GetJsonObjectValue(LFieldDefJson, 'size', '32', 'int');
+      LFieldDefJson := LFieldsDefJson.Items[i] as TJSONObject;
+      if LFieldDefJson = nil then
+        StopExceptionRaise(Self.ClassName + ' 异常：数据集定义错误');
+
+      with FClientDataSet.FieldDefs.AddFieldDef do
+      begin
+        Name := GetJsonObjectValue(LFieldDefJson, 'field_name');
+        DataType := TFieldType(GetJsonObjectValue(LFieldDefJson, 'data_type'));
+        if DataType = ftString then
+          Size := GetJsonObjectValue(LFieldDefJson, 'size', '32', 'int');
+      end;
     end;
+
+    if FClientDataSet.FieldDefs.Count > 0 then
+    begin
+      FClientDataSet.CreateDataSet;
+      FClientDataSet.Open;
+      Result := True;
+    end;
+  finally
+    LFieldsDefJson.Free;
   end;
 
-  if FClientDataSet.FieldDefs.Count > 0 then
+end;
+
+
+procedure TStepJsonDataSet.StartSelfDesign;
+begin
+  if not CreateDataSet then
   begin
-    FClientDataSet.CreateDataSet;
-    FClientDataSet.Open;
-    Result := True;
+    StopExceptionRaise('打开DataSet数据集失败');
+  end;
+
+  //设置ClientDataSet的各种属性
+  FClientDataSet.MasterFields := FMasterFields;
+  FClientDataSet.IndexFieldNames := FIndexedFieldNames;
+  FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName));
+
+  if TaskVar.RegObject(StepConfig.StepTitle, FClientDataSet) = -1 then
+      StopExceptionRaise('注册数据集失败');
+
+  if FCreateDataSource then
+  begin
+    FDataSource := TDataSource.Create(nil);
+    FDataSource.DataSet := FClientDataSet;
+    TaskVar.RegObject(StepConfig.StepTitle + '_ds', FDataSource);
   end;
 end;
 
 
 procedure TStepJsonDataSet.StartSelf;
+var
+  LDataSetStr: string;
 begin
   try
     CheckTaskStatus;
@@ -134,7 +167,9 @@ begin
     FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName));
 
     //赋值数据
-    JsonToDataSet(GetParamValue(FDataRef, 'string', ''), FClientDataSet);
+    LDataSetStr := GetParamValue(FDataRef, 'string', '');
+    TaskVar.Logger.Debug(FormatLogMsg('DataSet加载源数据：' + FDataRef + '：' + LDataSetStr));
+    JsonToDataSet(LDataSetStr, FClientDataSet);
 
     //本身注册到Task中，相当于一个临时变量
     if TaskVar.RegObject(StepConfig.StepTitle, FClientDataSet) = -1 then
