@@ -46,6 +46,8 @@ type
     procedure btnClearOldClick(Sender: TObject);
     procedure btnServiceControlClick(Sender: TObject);
     procedure GlobalVarSettingClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormKeyPress(Sender: TObject; var Key: Char);
   private
     procedure RefreshProjectFiles;
     function CheckCurrentProject: Boolean;
@@ -63,7 +65,7 @@ implementation
 
 uses uProject, uFileUtil, uDesignTimeDefines, uDefines, uDatabasesForm, uJobsForm,
 uTaskEditForm, uFunctions, uMakeDirForm, System.IOUtils, System.JSON, System.Win.Registry,
-uServiceControlForm, uGlobalVarSettingForm;
+uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar;
 
 {$R *.dfm}
 
@@ -139,7 +141,7 @@ end;
 
 function TProjectForm.CheckCurrentProject: Boolean;
 begin
-  Result := FileExists(CurrentProjectRec.RootPath + 'project.json');
+  Result := FileExists(CurrentProject.RootPath + 'project.json');
   if not Result then
   begin
     ShowMsg('请先创建或者打开项目文件');
@@ -147,6 +149,8 @@ begin
 end;
 
 procedure TProjectForm.AddTaskClick(Sender: TObject);
+var
+  LTaskFileName: string;
 begin
   inherited;
   if not CheckCurrentProject then Exit;
@@ -154,9 +158,10 @@ begin
   dlgOpenTask.InitialDir := lstFiles.Folder.PathName;
   if dlgOpenTask.Execute then
   begin
-    if not FileExists(dlgOpenTask.FileName) then
+    LTaskFileName := dlgOpenTask.FileName;
+    if not FileExists(LTaskFileName) then
     begin
-      if TFileUtil.CreateFile(dlgOpenTask.FileName) = INVALID_HANDLE_VALUE then
+      if TFileUtil.CreateFile(LTaskFileName) = INVALID_HANDLE_VALUE then
       begin
         ShowMsg('任务文件创建失败');
         Exit;
@@ -165,7 +170,7 @@ begin
 
     with TTaskEditForm.Create(nil) do
     try
-      ConfigTask(dlgOpenTask.FileName);
+      ConfigTask(LTaskFileName);
       ShowModal;
     finally
       Free;
@@ -180,7 +185,7 @@ begin
 
   with TDatabasesForm.Create(nil) do
   try
-    ConfigDatabases(CurrentProjectRec.DbsFile);
+    ConfigDatabases(CurrentProject.DbsFile);
     ShowModal;
   finally
     Free;
@@ -190,8 +195,24 @@ end;
 procedure TProjectForm.FormCreate(Sender: TObject);
 begin
   inherited;
+  CurrentProject := TProject.Create;
   rzshltrProject.BaseFolder.PathName := ExePath + 'projects';
   RefreshProjectFiles;
+end;
+
+procedure TProjectForm.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FreeAndNil(CurrentProject);
+end;
+
+procedure TProjectForm.FormKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = Char(VK_ESCAPE) then
+  begin
+    if ShowMsg('确定要退出任务管理程序吗？', MB_OKCANCEL) = mrOk  then
+      Self.Close;
+  end;
 end;
 
 procedure TProjectForm.GlobalVarSettingClick(Sender: TObject);
@@ -201,7 +222,7 @@ begin
 
   with TGlobalVarSettingForm.Create(nil) do
   try
-    ConfigGlobalVar(CurrentProjectRec.RootPath + 'project.global');
+    ConfigGlobalVar(CurrentProject.RootPath + 'project.global');
     ShowModal;
   finally
     Free;
@@ -215,7 +236,7 @@ begin
 
   with TJobsForm.Create(nil) do
   try
-    ConfigJobs(CurrentProjectRec.JobsFile);
+    ConfigJobs(CurrentProject.JobsFile);
     WindowState := wsMaximized;
     ShowModal;
   finally
@@ -261,7 +282,7 @@ begin
   inherited;
   if FileExists(lstFiles.Folder.PathName + '\project.json') then
   begin
-    CurrentProjectRec := TProjectUtil.GetConfigFrom(lstFiles.Folder.PathName);
+    CurrentProject.GetConfigFrom(lstFiles.Folder.PathName);
     RefreshProjectFiles;
   end;
 end;
@@ -311,9 +332,9 @@ end;
 procedure TProjectForm.RefreshProjectFiles;
 begin
   //编辑相关类别的文件
-  if System.SysUtils.DirectoryExists(CurrentProjectRec.RootPath) then
+  if System.SysUtils.DirectoryExists(CurrentProject.RootPath) then
   begin
-    lblProjectName.Caption := '当前项目路径：' + CurrentProjectRec.RootPath;
+    lblProjectName.Caption := '当前项目路径：' + CurrentProject.RootPath;
   end
   else
   begin
@@ -328,7 +349,7 @@ begin
   begin
     if TFileUtil.CreateFile(ADir + '\project.json') <> INVALID_HANDLE_VALUE then
     begin
-      CurrentProjectRec := TProjectUtil.GetConfigFrom(ADir);
+      CurrentProject.GetConfigFrom(ADir);
       RefreshProjectFiles;
     end;
   end;

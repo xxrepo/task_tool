@@ -25,9 +25,14 @@ type
     function GetStepDataFrom(AData: TStepData; AParamsRef: TStringList): TStepData; overload;
     function GetInParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; virtual;
     function GetTaskParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; virtual;
+    function GetParamValueFromStepData(AStepData: TStepData; AFieldName,
+      ADefaultValue, AParamType: string): Variant;
+    function GetContextParamValue(AParamRef, AParamType: string;
+      ADefaultValue: Variant): Variant;
   protected
     FSubSteps: TJSONArray;
-    FTaskVar: TTaskVar;
+    FTaskBlock: TTaskBlock; //表明本step运行的所在的任务块
+    FTaskVar: TTaskVar;     //表明整个task的全局context环境
     FInData: TStepData;
     FOutData: TStepData;
 
@@ -52,6 +57,7 @@ type
   public
     property StepConfig: TStepConfig read FStepConfig write FStepConfig;
     property SubSteps: TJSONArray read FSubSteps write FSubSteps;
+    property TaskBlock: TTaskBlock read FTaskBlock write FTaskBlock;
     property TaskVar: TTaskVar read GetTaskVar write SetTaskVar;
     property InData: TStepData read GetInData write SetInData;
     property OudData: TStepData read GetOutData write SetOutData;
@@ -73,14 +79,9 @@ type
 
   TStepNull = type TStepBasic;
 
-//  procedure StartStep(AStepConfigJson: TJSONObject; AInData: PStepData; const ATaskVar: TTaskVar);
-
 implementation
 
-uses uFunctions, uDefines, uExceptions, uStepFactory, System.StrUtils, uFileUtil;
-
-
-
+uses uFunctions, uDefines, uExceptions, uStepFactory, System.StrUtils, uFileUtil, uTaskDefine;
 
 
 { TStepBasic }
@@ -120,7 +121,7 @@ end;
 
 function TStepBasic.FormatLogMsg(ALogMsg: string): string;
 begin
-  Result := '[' + TaskVar.TaskVarRec.TaskName + '][' + FStepConfig.StepTitle + ']：' + ALogMsg;
+  Result := '[' + TaskVar.TaskVarRec.TaskName + '][' + FTaskBlock.BlockName + '][' + FStepConfig.StepTitle + ']：' + ALogMsg;
 end;
 
 function TStepBasic.GetInData: TStepData;
@@ -208,6 +209,10 @@ begin
       else if LParamRef = 'global' then
       begin
         Result := TaskVar.GlobalVar.GetParamValue(LParamNames.DelimitedText, AParamType, ADefaultValue);
+      end
+      else if LParamRef = 'context' then
+      begin
+        Result := GetContextParamValue(LParamNames.DelimitedText, AParamType, ADefaultValue);
       end;
     end
     else if LParamNames.Count = 1 then
@@ -221,6 +226,36 @@ begin
   Result := VariantValueByDataType(Result, AParamType);
 end;
 
+
+
+function TStepBasic.GetContextParamValue(AParamRef, AParamType: string;
+  ADefaultValue: Variant): Variant;
+var
+  LStepData: TStepData;
+  LParamNames: TStringList;
+  LJson: TJSONObject;
+  LFieldName: string;
+begin
+  Result := ADefaultValue;
+  LParamNames := TStringList.Create;
+  try
+    LParamNames.Delimiter := '.';
+    LParamNames.DelimitedText := AParamRef;
+    if LParamNames.Count = 1 then
+      LParamNames.Add('*');
+
+    if LParamNames.Count > 1 then
+    begin
+      LFieldName := LParamNames.Strings[LParamNames.Count - 1];
+      LParamNames.Delete(LParamNames.Count - 1);
+      LStepData := GetStepDataFrom('context.' + LParamNames.DelimitedText);
+
+      Result := GetParamValueFromStepData(LStepData, LFieldName, ADefaultValue, AParamType);
+    end;
+  finally
+    LParamNames.Free;
+  end;
+end;
 
 
 function TStepBasic.GetSelfParamValue(AParamRef, AParamType: string;
@@ -262,12 +297,7 @@ begin
       LStepData := FInData;
     end;
 
-    LJson := TJSONObject.ParseJSONValue(LStepData.Data) as TJSONObject;
-    if LJson <> nil then
-    begin
-      Result := GetJsonObjectValue(LJson, LFieldName, ADefaultValue);
-      LJson.Free;
-    end;
+    Result := GetParamValueFromStepData(LStepData, LFieldName, ADefaultValue, AParamType);
   finally
     LParamNames.Free;
   end;
@@ -288,28 +318,41 @@ begin
     LParamNames.Delimiter := '.';
     LParamNames.DelimitedText := AParamRef;
 
+    if LParamNames.Count = 1 then
+      LParamNames.Add('*');
+
     if LParamNames.Count > 1 then
     begin
       LFieldName := LParamNames.Strings[LParamNames.Count - 1];
       LParamNames.Delete(LParamNames.Count - 1);
       LStepData := GetStepDataFrom('task.' + LParamNames.DelimitedText);
-      if LFieldName = '*' then
-      begin
-        Result := LStepData.Data;
-      end
-      else
-      begin
-        LJson := TJSONObject.ParseJSONValue(LStepData.Data) as TJSONObject;
-        if LJson <> nil then
-        begin
-          Result := GetJsonObjectValue(LJson, LFieldName, ADefaultValue, AParamType);
 
-          LJson.Free;
-        end;
-      end;
+      Result := GetParamValueFromStepData(LStepData, LFieldName, ADefaultValue, AParamType);
     end;
   finally
     LParamNames.Free;
+  end;
+end;
+
+function TStepBasic.GetParamValueFromStepData(AStepData: TStepData; AFieldName: string; ADefaultValue: string; AParamType: string): Variant;
+var
+  LJson: TJSONObject;
+begin
+  Result := ADefaultValue;
+
+  if AFieldName = '*' then
+  begin
+    Result := AStepData.Data;
+  end
+  else
+  begin
+    LJson := TJSONObject.ParseJSONValue(AStepData.Data) as TJSONObject;
+    if LJson <> nil then
+    begin
+      Result := GetJsonObjectValue(LJson, AFieldName, ADefaultValue, AParamType);
+
+      LJson.Free;
+    end;
   end;
 end;
 
@@ -355,6 +398,18 @@ begin
       begin
         Result.DataType := sdtText;
         Result.Data := TaskVar.GlobalVar.Values;
+      end
+      else if LParamRef = 'context' then
+      begin
+        if LParamNames.Count = 0 then
+        begin
+          StopExceptionRaise('获取context.的数据必须包含具体Step的名称');
+        end
+        else
+        begin
+          Result := TaskVar.GetContextStepData(LParamNames.Strings[0]);
+          LParamNames.Delete(0);
+        end;
       end;
 
       //对于更加有深度的数据集获取，需要调用进一步的路径参数
@@ -482,7 +537,7 @@ begin
       if (AChildStepTitle <> '')
           and (GetJsonObjectValue(LStepConfigJson, 'step_title') <> AChildStepTitle) then Continue;
 
-      TaskVar.StartStep(LStepConfigJson, @FOutData);
+      TaskVar.StartStep(TaskBlock, LStepConfigJson, @FOutData);
     end;
   end;
 end;

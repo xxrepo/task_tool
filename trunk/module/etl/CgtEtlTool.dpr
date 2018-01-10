@@ -75,7 +75,9 @@ uses
   uStepJson2DataSet in 'steps\uStepJson2DataSet.pas',
   uStepJson2DataSetForm in 'steps\uStepJson2DataSetForm.pas' {StepJsonDataSetForm},
   uDBQueryResultForm in 'steps\database\uDBQueryResultForm.pas' {DBQueryResultForm},
-  uBasicLogForm in '..\..\core\basic\uBasicLogForm.pas' {BasicLogForm};
+  uBasicLogForm in '..\..\core\basic\uBasicLogForm.pas' {BasicLogForm},
+  uTaskDefine in 'comm\uTaskDefine.pas',
+  uTaskStepSourceForm in 'forms\uTaskStepSourceForm.pas' {TaskStepSourceForm};
 
 {$R *.res}
 
@@ -93,6 +95,7 @@ begin
 
   Application.CreateForm(TProjectForm, ProjectForm);
   Application.CreateForm(TBasicLogForm, BasicLogForm);
+  Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

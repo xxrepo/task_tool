@@ -15,6 +15,7 @@ type
     redtLog: TRichEdit;
     procedure MSGLoggerHandler(var AMsg: TMessage); message VV_MSG_LOGGER;
     procedure SetRichEditLineColor(AEditor: TRichEdit; ALine: Integer;AColor: TColor);
+    procedure btnClearLogClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,6 +36,12 @@ begin
   redtLog.SelAttributes.Color := AColor; // 设为需要的字体大小
 end;
 
+
+procedure TBasicLogForm.btnClearLogClick(Sender: TObject);
+begin
+  inherited;
+  redtLog.Clear;
+end;
 
 procedure TBasicLogForm.MSGLoggerHandler(var AMsg: TMessage);
 var

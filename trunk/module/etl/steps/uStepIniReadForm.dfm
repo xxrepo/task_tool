@@ -27,6 +27,8 @@ inherited StepIniReadForm: TStepIniReadForm
     ExplicitHeight = 419
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitWidth = 706
       ExplicitHeight = 392
       object lbl2: TLabel [1]
@@ -147,6 +149,15 @@ inherited StepIniReadForm: TStepIniReadForm
         Height = 25
         DataSource = dsParams
         TabOrder = 4
+      end
+      object btnClearParams: TBitBtn
+        Left = 258
+        Top = 356
+        Width = 81
+        Height = 25
+        Caption = #28165#38500
+        TabOrder = 7
+        OnClick = btnClearParamsClick
       end
     end
   end

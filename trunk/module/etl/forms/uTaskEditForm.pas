@@ -9,7 +9,7 @@ uses
   RzListVw, Vcl.Menus, RzCommon, Data.DB, Datasnap.DBClient, DBGridEhGrouping,
   ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh,
   DBGridEh, RzTreeVw, System.JSON, uStepDefines, Vcl.Mask, RzEdit, RzBtnEdt, uTask,
-  Vcl.Buttons, uBasicLogForm;
+  Vcl.Buttons, uBasicLogForm, uTaskVar, uTaskDefine;
 
 type
   TTaskEditForm = class(TBasicLogForm)
@@ -30,6 +30,7 @@ type
     dlgOpenTask: TOpenDialog;
     N1: TMenuItem;
     RunToStep: TMenuItem;
+    ViewStepConfigSource: TMenuItem;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -41,13 +42,15 @@ type
     procedure chktrTaskStepsDblClick(Sender: TObject);
     procedure StepDelClick(Sender: TObject);
     procedure SaveNodeAsSubTaskClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure chktrTaskStepsCollapsing(Sender: TObject; Node: TTreeNode;
       var AllowCollapse: Boolean);
     procedure CopyNodeClick(Sender: TObject);
     procedure PasteNodeClick(Sender: TObject);
     procedure RunToStepClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure ViewStepConfigSourceClick(Sender: TObject);
   private
+    CurrentTask: TTask; //所在的主任务
     procedure MakeTaskTree(ATaskStepsJsonStr: string);
     function GetNodeData(ANode: TTreeNode): TJSONObject;
     function GetNodeJsonStr(ANode: TTreeNode): string;
@@ -58,8 +61,11 @@ type
     { Private declarations }
   public
     { Public declarations }
-    CurrentTask: TTask;
-    procedure ConfigTask(ATaskFile: string);
+    TaskBlock: TTaskBlock; //标记当前的任务块
+    EditingTaskConfigRec: TTaskCongfigRec;    //表明当前正在编辑的资料
+    EntryTaskConfigRec: TTaskCongfigRec;
+
+    procedure ConfigTask(ATaskFile: string; ATaskBlock: PTaskBlock = nil);
   end;
 
 var
@@ -69,7 +75,7 @@ implementation
 
 uses
   uDefines, uFunctions, uStepTypeSelectForm, uDatabasesForm, uStepBasicForm, uStepFormFactory,
-  uFileUtil, uDesignTimeDefines, Vcl.Clipbrd, uStepBasic;
+  uFileUtil, uDesignTimeDefines, Vcl.Clipbrd, uStepBasic, uTaskStepSourceForm;
 
 {$R *.dfm}
 
@@ -81,7 +87,7 @@ begin
   inherited;
   if chktrTaskSteps.Selected = nil then Exit;
   
-  dlgOpenTask.InitialDir := CurrentProjectRec.RootPath + 'task\';
+  dlgOpenTask.InitialDir := CurrentProject.RootPath + 'task\';
   if dlgOpenTask.Execute then
   begin
     if not FileExists(dlgOpenTask.FileName) then
@@ -102,8 +108,8 @@ begin
 
     LSubTaskConfigRec.FileName := dlgOpenTask.FileName;
     LSubTaskConfigRec.TaskName := ChangeFileExt(ExtractFileName(LSubTaskConfigRec.FileName), '');
-    LSubTaskConfigRec.Version := CurrentTask.TaskConfigRec.Version;
-    LSubTaskConfigRec.Auth := CurrentTask.TaskConfigRec.Auth;
+    LSubTaskConfigRec.Version := EditingTaskConfigRec.Version;
+    LSubTaskConfigRec.Auth := EditingTaskConfigRec.Auth;
     LSubTaskConfigRec.StepsStr := GetNodeJsonStr(chktrTaskSteps.Selected);
 
     TTaskUtil.WriteConfigTo(LSubTaskConfigRec, LSubTaskConfigRec.FileName);
@@ -149,41 +155,13 @@ begin
           LStep.MakeStepConfigJson(LStepConfigJson);
           LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
 
-          chktrTaskSteps.Items.AddChildObject(LNode, LStep.StepConfig.StepTitle, LStepData);
+          chktrTaskSteps.Items.AddChildObject(LNode, LStep.StepConfig.StepTitle, LStepData).StateIndex := 2;
           chktrTaskSteps.FullExpand;
         finally
           LStepConfigJson.Free;
           LStep.Free;
         end;
       end;
-
-      //根据StepType启用不同的Steps属性设置窗口
-//      LForm := TStepFormFactory.GetStepSettingForm(StepType, CurrentTask.TaskVar);
-//      if LForm <> nil then
-//      begin
-//        //LForm.ParseStepConfig('');
-//        if LForm.ShowModal = mrOk then
-//        begin
-//          LStepConfigJson := TJSONObject.Create;
-//          try
-//            //执行画布添加节点
-//            LStepData := TStepConfig.Create;
-//            LStepData.StepType := StepType;
-//            LStepData.StepTitle := LForm.Step.StepConfig.StepTitle;
-//            LStepData.Description := LForm.Step.StepConfig.Description;
-//            LStepData.RegDataToTask := LForm.Step.StepConfig.RegDataToTask;
-//
-//            LForm.Step.MakeStepConfigJson(LStepConfigJson);
-//            LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
-//
-//            chktrTaskSteps.Items.AddChildObject(LNode, LForm.Step.StepConfig.StepTitle, LStepData);
-//            chktrTaskSteps.FullExpand;
-//          finally
-//            LStepConfigJson.Free;
-//          end;
-//        end;
-//        LForm.Free;
-//      end;
     end;
   finally
     Free;
@@ -202,6 +180,24 @@ begin
   end;
 end;
 
+
+procedure TTaskEditForm.ViewStepConfigSourceClick(Sender: TObject);
+var
+  LStepConfig: TStepConfig;
+begin
+  inherited;
+  if chktrTaskSteps.Selected = nil then Exit;
+
+  with TTaskStepSourceForm.Create(nil) do
+  try
+    LStepConfig := TStepConfig(chktrTaskSteps.Selected.Data);
+    if LStepConfig <> nil then
+      redtSource.Lines.Text := LStepConfig.ConfigJson.ToString;
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
 
 function TTaskEditForm.GetNodeData(ANode: TTreeNode): TJSONObject;
 var
@@ -256,10 +252,13 @@ begin
   inherited;
   if chktrTaskSteps.Items.Count > 0 then
   begin
-    CurrentTask.TaskConfigRec.StepsStr := GetNodeJsonStr(chktrTaskSteps.Items[0]);
+    EditingTaskConfigRec.StepsStr := GetNodeJsonStr(chktrTaskSteps.Items[0]);
   end;
 
-  TTaskUtil.WriteConfigTo(CurrentTask.TaskConfigRec, CurrentTask.TaskConfigRec.FileName);
+  TTaskUtil.WriteConfigTo(EditingTaskConfigRec, EditingTaskConfigRec.FileName);
+
+  //重新加载
+  ConfigTask(EditingTaskConfigRec.FileName, @TaskBlock);
 end;
 
 
@@ -286,8 +285,8 @@ begin
   //根据StepData创建Step
   LForm := TStepFormFactory.GetStepSettingForm(LStepData.StepType, CurrentTask.TaskVar);
   if LForm <> nil then
-  begin
-    CurrentTask.TaskVar.DesignToStep(chktrTaskSteps.Selected.AbsoluteIndex);
+  try
+    CurrentTask.TaskVar.DesignToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);
     CurrentTask.Start;
     LForm.GetStepFromStepStack;
 
@@ -314,10 +313,12 @@ begin
 
         chktrTaskSteps.Selected.Text := LStepData.StepTitle;
       end;
-
     end;
+
+  finally
     LForm.Free;
   end;
+
 end;
 
 procedure TTaskEditForm.chktrTaskStepsDeletion(Sender: TObject;
@@ -371,20 +372,49 @@ begin
 end;
 
 
-procedure TTaskEditForm.ConfigTask(ATaskFile: string);
-var
-  LTaskConfigRec: TTaskCongfigRec;
+procedure TTaskEditForm.ConfigTask(ATaskFile: string; ATaskBlock: PTaskBlock = nil);
+
+  function ParseTaskConfig(AFile: string): TTaskCongfigRec;
+  begin
+    Result := TTaskUtil.ReadConfigFrom(AFile);
+    Result.RunBasePath := CurrentProject.RootPath;
+    Result.DBsConfigFile := CurrentProject.DbsFile;
+  end;
+
 begin
+  if CurrentTask <> nil then
+    FreeAndNil(CurrentTask);
+
+  if ATaskBlock <> nil then
+  begin
+    TaskBlock.BlockName := ATaskBlock.BlockName;
+    TaskBlock._ENTRY_FILE := ATaskBlock._ENTRY_FILE;
+  end
+  else
+  begin
+    TaskBlock.BlockName := '';
+    TaskBlock._ENTRY_FILE := ATaskFile;
+  end;
+
   //对当前的current_task进行处理
-  LTaskConfigRec := TTaskUtil.ReadConfigFrom(ATaskFile);
-  LTaskConfigRec.RunBasePath := CurrentProjectRec.RootPath;
-  LTaskConfigRec.DBsConfigFile := CurrentProjectRec.DbsFile;
+  EditingTaskConfigRec := ParseTaskConfig(ATaskFile);
+  EntryTaskConfigRec := ParseTaskConfig(TaskBlock._ENTRY_FILE);
 
-  CurrentTask := TTask.Create(LTaskConfigRec);
+  CurrentTask := TTask.Create(EntryTaskConfigRec);
+  //同时加载任务执行需要依赖的GlobalVar
+  CurrentTask.TaskVar.GlobalVar := CurrentProject.GlobalVar;
 
-  MakeTaskTree(CurrentTask.TaskConfigRec.StepsStr);
-  Self.Caption := Self.Caption + ' -- ' + CurrentTask.TaskConfigRec.TaskName;
+  MakeTaskTree(EditingTaskConfigRec.StepsStr);
+  Self.Caption := '任务设计：' + TaskBlock.BlockName + '/' + EditingTaskConfigRec.TaskName;
 end;
+
+
+procedure TTaskEditForm.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FreeAndNil(CurrentTask);
+end;
+
 
 procedure TTaskEditForm.CopyNodeClick(Sender: TObject);
 var
@@ -401,12 +431,6 @@ begin
   Clipboard.SetTextBuf(PChar(LNodeStr));
 end;
 
-procedure TTaskEditForm.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-  inherited;
-  if CurrentTask <> nil then
-    FreeAndNil(CurrentTask);
-end;
 
 
 //实现画图
@@ -454,7 +478,8 @@ begin
     //LJob.Task.TaskVar.GlobalVar := FGlobalVar;
     //LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     try
-      CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Selected.AbsoluteIndex);
+      CurrentTask.TaskVar.Logger.Force('运行至当前Step：' + TaskBlock.BlockName + '/' + chktrTaskSteps.Selected.Text);
+      CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);
       CurrentTask.Start;
     except
       on E: Exception do

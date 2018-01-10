@@ -8,10 +8,10 @@ uses
   Vcl.ExtCtrls, RzPanel, DBGridEhGrouping, ToolCtrlsEh, DBGridEhToolCtrls,
   DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh, Data.DB,
   Datasnap.DBClient, Vcl.Menus, uJob, Vcl.DBCtrls, Vcl.ComCtrls, RzListVw,
-  RzShellCtrls, uDesignTimeDefines, RzSplit, uFileLogger;
+  RzShellCtrls, uDesignTimeDefines, RzSplit, uFileLogger, uBasicLogForm;
 
 type
-  TJobsForm = class(TBasicForm)
+  TJobsForm = class(TBasicLogForm)
     rzpnl1: TRzPanel;
     cdsJobs: TClientDataSet;
     dsJobs: TDataSource;
@@ -26,15 +26,11 @@ type
     dlgOpenTaskFile: TOpenDialog;
     btnLoadJobs: TBitBtn;
     tmrJobsSchedule: TTimer;
-    rzspltr2: TRzSplitter;
     rzspltr1: TRzSplitter;
     dbgrdhJobs: TDBGridEh;
     rzpnl2: TRzPanel;
     pnl1: TPanel;
     lstLogs: TRzShellList;
-    redtLog: TRichEdit;
-    rzpnl3: TRzPanel;
-    btnClearLog: TBitBtn;
     btnEnableAll: TBitBtn;
     procedure DeleteTJobClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -48,8 +44,6 @@ type
     procedure tmrJobsScheduleTimer(Sender: TObject);
     procedure btnStartAllClick(Sender: TObject);
 
-    procedure MSGLoggerHandler(var AMsg: TMessage); message VV_MSG_LOGGER;
-    procedure btnClearLogClick(Sender: TObject);
     procedure dbgrdhJobsColumns3CellButtons0Click(Sender: TObject;
       var Handled: Boolean);
     procedure dbgrdhJobsColumns2CellButtons0Click(Sender: TObject;
@@ -64,8 +58,6 @@ type
 
     procedure RefreshData;
     procedure SaveData;
-    procedure SetRichEditLineColor(AEditor: TRichEdit; ALine: Integer;
-      AColor: TColor);
   public
     procedure ConfigJobs(AJobsConfigFile: string);
   end;
@@ -75,50 +67,10 @@ var
 
 implementation
 
-uses uDefines, uFunctions, uJobScheduleForm, uTaskEditForm, uFileUtil;
+uses uDefines, uFunctions, uJobScheduleForm, uTaskEditForm, uFileUtil, uTaskVar;
 
 {$R *.dfm}
 
-
-procedure TJobsForm.SetRichEditLineColor(AEditor: TRichEdit; ALine: Integer; AColor: TColor);
-begin
-  redtLog.SelStart := SendMessage(redtLog.Handle, EM_LINEINDEX, ALine, 0); // 选中这一行文字
-  redtLog.SelLength := Length(redtLog.Lines.Strings[ALine]);
-  redtLog.SelAttributes.Color := AColor; // 设为需要的字体大小
-end;
-
-
-procedure TJobsForm.MSGLoggerHandler(var AMsg: TMessage);
-var
-  LMsg: PChar;
-  LLine: Integer;
-begin
-  LMsg := PChar(AMsg.WParam);
-  //更新状态
-  LLine := redtLog.Lines.Add(LMsg);
-
-  if Pos('[WARN]', LMsg) > 0 then
-  begin
-    SetRichEditLineColor(redtLog, LLine, clWebOrangeRed);
-  end
-  else if (Pos('[ERROR]', LMsg) > 0) or (Pos('[FATAL]', LMsg) > 0)
-          or (Pos('错误', LMsg) > 0) or (Pos('失败', LMsg) > 0)
-          or (Pos('异常', LMsg) > 0)  then
-  begin
-    SetRichEditLineColor(redtLog, LLine, clWebRed);
-  end
-  else if Pos('[FORCE]', LMsg) > 0 then
-  begin
-    SetRichEditLineColor(redtLog, LLine, clWebGreen);
-  end;
-end;
-
-
-procedure TJobsForm.btnClearLogClick(Sender: TObject);
-begin
-  inherited;
-  redtLog.Lines.Clear;
-end;
 
 procedure TJobsForm.btnEnableAllClick(Sender: TObject);
 var
@@ -210,7 +162,7 @@ procedure TJobsForm.dbgrdhJobsColumns2CellButtons0Click(Sender: TObject;
   var Handled: Boolean);
 begin
   inherited;
-  dlgOpenTaskFile.InitialDir := CurrentProjectRec.RootPath;
+  dlgOpenTaskFile.InitialDir := CurrentProject.RootPath;
   if dlgOpenTaskFile.Execute then
   begin
     if FileExists(dlgOpenTaskFile.FileName) then
@@ -262,7 +214,7 @@ begin
   if cdsJobs.RecordCount > 0 then
   begin
     //获取当前的文件
-    LTaskFile := TFileUtil.GetAbsolutePathEx(CurrentProjectRec.RootPath, cdsJobs.FieldByName('task_file').AsString);
+    LTaskFile := TFileUtil.GetAbsolutePathEx(CurrentProject.RootPath, cdsJobs.FieldByName('task_file').AsString);
     if not FileExists(LTaskFile) then
     begin
       ShowMsg('任务文件不存在，请检查文件路径或者重新添加');
@@ -300,9 +252,9 @@ procedure TJobsForm.FormCreate(Sender: TObject);
 begin
   inherited;
   AppLogger.NoticeHandle := Handle;
-  JobMgr := TJobMgr.Create(CurrentProjectRec.JobsFile, 2);
+  JobMgr := TJobMgr.Create(CurrentProject.JobsFile, 2);
   JobMgr.CallerHandle := Handle;
-  lstLogs.Folder.PathName := CurrentProjectRec.RootPath + 'task_log\';
+  lstLogs.Folder.PathName := CurrentProject.RootPath + 'task_log\';
 end;
 
 procedure TJobsForm.FormDestroy(Sender: TObject);

@@ -3,9 +3,11 @@ unit uTask;
 interface
 
 uses
-  uTaskVar, System.JSON, uStepBasic, uStepDefines, System.SysUtils, System.Classes, System.Contnrs;
+  uTaskVar, System.JSON, uStepBasic, uStepDefines, System.SysUtils, System.Classes, System.Contnrs,
+  uTaskDefine;
 
 type
+
   TTaskUtil = class
   public
     class function ReadConfigFrom(ATaskFile: string): TTaskCongfigRec;
@@ -108,18 +110,23 @@ procedure TTask.Start;
 var
   LTaskConfigJson: TJSONObject;
   LInitInData: TStepData;
+  LTaskBlock: TTaskBlock;
 begin
   LTaskConfigJson := TJSONObject.ParseJSONValue(TaskConfigRec.StepsStr) as TJSONObject;
   if LTaskConfigJson = nil then
-    raise TaskConfigException.Create('task配置文件解析异常');
+    raise TaskConfigException.Create('task配置文件加载异常，请确认Task文件正常保存后再运行');
 
   try
+    //本入口是顶级BlockName的入口，所有task启动时的起始入口
+    LTaskBlock.BlockName := '';
+    LTaskBlock._ENTRY_FILE := TaskConfigRec.FileName;
+
     TaskVar.TaskVarRec.TaskName := TaskConfigRec.TaskName;
     TaskVar.TaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
     try
       //清空调用栈
       TaskVar.InitStartContext;
-      TaskVar.StartStep(LTaskConfigJson, @LInitInData);
+      TaskVar.StartStep(LTaskBlock, LTaskConfigJson, @LInitInData);
     except
       on E: StepException do
       begin

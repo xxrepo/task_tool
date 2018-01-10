@@ -31,7 +31,7 @@ var
 
 implementation
 
-uses uDesignTimeDefines, uFunctions, uTaskEditForm;
+uses uDesignTimeDefines, uFunctions, uTaskEditForm, uTaskVar, uTask;
 
 {$R *.dfm}
 
@@ -45,14 +45,27 @@ begin
 end;
 
 procedure TStepSubTaskForm.btnEditClick(Sender: TObject);
+var
+  LTaskBlock: PTaskBlock;
 begin
   inherited;
+
+  if (Step = nil) or (Step.StepConfig = nil) then
+  begin
+    ShowMsg('Step参数加载异常，请保存任务关闭窗口后重试');
+    Exit;
+  end;
+
   //获取当前的文件
   with TTaskEditForm.Create(nil) do
   try
-    ConfigTask(TDesignUtil.GetRealAbsolutePath(btnFileName.Text));
+    New(LTaskBlock);
+    LTaskBlock^.BlockName := Step.TaskBlock.BlockName + '/' + Step.StepConfig.StepTitle;
+    LTaskBlock^._ENTRY_FILE := Step.TaskBlock._ENTRY_FILE;
+    ConfigTask(TDesignUtil.GetRealAbsolutePath(btnFileName.Text), LTaskBlock);
     ShowModal;
   finally
+    Dispose(LTaskBlock);
     Free;
   end;
 end;

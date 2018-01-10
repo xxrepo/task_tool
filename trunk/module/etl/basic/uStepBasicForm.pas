@@ -41,14 +41,8 @@ uses uFunctions, uDesignTimeDefines, uFileUtil;
 {$R *.dfm}
 
 procedure TStepBasicForm.GetStepFromStepStack;
-var
-  idx: Integer;
 begin
-  idx := TaskVar.StepStack.IndexOf(IntToStr(TaskVar.ToStepId));
-  if idx > -1 then
-  begin
-    Step := TStepBasic(TaskVar.StepStack.Objects[idx]);
-  end;
+  Step := TStepBasic(TaskVar.GetStepFromStack(TaskVar.ToStep));
 end;
 
 

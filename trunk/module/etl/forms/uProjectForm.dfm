@@ -3,6 +3,7 @@ inherited ProjectForm: TProjectForm
   ClientHeight = 520
   ClientWidth = 759
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   ExplicitWidth = 775
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -105,7 +106,7 @@ inherited ProjectForm: TProjectForm
     Top = 158
   end
   object pmProjectFile: TPopupMenu
-    Left = 701
+    Left = 703
     Top = 385
     object GlobalVarSetting: TMenuItem
       Caption = #20840#23616#21442#25968#35774#32622

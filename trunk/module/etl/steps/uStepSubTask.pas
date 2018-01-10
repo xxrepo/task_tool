@@ -12,6 +12,7 @@ type
     FSubTaskRealAbsFile: string;
   protected
     procedure StartSelf; override;
+    procedure StartSelfDesign; override;
   public
     procedure ParseStepConfig(AConfigJsonStr: string); override;
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); override;
@@ -22,7 +23,8 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, System.Classes, System.SysUtils, uExceptions, uTask, uStepDefines, uTaskVar;
+  uDefines, uFunctions, System.Classes, System.SysUtils, uExceptions, uTask, uStepDefines,
+  uTaskVar, uTaskDefine;
 
 { TStepQuery }
 
@@ -41,10 +43,42 @@ begin
 end;
 
 
+procedure TStepSubTask.StartSelfDesign;
+var
+  LStepConfigJson: TJSONObject;
+  LTaskConfigRec: TTaskCongfigRec;
+  LTaskBlock: TTaskBlock;
+  LTaskStep: TTaskStep;
+begin
+  if not FileExists(FSubTaskRealAbsFile) then
+  begin
+    Exit;
+  end;
+
+  LTaskStep.OwnerBlock := TaskBlock;
+  LTaskStep.Id := StepConfig.StepId;
+  if TaskVar.IsToStep(LTaskStep) then Exit;
+
+  TaskVar.Logger.Debug(FormatLogMsg('执行文件子任务：' + FSubTaskFile));
+
+  LTaskConfigRec := TTaskUtil.ReadConfigFrom(FSubTaskRealAbsFile);
+
+  LStepConfigJson := TJSONObject.ParseJSONValue(LTaskConfigRec.StepsStr) as TJSONObject;
+  try
+    LTaskBlock.BlockName := TaskBlock.BlockName + '/' + StepConfig.StepTitle;
+    LTaskBlock._ENTRY_FILE := TaskBlock._ENTRY_FILE;
+    TaskVar.StartStep(LTaskBlock, LStepConfigJson, @FInData);
+  finally
+    if LStepConfigJson <> nil then
+      LStepConfigJson.Free;
+  end;
+end;
+
 procedure TStepSubTask.StartSelf;
 var
   LStepConfigJson: TJSONObject;
   LTaskConfigRec: TTaskCongfigRec;
+  LTaskBlock: TTaskBlock;
 begin
   try
     CheckTaskStatus;
@@ -61,7 +95,9 @@ begin
 
     LStepConfigJson := TJSONObject.ParseJSONValue(LTaskConfigRec.StepsStr) as TJSONObject;
     try
-      TaskVar.StartStep(LStepConfigJson, @FInData);
+      LTaskBlock.BlockName := TaskBlock.BlockName + '/' + StepConfig.StepTitle;
+      LTaskBlock._ENTRY_FILE := TaskBlock._ENTRY_FILE;
+      TaskVar.StartStep(LTaskBlock, LStepConfigJson, @FInData);
     finally
       if LStepConfigJson <> nil then
         LStepConfigJson.Free;

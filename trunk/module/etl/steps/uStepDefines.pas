@@ -5,22 +5,6 @@ interface
 uses System.JSON, System.SysUtils;
 
 type
-  TTaskRunStatus = (trsUnknown, trsRunning, trsStop, trsSuspend);
-
-  TTaskCongfigRec = record
-    FileName: string;
-    TaskName: string;
-    Description: string;
-    Version: string;
-    Auth: string;
-
-    StepsStr: string;
-
-    //这两项来自于jobmgr运行时传入
-    RunBasePath: string;
-    DBsConfigFile: string;
-  end;
-
   //Step中数据的几个类型，实际上目前仅仅支持文本型，暂时不做其他处理
   TStepDataType = (sdtText);
 
@@ -58,6 +42,7 @@ type
     procedure SetConfigJsonStr(const Value: string);
   public
     StepId: Integer;
+
     StepType: TStepType;
     StepTitle: string;
     Description: string;

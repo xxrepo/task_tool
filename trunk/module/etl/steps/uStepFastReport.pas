@@ -96,7 +96,7 @@ var
   i: Integer;
 begin
   try
-    RegisterClass(TfrxDBDataSet);
+    //RegisterClass(TfrxDBDataSet);
     FReporter := TfrxReport.Create(nil);
 
     //创建datasets
@@ -118,8 +118,8 @@ begin
       end;
     end;
 
-    //创建加载各个variables
-    if (TaskVar.ToStepId = StepConfig.StepId) and FileExists(FAbsoluteReportFile) then
+    //创建加载各个variables  (TaskVar.ToStepId = StepConfig.StepId) and
+    if FileExists(FAbsoluteReportFile) then
       FReporter.LoadFromFile(FAbsoluteReportFile);
   finally
     if LDBDataSetsJsonArray <> nil then
@@ -137,7 +137,7 @@ begin
   try
     CheckTaskStatus;
 
-    RegisterClass(TfrxDBDataSet);
+    //RegisterClass(TfrxDBDataSet);
     FReporter := TfrxReport.Create(nil);
 
     //创建datasets

@@ -90,6 +90,10 @@ inherited StepQueryForm: TStepQueryForm
     end
     object rztbshtParams: TRzTabSheet
       Caption = 'SQL'#20837#21442#32465#23450
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object lblParams: TLabel
         Left = 40
         Top = 24

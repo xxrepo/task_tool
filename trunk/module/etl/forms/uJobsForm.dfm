@@ -2,119 +2,46 @@ inherited JobsForm: TJobsForm
   Caption = #25191#34892#24037#20316#31649#29702
   ClientHeight = 693
   ClientWidth = 1168
+  Font.Height = -16
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  ExplicitTop = 8
   ExplicitWidth = 1184
   ExplicitHeight = 732
   PixelsPerInch = 96
-  TextHeight = 17
-  object rzpnl1: TRzPanel
-    Left = 0
-    Top = 0
-    Width = 1168
-    Height = 53
-    Align = alTop
-    BorderOuter = fsFlat
-    TabOrder = 0
-    object btnSave: TBitBtn
-      Left = 266
-      Top = 7
-      Width = 77
-      Height = 36
-      Caption = #20445#23384
-      TabOrder = 0
-      OnClick = btnSaveClick
-    end
-    object btnStartJob: TBitBtn
-      Left = 582
-      Top = 7
-      Width = 119
-      Height = 36
-      Caption = #21551#21160#24403#21069#24037#20316
-      TabOrder = 1
-      OnClick = btnStartJobClick
-    end
-    object btnStartAll: TBitBtn
-      Left = 456
-      Top = 7
-      Width = 113
-      Height = 36
-      Caption = #21551#21160#20840#37096#24037#20316
-      TabOrder = 2
-      OnClick = btnStartAllClick
-    end
-    object btnStopJob: TBitBtn
-      Left = 713
-      Top = 7
-      Width = 118
-      Height = 36
-      Caption = #20572#27490#24403#21069#24037#20316
-      TabOrder = 3
-      OnClick = btnStopJobClick
-    end
-    object dbnvgrJobs: TDBNavigator
-      Left = 6
-      Top = 7
-      Width = 250
-      Height = 36
-      DataSource = dsJobs
-      TabOrder = 4
-    end
-    object btnLoadJobs: TBitBtn
-      Left = 349
-      Top = 7
-      Width = 78
-      Height = 36
-      Caption = #21047#26032
-      TabOrder = 5
-      OnClick = btnLoadJobsClick
-    end
-    object btnEnableAll: TBitBtn
-      Left = 844
-      Top = 7
-      Width = 83
-      Height = 36
-      Caption = #20840#37096#21551#29992
-      TabOrder = 6
-      OnClick = btnEnableAllClick
-    end
-  end
-  object rzspltr2: TRzSplitter
-    Left = 0
+  TextHeight = 19
+  inherited rzspltrLogForm: TRzSplitter
     Top = 53
     Width = 1168
     Height = 640
-    Orientation = orVertical
-    Position = 436
-    Percent = 68
-    Align = alClient
+    Percent = 61
     TabOrder = 1
-    BarSize = (
-      0
-      436
-      1168
-      440)
+    ExplicitTop = 53
+    ExplicitWidth = 1168
+    ExplicitHeight = 640
     UpperLeftControls = (
       rzspltr1)
     LowerRightControls = (
       redtLog
       rzpnl3)
-    object rzspltr1: TRzSplitter
+    object rzspltr1: TRzSplitter [0]
       Left = 0
       Top = 0
       Width = 1168
-      Height = 436
+      Height = 389
       Position = 874
       Percent = 75
       UsePercent = True
       Align = alClient
       TabOrder = 0
+      ExplicitTop = 53
+      ExplicitHeight = 640
       BarSize = (
         874
         0
         878
-        436)
+        389)
       UpperLeftControls = (
         dbgrdhJobs)
       LowerRightControls = (
@@ -123,7 +50,7 @@ inherited JobsForm: TJobsForm
         Left = 0
         Top = 0
         Width = 874
-        Height = 436
+        Height = 389
         Align = alClient
         BorderStyle = bsNone
         DataSource = dsJobs
@@ -224,10 +151,11 @@ inherited JobsForm: TJobsForm
         Left = 0
         Top = 0
         Width = 290
-        Height = 436
+        Height = 389
         Align = alClient
         BorderOuter = fsFlat
         TabOrder = 0
+        ExplicitHeight = 640
         object pnl1: TPanel
           Left = 1
           Top = 1
@@ -241,7 +169,7 @@ inherited JobsForm: TJobsForm
           Left = 1
           Top = 42
           Width = 288
-          Height = 393
+          Height = 346
           Align = alClient
           BorderStyle = bsNone
           FileFilter = '*.log'
@@ -251,40 +179,86 @@ inherited JobsForm: TJobsForm
         end
       end
     end
-    object redtLog: TRichEdit
-      Left = 0
-      Top = 45
+    inherited redtLog: TRichEdit
       Width = 1168
-      Height = 155
-      Align = alClient
-      BorderStyle = bsNone
-      Font.Charset = GB2312_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -14
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentFont = False
-      ScrollBars = ssBoth
-      TabOrder = 0
-      Zoom = 100
+      Height = 202
+      ExplicitWidth = 1168
+      ExplicitHeight = 202
     end
-    object rzpnl3: TRzPanel
-      Left = 0
-      Top = 0
+    inherited rzpnl3: TRzPanel
       Width = 1168
-      Height = 45
-      Align = alTop
-      BorderOuter = fsFlat
+      ExplicitWidth = 1168
+    end
+  end
+  object rzpnl1: TRzPanel
+    Left = 0
+    Top = 0
+    Width = 1168
+    Height = 53
+    Align = alTop
+    BorderOuter = fsFlat
+    TabOrder = 0
+    object btnSave: TBitBtn
+      Left = 266
+      Top = 7
+      Width = 77
+      Height = 36
+      Caption = #20445#23384
+      TabOrder = 0
+      OnClick = btnSaveClick
+    end
+    object btnStartJob: TBitBtn
+      Left = 582
+      Top = 7
+      Width = 119
+      Height = 36
+      Caption = #21551#21160#24403#21069#24037#20316
       TabOrder = 1
-      object btnClearLog: TBitBtn
-        Left = 12
-        Top = 8
-        Width = 99
-        Height = 31
-        Caption = #28165#38500#26085#24535
-        TabOrder = 0
-        OnClick = btnClearLogClick
-      end
+      OnClick = btnStartJobClick
+    end
+    object btnStartAll: TBitBtn
+      Left = 456
+      Top = 7
+      Width = 113
+      Height = 36
+      Caption = #21551#21160#20840#37096#24037#20316
+      TabOrder = 2
+      OnClick = btnStartAllClick
+    end
+    object btnStopJob: TBitBtn
+      Left = 713
+      Top = 7
+      Width = 118
+      Height = 36
+      Caption = #20572#27490#24403#21069#24037#20316
+      TabOrder = 3
+      OnClick = btnStopJobClick
+    end
+    object dbnvgrJobs: TDBNavigator
+      Left = 6
+      Top = 7
+      Width = 250
+      Height = 36
+      DataSource = dsJobs
+      TabOrder = 4
+    end
+    object btnLoadJobs: TBitBtn
+      Left = 349
+      Top = 7
+      Width = 78
+      Height = 36
+      Caption = #21047#26032
+      TabOrder = 5
+      OnClick = btnLoadJobsClick
+    end
+    object btnEnableAll: TBitBtn
+      Left = 844
+      Top = 7
+      Width = 83
+      Height = 36
+      Caption = #20840#37096#21551#29992
+      TabOrder = 6
+      OnClick = btnEnableAllClick
     end
   end
   object cdsJobs: TClientDataSet

@@ -3,7 +3,7 @@ unit uJob;
 interface
 
 uses System.Classes, uThreadQueueUtil, System.JSON, System.SysUtils, uTask, uStepDefines,
-    System.SyncObjs, uFileLogger, uGlobalVar;
+    System.SyncObjs, uFileLogger, uGlobalVar, uTaskDefine;
 
 type
   PJobRequest = ^TJobRequest;

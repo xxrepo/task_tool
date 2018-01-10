@@ -19,10 +19,8 @@ type
 
 
 var
-  CurrentProjectRec: TProjectConfigRec;
+  CurrentProject: TProject;
   ExePath: string;
-
-  //AppConfig: TAppConfig;
 
 
 implementation
@@ -39,12 +37,12 @@ end;
 
 class function TDesignUtil.GetRealAbsolutePath(ARelativePath: string): string;
 begin
-  Result := TFileUtil.GetAbsolutePathEx(CurrentProjectRec.RootPath, ARelativePath);
+  Result := TFileUtil.GetAbsolutePathEx(CurrentProject.RootPath, ARelativePath);
 end;
 
 class function TDesignUtil.GetRelativePathToProject(ARealPath: string): string;
 begin
-  Result := TFileUtil.GetRelativePath(CurrentProjectRec.RootPath, ARealPath);
+  Result := TFileUtil.GetRelativePath(CurrentProject.RootPath, ARealPath);
 end;
 
 end.

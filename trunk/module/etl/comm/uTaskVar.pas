@@ -3,7 +3,7 @@ unit uTaskVar;
 interface
 
 uses
-  uDbConMgr, System.Classes, uDefines, uStepDefines, uFileLogger, uGlobalVar,
+  uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
   System.SysUtils, System.JSON;
 
 type
@@ -12,6 +12,18 @@ type
     TaskName: string;
     RunBasePath: string;
     DbsFileName: string;
+  end;
+
+  PTaskBlock = ^TTaskBlock;
+
+  TTaskBlock = record
+    BlockName: string;
+    _ENTRY_FILE: string; //用于标记任务最开始执行的入口文件，主要对子任务调试时使用
+  end;
+
+  TTaskStep = record
+    OwnerBlock: TTaskBlock;
+    Id: Integer;
   end;
 
   TTaskMode = (tmNormal, tmDesigning, tmDebug);
@@ -24,14 +36,14 @@ type
 
     FStepStack: TStringList;
 
-    FToStepId: Integer;
+    FToStep: TTaskStep;
 
     FTaskMode: TTaskMode;
 
-    function PushStep(AStep: TObject): Integer;
-    procedure PopStep(AStep: TObject);
+    function PushStep(const ATaskStep: TTaskStep; const AStep: TObject): Integer;
+    procedure PopStep(const ATaskStep: TTaskStep);
     procedure PopSteps;
-
+    function GetTaskStepIdxName(ATaskStep: TTaskStep): string;
   public
     TaskVarRec: TTaskVarRec;
     GlobalVar: TGlobalVar;
@@ -43,6 +55,7 @@ type
 
     function RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
     function GetStepData(ADataRef: string): TStepData;
+    function GetContextStepData(ADataRef: string): TStepData;
     function RegObject(ARef: string; AObject: TObject): Integer;
     function GetObject(ARef: string): TObject;
 
@@ -51,15 +64,17 @@ type
 
 
     procedure InitStartContext;
-    procedure StartStep(AStepConfigJson: TJSONObject; AInData: PStepData);
+    procedure StartStep(const ATaskBlock: TTaskBlock; const AStepConfigJson: TJSONObject; const AInData: PStepData);
 
+    function IsToStep(ATaskStep: TTaskStep): Boolean;
+    function GetStepFromStack(ATaskStep: TTaskStep): TObject;
 
-    procedure DesignToStep(AStepId: Integer);
-    procedure DebugToStep(AStepId: Integer);
+    procedure DesignToStep(AStepId: Integer; ABlock: TTaskBlock);
+    procedure DebugToStep(AStepId: Integer; ABlock: TTaskBlock);
 
+    property Owner: TObject read FOwner;
     property RegistedObjectList: TStringList read FRegistedObjectList;
-    property StepStack: TStringList read FStepStack;
-    property ToStepId: Integer read FToStepId;
+    property ToStep: TTaskStep read FToStep;
   end;
 
 implementation
@@ -79,7 +94,9 @@ constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
   FStepStack := TStringList.Create;
 
-  FToStepId := -1;
+  FToStep.OwnerBlock.BlockName := '';
+  FToStep.Id := -1;
+
   FTaskMode := tmNormal;
 
   FOwner := AOwner;
@@ -96,16 +113,23 @@ begin
 end;
 
 
-procedure TTaskVar.DebugToStep(AStepId: Integer);
+procedure TTaskVar.DebugToStep(AStepId: Integer; ABlock: TTaskBlock);
 begin
-  FToStepId := AStepId;
+  FToStep.Id := AStepId;
+  FToStep.OwnerBlock := ABlock;
   FTaskMode := tmDebug;
 end;
 
-procedure TTaskVar.DesignToStep(AStepId: Integer);
+procedure TTaskVar.DesignToStep(AStepId: Integer; ABlock: TTaskBlock);
 begin
-  FToStepId := AStepId;
+  FToStep.Id := AStepId;
+  FToStep.OwnerBlock := ABlock;
   FTaskMode := tmDesigning;
+end;
+
+function TTaskVar.IsToStep(ATaskStep: TTaskStep): Boolean;
+begin
+  Result := (ATaskStep.OwnerBlock.BlockName = FToStep.OwnerBlock.BlockName) and (ATaskStep.Id = FToStep.Id);
 end;
 
 destructor TTaskVar.Destroy;
@@ -151,6 +175,22 @@ begin
 end;
 
 
+function TTaskVar.GetStepFromStack(ATaskStep: TTaskStep): TObject;
+var
+  idx: Integer;
+begin
+  Result := nil;
+  idx := FStepStack.IndexOf(GetTaskStepIdxName(ATaskStep));
+  if idx > -1 then
+    Result := FStepStack.Objects[idx];
+end;
+
+function TTaskVar.GetTaskStepIdxName(ATaskStep: TTaskStep): string;
+begin
+   Result := ATaskStep.OwnerBlock.BlockName + '/' + IntToStr(ATaskStep.Id);
+end;
+
+
 function TTaskVar.RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
 var
   LStepData: TStepDataStore;
@@ -169,6 +209,27 @@ begin
   LStepData.DataRef := ADataRef;
   LStepData.Value := ADataValue;
   Result := FStepDataList.AddObject(ADataRef, LStepData);
+end;
+
+function TTaskVar.GetContextStepData(ADataRef: string): TStepData;
+var
+  i: Integer;
+  LStep: TStepBasic;
+begin
+  Result.DataType := sdtText;
+  Result.Data := '';
+  for i := FStepStack.Count - 1 downto 0 do
+  begin
+    LStep := TStepBasic(FStepStack.Objects[i]);
+    if LStep <> nil then
+    begin
+      if LStep.StepConfig.StepTitle = ADataRef then
+      begin
+        Result := LStep.OudData;
+        Break;
+      end;
+    end;
+  end;
 end;
 
 function TTaskVar.GetObject(ARef: string): TObject;
@@ -220,10 +281,12 @@ begin
 end;
 
 
-procedure TTaskVar.StartStep(AStepConfigJson: TJSONObject; AInData: PStepData);
+procedure TTaskVar.StartStep(const ATaskBlock: TTaskBlock; const AStepConfigJson: TJSONObject; const AInData: PStepData);
 var
   LStep: TStepBasic;
   LStepType: string;
+  LTaskStep: TTaskStep;
+  LStepStatus: Integer;
 begin
   if AStepConfigJson = nil then
   begin
@@ -238,7 +301,8 @@ begin
 
   //获取当前Step的相关参数
   try
-    if StrToInt(GetJsonObjectValue(AStepConfigJson, 'step_status', '0')) > 1 then //checked or partialy checked
+    LStepStatus := StrToInt(GetJsonObjectValue(AStepConfigJson, 'step_status', '0'));
+    if (LStepStatus > 1) then //checked or partialy checked
     begin
       //调用工厂类
       LStepType := GetJsonObjectValue(AStepConfigJson, 'step_type');
@@ -247,24 +311,30 @@ begin
       begin
         try
           //处理入参和初始设置
+          LStep.TaskBlock := ATaskBlock;
           LStep.TaskVar := Self;
+
           LStep.InData := AInData^;
           LStep.SubSteps := AStepConfigJson.GetValue('sub_steps') as TJSONArray;
           LStep.StepConfig.StepId := GetJsonObjectValue(AStepConfigJson, 'step_abs_id', '-1', 'int');
           LStep.StepConfig.StepType := GetJsonObjectValue(AStepConfigJson, 'step_type');
           LStep.StepConfig.StepTitle := GetJsonObjectValue(AStepConfigJson, 'step_title');
-          LStep.StepConfig.StepStatus := StrToInt(GetJsonObjectValue(AStepConfigJson, 'step_status', '0'));
+          LStep.StepConfig.StepStatus := LStepStatus;
           LStep.ParseStepConfig(GetJsonObjectValue(AStepConfigJson, 'step_config'));
 
           LStep.LogMsg('任务执行：入参数据：' + LStep.InData.Data, llDebug);
 
+          LTaskStep.OwnerBlock := ATaskBlock;
+          LTaskStep.Id := LStep.StepConfig.StepId;
+
           //在设计模式或者debug模式中，允许运行到指定的步骤，不再执行后面的Step
-          if (FToStepId > -1) then
+          if (FToStep.Id > -1) then
           begin
-            if (LStep.StepConfig.StepId <= FToStepId) then
+            if (ATaskBlock.BlockName <> FToStep.OwnerBlock.BlockName)
+                or (LStep.StepConfig.StepId <= FToStep.Id) then
             begin
               //入栈
-              PushStep(LStep);
+              PushStep(LTaskStep, LStep);
 
               if FTaskMode = tmDesigning then
                 LStep.StartDesign
@@ -272,7 +342,7 @@ begin
                 LStep.Start;
 
               //如果已经匹配相等，设置后续的执行状态为Suspend
-              if LStep.StepConfig.StepId = FToStepId then
+              if IsToStep(LTaskStep) then
                 TaskStatus := trsSuspend
             end
             else
@@ -286,12 +356,12 @@ begin
           else
           begin
             //入栈
-            PushStep(LStep);
+            PushStep(LTaskStep, LStep);
             LStep.Start;
           end;
         finally
           //出栈
-          PopStep(LStep);
+          PopStep(LTaskStep);
         end;
       end
       else
@@ -306,26 +376,30 @@ begin
 end;
 
 
-function TTaskVar.PushStep(AStep: TObject): Integer;
+function TTaskVar.PushStep(const ATaskStep: TTaskStep; const AStep: TObject): Integer;
 var
-  LStep: TStepBasic;
+  LStepIdxName: string;
 begin
-  LStep := TStepBasic(AStep);
-  Result := FStepStack.AddObject(IntToStr(LStep.StepConfig.StepId), AStep);
+  LStepIdxName := GetTaskStepIdxName(ATaskStep);
+  Result := FStepStack.AddObject(LStepIdxName, AStep);
 end;
 
-procedure TTaskVar.PopStep(AStep: TObject);
+
+procedure TTaskVar.PopStep(const ATaskStep: TTaskStep);
 var
   idx: Integer;
   LStep: TStepBasic;
+  LStepIdxName: string;
 begin
   if TaskStatus = trsSuspend then Exit;
 
-  LStep := TStepBasic(AStep);
-  if LStep <> nil then
+  LStepIdxName := GetTaskStepIdxName(ATaskStep);
+  idx := FStepStack.IndexOf(LStepIdxName);
+  if idx > -1 then
   begin
-    idx := FStepStack.IndexOf(IntToStr(LStep.StepConfig.StepId));
-    LStep.Free;
+    LStep := TStepBasic(FStepStack.Objects[idx]);
+    if LStep <> nil then
+      FreeAndNil(LStep);
     FStepStack.Delete(idx);
   end;
 end;
@@ -333,10 +407,14 @@ end;
 procedure TTaskVar.PopSteps;
 var
   i: Integer;
+  LStep: TStepBasic;
 begin
   for i := FStepStack.Count - 1 downto 0 do
   begin
-    PopStep(FStepStack.Objects[i]);
+    LStep := TStepBasic(FStepStack.Objects[i]);
+    if LStep <> nil then
+      FreeAndNil(LStep);
+    FStepStack.Delete(i);
   end;
 end;
 

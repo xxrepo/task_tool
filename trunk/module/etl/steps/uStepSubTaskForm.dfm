@@ -1,7 +1,6 @@
 inherited StepSubTaskForm: TStepSubTaskForm
   Caption = #25991#20214#23376#20219#21153
   ClientHeight = 341
-  OnDestroy = FormDestroy
   ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 17

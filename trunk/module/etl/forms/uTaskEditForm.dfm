@@ -3,7 +3,8 @@ inherited TaskEditForm: TTaskEditForm
   ClientHeight = 520
   ClientWidth = 784
   WindowState = wsMaximized
-  OnClose = FormClose
+  OnDestroy = FormDestroy
+  ExplicitTop = 8
   ExplicitWidth = 800
   ExplicitHeight = 559
   PixelsPerInch = 96
@@ -15,9 +16,8 @@ inherited TaskEditForm: TTaskEditForm
     Percent = 64
     LowerRight.Visible = False
     TabOrder = 1
-    ExplicitTop = 301
     ExplicitWidth = 784
-    ExplicitHeight = 242
+    ExplicitHeight = 501
     UpperLeftControls = (
       rzpnlTop
       chktrTaskSteps)
@@ -60,6 +60,7 @@ inherited TaskEditForm: TTaskEditForm
       Top = 57
       Width = 784
       Height = 444
+      CascadeChecks = False
       Align = alClient
       AutoExpand = True
       BorderStyle = bsNone
@@ -103,12 +104,11 @@ inherited TaskEditForm: TTaskEditForm
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
     TabOrder = 0
-    ExplicitTop = 543
   end
   object pmTaskSteps: TPopupMenu
     OwnerDraw = True
-    Left = 594
-    Top = 183
+    Left = 604
+    Top = 187
     object StepAdd: TMenuItem
       Caption = #28155#21152'Step'
       OnClick = StepAddClick
@@ -145,6 +145,10 @@ inherited TaskEditForm: TTaskEditForm
     object SaveNodeAsSubTask: TMenuItem
       Caption = #33410#28857#20219#21153#21478#23384#20026'...'
       OnClick = SaveNodeAsSubTaskClick
+    end
+    object ViewStepConfigSource: TMenuItem
+      Caption = #26597#30475#28304
+      OnClick = ViewStepConfigSourceClick
     end
   end
   object dlgOpenTask: TOpenDialog

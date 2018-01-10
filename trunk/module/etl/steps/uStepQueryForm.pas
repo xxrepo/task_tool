@@ -54,9 +54,9 @@ begin
   inherited;
   with TDatabasesForm.Create(nil) do
   try
-    ConfigDatabases(CurrentProjectRec.DbsFile);
+    ConfigDatabases(CurrentProject.DbsFile);
     ShowModal;
-    Step.TaskVar.DbConMgr.LoadDbConfigs(CurrentProjectRec.DbsFile);
+    Step.TaskVar.DbConMgr.LoadDbConfigs(CurrentProject.DbsFile);
     ReLoadDBs;
   finally
     Free;

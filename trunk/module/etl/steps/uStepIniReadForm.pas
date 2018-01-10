@@ -20,9 +20,11 @@ type
     dbgrdhInputParams: TDBGridEh;
     btnGetValues: TBitBtn;
     dbnvgrParams: TDBNavigator;
+    btnClearParams: TBitBtn;
     procedure btnOKClick(Sender: TObject);
     procedure btnIniFileNameButtonClick(Sender: TObject);
     procedure btnGetValuesClick(Sender: TObject);
+    procedure btnClearParamsClick(Sender: TObject);
   private
 
     { Private declarations }
@@ -50,6 +52,13 @@ begin
     FileName := btnIniFileName.Text;
     FieldParams := DataSetToJsonStr(cdsParams);
   end;
+end;
+
+procedure TStepIniReadForm.btnClearParamsClick(Sender: TObject);
+begin
+  inherited;
+  if ShowMsg('您真的要清空所有参数吗？', MB_OKCANCEL) = mrOK then
+    cdsParams.EmptyDataSet;
 end;
 
 procedure TStepIniReadForm.btnGetValuesClick(Sender: TObject);

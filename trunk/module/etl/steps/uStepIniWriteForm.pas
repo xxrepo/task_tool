@@ -20,9 +20,11 @@ type
     btnGetValues: TBitBtn;
     dbnvgrParams: TDBNavigator;
     dbgrdhInputParams: TDBGridEh;
+    btnClearParams: TBitBtn;
     procedure btnOKClick(Sender: TObject);
     procedure btnIniFileNameButtonClick(Sender: TObject);
     procedure btnGetValuesClick(Sender: TObject);
+    procedure btnClearParamsClick(Sender: TObject);
   private
 
     { Private declarations }
@@ -38,18 +40,25 @@ var
 
 implementation
 
-uses uStepIniRead, uFunctions, uDesignTimeDefines;
+uses uStepIniWrite, uFunctions, uDesignTimeDefines;
 
 {$R *.dfm}
 
 procedure TStepIniWriteForm.btnOKClick(Sender: TObject);
 begin
   inherited;
-  with Step as TStepIniRead do
+  with Step as TStepIniWrite do
   begin
     FileName := btnIniFileName.Text;
     FieldParams := DataSetToJsonStr(cdsParams);
   end;
+end;
+
+procedure TStepIniWriteForm.btnClearParamsClick(Sender: TObject);
+begin
+  inherited;
+  if ShowMsg('您真的要清空所有参数吗？', MB_OKCANCEL) = mrOK then
+    cdsParams.EmptyDataSet;
 end;
 
 procedure TStepIniWriteForm.btnGetValuesClick(Sender: TObject);
@@ -102,11 +111,11 @@ end;
 
 procedure TStepIniWriteForm.ParseStepConfig(AConfigJsonStr: string);
 var
-  LStep: TStepIniRead;
+  LStep: TStepIniWrite;
 begin
   inherited ParseStepConfig(AConfigJsonStr);
 
-  LStep := TStepIniRead(Step);
+  LStep := TStepIniWrite(Step);
   btnIniFileName.Text := LStep.FileName;
   JsonToDataSet(LStep.FieldParams, cdsParams);
 end;
