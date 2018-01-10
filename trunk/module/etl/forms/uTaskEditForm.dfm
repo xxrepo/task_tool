@@ -12,12 +12,11 @@ inherited TaskEditForm: TTaskEditForm
   inherited rzspltrLogForm: TRzSplitter
     Width = 858
     Height = 593
-    Position = 338
+    Position = 336
     Percent = 57
     TabOrder = 1
-    ExplicitTop = 52
     ExplicitWidth = 858
-    ExplicitHeight = 541
+    ExplicitHeight = 593
     UpperLeftControls = (
       rzpnlTop
       chktrTaskSteps)
@@ -38,7 +37,6 @@ inherited TaskEditForm: TTaskEditForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 784
       DesignSize = (
         858
         57)
@@ -60,7 +58,6 @@ inherited TaskEditForm: TTaskEditForm
         Caption = #21478#23384#20026'...'
         TabOrder = 1
         Visible = False
-        ExplicitLeft = 667
       end
       object btnStart: TBitBtn
         Left = 114
@@ -76,7 +73,7 @@ inherited TaskEditForm: TTaskEditForm
       Left = 0
       Top = 57
       Width = 858
-      Height = 281
+      Height = 279
       CascadeChecks = False
       Align = alClient
       AutoExpand = True
@@ -100,20 +97,18 @@ inherited TaskEditForm: TTaskEditForm
       OnDragDrop = chktrTaskStepsDragDrop
       OnDragOver = chktrTaskStepsDragOver
       OnMouseDown = chktrTaskStepsMouseDown
-      ExplicitWidth = 784
-      ExplicitHeight = 444
     end
     inherited redtLog: TRichEdit
       Width = 858
-      Height = 203
-      ExplicitWidth = 784
-      ExplicitHeight = 132
+      Height = 205
+      ExplicitWidth = 858
+      ExplicitHeight = 205
     end
     inherited rzpnl3: TRzPanel
       Width = 858
       Font.Height = -16
       ParentFont = False
-      ExplicitWidth = 784
+      ExplicitWidth = 858
       inherited btnClearLog: TBitBtn
         Font.Height = -16
         ParentFont = False
@@ -130,8 +125,6 @@ inherited TaskEditForm: TTaskEditForm
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
     TabOrder = 0
-    ExplicitTop = 501
-    ExplicitWidth = 784
   end
   object pmTaskSteps: TPopupMenu
     OwnerDraw = True
