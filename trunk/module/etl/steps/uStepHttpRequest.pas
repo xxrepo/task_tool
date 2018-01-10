@@ -87,7 +87,7 @@ begin
                                     TNetUtil.ParamEncodeUtf8(LParamValue),
                                     pkGETorPOST,
                                     [poDoNotEncode]);
-          TaskVar.Logger.Debug('准备HTTP请求参数：' + LParamName + '：' + LParamValue);
+          TaskVar.Logger.Debug(FormatLogMsg('准备HTTP请求参数：' + LParamName + '：' + LParamValue));
         end;
       finally
         LRequestParamsJson.Free;

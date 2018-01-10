@@ -9,7 +9,7 @@ uses
   RzListVw, Vcl.Menus, RzCommon, Data.DB, Datasnap.DBClient, DBGridEhGrouping,
   ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh,
   DBGridEh, RzTreeVw, System.JSON, uStepDefines, Vcl.Mask, RzEdit, RzBtnEdt, uTask,
-  Vcl.Buttons, uBasicLogForm, uTaskVar, uTaskDefine;
+  Vcl.Buttons, uBasicLogForm, uTaskVar, uTaskDefine, System.Generics.Collections;
 
 type
   TTaskEditForm = class(TBasicLogForm)
@@ -31,6 +31,7 @@ type
     N1: TMenuItem;
     RunToStep: TMenuItem;
     ViewStepConfigSource: TMenuItem;
+    btnStart: TBitBtn;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -49,8 +50,19 @@ type
     procedure RunToStepClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ViewStepConfigSourceClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure chktrTaskStepsCustomDrawItem(Sender: TCustomTreeView;
+      Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure btnStartClick(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
+    TaskBlock: TTaskBlock; //标记当前的任务块
+    EditingTaskConfigRec: TTaskCongfigRec;    //表明当前正在编辑的资料
+    EntryTaskConfigRec: TTaskCongfigRec;
+
+    StepTitles: TDictionary<string, integer>;
+    StepDuplicated: Boolean;
+
     procedure MakeTaskTree(ATaskStepsJsonStr: string);
     function GetNodeData(ANode: TTreeNode): TJSONObject;
     function GetNodeJsonStr(ANode: TTreeNode): string;
@@ -61,9 +73,6 @@ type
     { Private declarations }
   public
     { Public declarations }
-    TaskBlock: TTaskBlock; //标记当前的任务块
-    EditingTaskConfigRec: TTaskCongfigRec;    //表明当前正在编辑的资料
-    EntryTaskConfigRec: TTaskCongfigRec;
 
     procedure ConfigTask(ATaskFile: string; ATaskBlock: PTaskBlock = nil);
   end;
@@ -205,6 +214,7 @@ var
   i: Integer;
   LChildren: TJSONArray;
   LChild: TJSONObject;
+  LTitleCount: Integer;
 begin
   Result := nil;
   if ANode = nil then Exit;
@@ -219,6 +229,12 @@ begin
 
   Result.AddPair(TJSONPair.Create('step_status', IntToStr(ANode.StateIndex)));
   Result.AddPair(TJSONPair.Create('step_config', LData.ConfigJsonStr));
+
+//  //设置titlecount
+//  StepTitles.TryGetValue(LData.StepTitle, LTitleCount);
+//  LTitleCount := LTitleCount + 1;
+//  StepTitles.AddOrSetValue(LData.StepTitle, LTitleCount);
+
 
   LChildren := TJSONArray.Create;
   if ANode.HasChildren then
@@ -262,12 +278,28 @@ begin
 end;
 
 
-
 procedure TTaskEditForm.chktrTaskStepsCollapsing(Sender: TObject;
   Node: TTreeNode; var AllowCollapse: Boolean);
 begin
   inherited;
   AllowCollapse := False;
+end;
+
+procedure TTaskEditForm.chktrTaskStepsCustomDrawItem(Sender: TCustomTreeView;
+  Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  LStepConfig: TStepConfig;
+  LTitleCount: Integer;
+begin
+  inherited;
+  LStepConfig := TStepConfig(Node.Data);
+  if LStepConfig = nil then Exit;
+
+  StepTitles.TryGetValue(LStepConfig.StepTitle, LTitleCount);
+  if LTitleCount > 1 then
+  begin
+    chktrTaskSteps.Canvas.Font.Color := clWebRed;
+  end;
 end;
 
 procedure TTaskEditForm.chktrTaskStepsDblClick(Sender: TObject);
@@ -403,15 +435,23 @@ begin
   CurrentTask := TTask.Create(EntryTaskConfigRec);
   //同时加载任务执行需要依赖的GlobalVar
   CurrentTask.TaskVar.GlobalVar := CurrentProject.GlobalVar;
+  CurrentTask.TaskVar.Logger.NoticeHandle := Handle;
 
   MakeTaskTree(EditingTaskConfigRec.StepsStr);
   Self.Caption := '任务设计：' + TaskBlock.BlockName + '/' + EditingTaskConfigRec.TaskName;
 end;
 
 
+procedure TTaskEditForm.FormCreate(Sender: TObject);
+begin
+  inherited;
+  StepTitles := TDictionary<string, Integer>.Create;
+end;
+
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
 begin
   inherited;
+  StepTitles.Free;
   FreeAndNil(CurrentTask);
 end;
 
@@ -472,23 +512,15 @@ begin
 
   rzspltrLogForm.LowerRight.Visible := True;
 
-  CurrentTask.TaskVar.Logger.NoticeHandle := Handle;
-
   try
-    //LJob.Task.TaskVar.GlobalVar := FGlobalVar;
-    //LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
-    try
-      CurrentTask.TaskVar.Logger.Force('运行至当前Step：' + TaskBlock.BlockName + '/' + chktrTaskSteps.Selected.Text);
-      CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);
-      CurrentTask.Start;
-    except
-      on E: Exception do
-      begin
-        AppLogger.Fatal('执行工作异常退出，原因：' + E.Message);
-      end;
+    CurrentTask.TaskVar.Logger.Force('运行至当前Step：' + TaskBlock.BlockName + '/' + chktrTaskSteps.Selected.Text);
+    CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);
+    CurrentTask.Start;
+  except
+    on E: Exception do
+    begin
+      AppLogger.Fatal('执行工作异常退出，原因：' + E.Message);
     end;
-  finally
-
   end;
 end;
 
@@ -542,5 +574,22 @@ begin
   end;
 end;
 
+
+procedure TTaskEditForm.btnStartClick(Sender: TObject);
+begin
+  inherited;
+  rzspltrLogForm.LowerRight.Visible := True;
+
+  try
+    CurrentTask.TaskVar.Logger.Force('运行任务：' + EditingTaskConfigRec.FileName + '；主任务文件：' + EntryTaskConfigRec.FileName);
+    CurrentTask.Start;
+    CurrentTask.TaskVar.Logger.Force('运行结束');
+  except
+    on E: Exception do
+    begin
+      AppLogger.Fatal('执行工作异常退出，原因：' + E.Message);
+    end;
+  end;
+end;
 
 end.

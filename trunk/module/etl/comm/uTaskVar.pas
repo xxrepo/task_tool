@@ -336,14 +336,14 @@ begin
               //入栈
               PushStep(LTaskStep, LStep);
 
+              //如果已经匹配相等，设置后续的执行状态为Suspend
+              if IsToStep(LTaskStep) then
+                TaskStatus := trsSuspend;
+
               if FTaskMode = tmDesigning then
                 LStep.StartDesign
               else
                 LStep.Start;
-
-              //如果已经匹配相等，设置后续的执行状态为Suspend
-              if IsToStep(LTaskStep) then
-                TaskStatus := trsSuspend
             end
             else
             begin

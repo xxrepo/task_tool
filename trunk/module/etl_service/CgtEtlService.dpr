@@ -36,7 +36,8 @@ uses
   uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
   uStepFormSettings in '..\etl\steps\uStepFormSettings.pas',
   uStepFastReport in '..\etl\steps\uStepFastReport.pas',
-  uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas';
+  uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
+  uTaskDefine in '..\etl\comm\uTaskDefine.pas';
 
 {$R *.RES}
 

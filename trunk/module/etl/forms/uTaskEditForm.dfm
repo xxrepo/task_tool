@@ -1,23 +1,23 @@
 inherited TaskEditForm: TTaskEditForm
   Caption = #39033#30446#20219#21153#35774#35745
-  ClientHeight = 520
-  ClientWidth = 784
+  ClientHeight = 612
+  ClientWidth = 858
   WindowState = wsMaximized
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitTop = 8
-  ExplicitWidth = 800
-  ExplicitHeight = 559
+  ExplicitWidth = 874
+  ExplicitHeight = 651
   PixelsPerInch = 96
   TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
-    Width = 784
-    Height = 501
-    Position = 320
-    Percent = 64
-    LowerRight.Visible = False
+    Width = 858
+    Height = 593
+    Position = 338
+    Percent = 57
     TabOrder = 1
-    ExplicitWidth = 784
-    ExplicitHeight = 501
+    ExplicitTop = 52
+    ExplicitWidth = 858
+    ExplicitHeight = 541
     UpperLeftControls = (
       rzpnlTop
       chktrTaskSteps)
@@ -27,13 +27,20 @@ inherited TaskEditForm: TTaskEditForm
     object rzpnlTop: TRzPanel [0]
       Left = 0
       Top = 0
-      Width = 784
+      Width = 858
       Height = 57
       Align = alTop
       BorderOuter = fsFlat
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 0
+      ExplicitWidth = 784
       DesignSize = (
-        784
+        858
         57)
       object rzbtbtnSave: TRzBitBtn
         Left = 13
@@ -45,7 +52,7 @@ inherited TaskEditForm: TTaskEditForm
         OnClick = rzbtbtnSaveClick
       end
       object rzbtbtnRunSchedual: TRzBitBtn
-        Left = 667
+        Left = 741
         Top = 12
         Width = 86
         Height = 33
@@ -53,13 +60,23 @@ inherited TaskEditForm: TTaskEditForm
         Caption = #21478#23384#20026'...'
         TabOrder = 1
         Visible = False
+        ExplicitLeft = 667
+      end
+      object btnStart: TBitBtn
+        Left = 114
+        Top = 12
+        Width = 89
+        Height = 33
+        Caption = #36816#34892
+        TabOrder = 2
+        OnClick = btnStartClick
       end
     end
     object chktrTaskSteps: TRzCheckTree [1]
       Left = 0
       Top = 57
-      Width = 784
-      Height = 444
+      Width = 858
+      Height = 281
       CascadeChecks = False
       Align = alClient
       AutoExpand = True
@@ -77,38 +94,49 @@ inherited TaskEditForm: TTaskEditForm
       StateImages = chktrTaskSteps.CheckImages
       TabOrder = 1
       OnCollapsing = chktrTaskStepsCollapsing
+      OnCustomDrawItem = chktrTaskStepsCustomDrawItem
       OnDblClick = chktrTaskStepsDblClick
       OnDeletion = chktrTaskStepsDeletion
       OnDragDrop = chktrTaskStepsDragDrop
       OnDragOver = chktrTaskStepsDragOver
       OnMouseDown = chktrTaskStepsMouseDown
+      ExplicitWidth = 784
+      ExplicitHeight = 444
     end
     inherited redtLog: TRichEdit
-      Width = 784
-      Height = 132
+      Width = 858
+      Height = 203
       ExplicitWidth = 784
       ExplicitHeight = 132
     end
     inherited rzpnl3: TRzPanel
-      Width = 784
+      Width = 858
+      Font.Height = -16
+      ParentFont = False
       ExplicitWidth = 784
+      inherited btnClearLog: TBitBtn
+        Font.Height = -16
+        ParentFont = False
+      end
     end
   end
   object rzstsbrMain: TRzStatusBar
     Left = 0
-    Top = 501
-    Width = 784
+    Top = 593
+    Width = 858
     Height = 19
     BorderInner = fsNone
     BorderOuter = fsNone
     BorderSides = [sdLeft, sdTop, sdRight, sdBottom]
     BorderWidth = 0
     TabOrder = 0
+    ExplicitTop = 501
+    ExplicitWidth = 784
   end
   object pmTaskSteps: TPopupMenu
     OwnerDraw = True
-    Left = 604
-    Top = 187
+    Left = 682
+    Top = 161
     object StepAdd: TMenuItem
       Caption = #28155#21152'Step'
       OnClick = StepAddClick
@@ -154,7 +182,7 @@ inherited TaskEditForm: TTaskEditForm
   object dlgOpenTask: TOpenDialog
     DefaultExt = 'task'
     Filter = #20219#21153#25991#20214#65288'*.task'#65289'|*.task'
-    Left = 600
-    Top = 104
+    Left = 684
+    Top = 84
   end
 end

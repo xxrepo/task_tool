@@ -3,9 +3,8 @@ inherited BasicDlgForm: TBasicDlgForm
   Caption = 'BasicDlgForm'
   ClientHeight = 309
   ClientWidth = 645
-  Font.Height = -16
   PixelsPerInch = 96
-  TextHeight = 19
+  TextHeight = 17
   object pnlOper: TPanel
     Left = 0
     Top = 252
