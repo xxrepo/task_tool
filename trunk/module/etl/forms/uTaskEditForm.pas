@@ -50,18 +50,12 @@ type
     procedure RunToStepClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ViewStepConfigSourceClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure chktrTaskStepsCustomDrawItem(Sender: TCustomTreeView;
-      Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure btnStartClick(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
     TaskBlock: TTaskBlock; //标记当前的任务块
     EditingTaskConfigRec: TTaskCongfigRec;    //表明当前正在编辑的资料
     EntryTaskConfigRec: TTaskCongfigRec;
-
-    StepTitles: TDictionary<string, integer>;
-    StepDuplicated: Boolean;
 
     procedure MakeTaskTree(ATaskStepsJsonStr: string);
     function GetNodeData(ANode: TTreeNode): TJSONObject;
@@ -214,7 +208,6 @@ var
   i: Integer;
   LChildren: TJSONArray;
   LChild: TJSONObject;
-  LTitleCount: Integer;
 begin
   Result := nil;
   if ANode = nil then Exit;
@@ -283,23 +276,6 @@ procedure TTaskEditForm.chktrTaskStepsCollapsing(Sender: TObject;
 begin
   inherited;
   AllowCollapse := False;
-end;
-
-procedure TTaskEditForm.chktrTaskStepsCustomDrawItem(Sender: TCustomTreeView;
-  Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
-var
-  LStepConfig: TStepConfig;
-  LTitleCount: Integer;
-begin
-  inherited;
-  LStepConfig := TStepConfig(Node.Data);
-  if LStepConfig = nil then Exit;
-
-  StepTitles.TryGetValue(LStepConfig.StepTitle, LTitleCount);
-  if LTitleCount > 1 then
-  begin
-    chktrTaskSteps.Canvas.Font.Color := clWebRed;
-  end;
 end;
 
 procedure TTaskEditForm.chktrTaskStepsDblClick(Sender: TObject);
@@ -442,16 +418,9 @@ begin
 end;
 
 
-procedure TTaskEditForm.FormCreate(Sender: TObject);
-begin
-  inherited;
-  StepTitles := TDictionary<string, Integer>.Create;
-end;
-
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
 begin
   inherited;
-  StepTitles.Free;
   FreeAndNil(CurrentTask);
 end;
 

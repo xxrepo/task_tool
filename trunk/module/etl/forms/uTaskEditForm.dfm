@@ -3,7 +3,6 @@ inherited TaskEditForm: TTaskEditForm
   ClientHeight = 612
   ClientWidth = 858
   WindowState = wsMaximized
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 874
   ExplicitHeight = 651
@@ -91,7 +90,6 @@ inherited TaskEditForm: TTaskEditForm
       StateImages = chktrTaskSteps.CheckImages
       TabOrder = 1
       OnCollapsing = chktrTaskStepsCollapsing
-      OnCustomDrawItem = chktrTaskStepsCustomDrawItem
       OnDblClick = chktrTaskStepsDblClick
       OnDeletion = chktrTaskStepsDeletion
       OnDragDrop = chktrTaskStepsDragDrop

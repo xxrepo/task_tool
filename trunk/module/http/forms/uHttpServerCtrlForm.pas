@@ -62,7 +62,7 @@ begin
       try
         ARequestInfo.PostStream.Seek(0, 0);
         LStringStream.LoadFromStream(ARequestInfo.PostStream);
-        LRequest := LRequest + '; Data: ' + UTF8Decode(LStringStream.DataString);
+        LRequest := LRequest + '; Data: ' + UTF8ToString(LStringStream.DataString);
       finally
         LStringStream.Free;
       end;
