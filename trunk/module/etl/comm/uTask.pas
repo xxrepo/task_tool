@@ -25,7 +25,7 @@ type
     destructor Destroy; override;
 
     //运行
-    procedure Start;
+    procedure Start(const AInitData: PStepData = nil);
 
 
   end;
@@ -106,10 +106,10 @@ begin
 end;
 
 
-procedure TTask.Start;
+procedure TTask.Start(const AInitData: PStepData = nil);
 var
   LTaskConfigJson: TJSONObject;
-  LInitInData: TStepData;
+  //LInitInData: TStepData;
   LTaskBlock: TTaskBlock;
 begin
   LTaskConfigJson := TJSONObject.ParseJSONValue(TaskConfigRec.StepsStr) as TJSONObject;
@@ -126,7 +126,7 @@ begin
     try
       //清空调用栈
       TaskVar.InitStartContext;
-      TaskVar.StartStep(LTaskBlock, LTaskConfigJson, @LInitInData);
+      TaskVar.StartStep(LTaskBlock, LTaskConfigJson, AInitData);//@LInitInData);
     except
       on E: StepException do
       begin

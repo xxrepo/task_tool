@@ -233,7 +233,6 @@ function TStepBasic.GetContextParamValue(AParamRef, AParamType: string;
 var
   LStepData: TStepData;
   LParamNames: TStringList;
-  LJson: TJSONObject;
   LFieldName: string;
 begin
   Result := ADefaultValue;
@@ -271,7 +270,6 @@ var
   LStepData: TStepData;
   LParamNames: TStringList;
   LFieldName: string;
-  LJson: TJSONObject;
 begin
   Result := ADefaultValue;
   if (AParamRef = '*') or (Trim(AParamRef) = '') then
@@ -309,7 +307,6 @@ function TStepBasic.GetTaskParamValue(AParamRef, AParamType: string;
 var
   LStepData: TStepData;
   LParamNames: TStringList;
-  LJson: TJSONObject;
   LFieldName: string;
 begin
   Result := ADefaultValue;
