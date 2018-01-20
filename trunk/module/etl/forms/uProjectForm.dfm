@@ -47,6 +47,16 @@ inherited ProjectForm: TProjectForm
       TabOrder = 1
       OnClick = btnServiceControlClick
     end
+    object btnHttpServerCtrl: TBitBtn
+      Left = 398
+      Top = 4
+      Width = 139
+      Height = 37
+      Anchors = [akTop, akRight]
+      Caption = 'LocalServer'#31649#29702
+      TabOrder = 2
+      OnClick = btnHttpServerCtrlClick
+    end
   end
   object rzspltrFiles: TRzSplitter
     Left = 0

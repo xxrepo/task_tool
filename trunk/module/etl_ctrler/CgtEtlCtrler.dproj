@@ -1,9 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{98E4E9E0-44FE-4E46-A29F-8873C14D3C6B}</ProjectGuid>
+        <ProjectGuid>{B2E83D70-46CA-4345-9D8F-EB1D470ABADB}</ProjectGuid>
         <ProjectVersion>18.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>CgtEtlTool.dpr</MainSource>
+        <MainSource>CgtEtlCtrler.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -46,9 +46,9 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-        <SanitizedProjectName>CgtEtlTool</SanitizedProjectName>
+        <SanitizedProjectName>CgtEtlCtrler</SanitizedProjectName>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -58,12 +58,12 @@
         <DCC_K>false</DCC_K>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;frxe23;vclFireDAC;PkgSpcomm;emsclientfiredac;DataSnapFireDAC;svnui;tethering;FireDACADSDriver;fsTee23;RaizeComponentsVclDb230;EhLibDBXDataDrivers230;DBXMSSQLDriver;EhLib230;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;inetdb;CEF4Delphi;dac230;FmxTeeUI;crcontrols230;FireDACIBDriver;fmx;fmxdae;vclib;fsDB23;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;bdertl;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;frxTee23;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;unidacfmx230;FireDACCommonDriver;DataSnapClient;inet;fsADO23;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;dacfmx230;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;dacvcl230;RaizeComponentsVcl230;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;VVComponents;DBXOdbcDriver;FireDACTDataDriver;FMXTee;fs23;soaprtl;DbxCommonDriver;unidac230;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;EhLibBDEDataDrivers230;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;fsIBX23;unidacvcl230;bindcompvcl;frxDB23;PKIECtRL23;vcldbx;TeeUI;EhLibADODataDrivers230;vclribbon;dbxcds;VclSmp;PKIEDB23;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;frx23;EhLibIBXDataDrivers230;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;frxe23;vclFireDAC;PkgSpcomm;emsclientfiredac;DataSnapFireDAC;svnui;tethering;FireDACADSDriver;fsTee23;RaizeComponentsVclDb230;EhLibDBXDataDrivers230;DBXMSSQLDriver;EhLib230;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;inetdb;dac230;FmxTeeUI;crcontrols230;FireDACIBDriver;fmx;fmxdae;vclib;fsDB23;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;bdertl;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;frxTee23;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;unidacfmx230;FireDACCommonDriver;DataSnapClient;inet;fsADO23;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;dacfmx230;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;dacvcl230;RaizeComponentsVcl230;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;fs23;soaprtl;DbxCommonDriver;unidac230;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;EhLibBDEDataDrivers230;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;fsIBX23;unidacvcl230;bindcompvcl;frxDB23;PKIECtRL23;vcldbx;TeeUI;EhLibADODataDrivers230;vclribbon;dbxcds;VclSmp;PKIEDB23;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;frx23;EhLibIBXDataDrivers230;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;vclFireDAC;emsclientfiredac;DataSnapFireDAC;tethering;FireDACADSDriver;DBXMSSQLDriver;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;Intraweb;DBXOracleDriver;inetdb;dac230;FmxTeeUI;FireDACIBDriver;fmx;fmxdae;vclib;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;unidacfmx230;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;dacfmx230;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;dacvcl230;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;soaprtl;DbxCommonDriver;unidac230;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;EhLibBDEDataDrivers230;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;unidacvcl230;bindcompvcl;PKIECtRL23;TeeUI;vclribbon;dbxcds;VclSmp;PKIEDB23;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
@@ -77,12 +77,11 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -92,10 +91,6 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
-        <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
@@ -103,159 +98,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\..\core\basic\uBasicForm.pas">
-            <Form>BasicForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\basic\uBasicDlgForm.pas">
-            <Form>BasicDlgForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\common\uFunctions.pas"/>
-        <DCCReference Include="comm\uDefines.pas"/>
-        <DCCReference Include="forms\uTaskEditForm.pas">
-            <Form>TaskEditForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\lib\uAlertSound.pas"/>
-        <DCCReference Include="forms\uStepTypeSelectForm.pas">
-            <Form>StepTypeSelectForm</Form>
-        </DCCReference>
-        <DCCReference Include="basic\uStepBasicForm.pas">
-            <Form>StepBasicForm</Form>
-        </DCCReference>
-        <DCCReference Include="forms\uDatabasesForm.pas">
-            <Form>DatabasesForm</Form>
-        </DCCReference>
-        <DCCReference Include="forms\uDatabaseConnectTestForm.pas">
-            <Form>DatabaseConnectTestForm</Form>
-        </DCCReference>
-        <DCCReference Include="comm\uDbConMgr.pas"/>
-        <DCCReference Include="basic\uStepBasic.pas"/>
-        <DCCReference Include="comm\uTaskVar.pas"/>
-        <DCCReference Include="comm\uTask.pas"/>
-        <DCCReference Include="comm\uExceptions.pas"/>
-        <DCCReference Include="..\..\core\lib\uFileLogger.pas"/>
-        <DCCReference Include="..\..\core\lib\uThreadQueueUtil.pas"/>
-        <DCCReference Include="comm\uJob.pas"/>
-        <DCCReference Include="forms\uJobsMgrForm.pas">
-            <Form>JobsForm</Form>
-        </DCCReference>
-        <DCCReference Include="forms\uSettingForm.pas">
-            <Form>SettingsForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\lib\uFileUtil.pas"/>
-        <DCCReference Include="forms\uProjectForm.pas">
-            <Form>ProjectForm</Form>
-        </DCCReference>
-        <DCCReference Include="comm\uProject.pas"/>
-        <DCCReference Include="comm\uDesignTimeDefines.pas"/>
-        <DCCReference Include="..\..\core\lib\uNetUtil.pas"/>
-        <DCCReference Include="steps\uStepCondition.pas"/>
-        <DCCReference Include="steps\uStepConditionForm.pas">
-            <Form>StepConditionForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepDatasetSpliter.pas"/>
-        <DCCReference Include="steps\uStepDefines.pas"/>
-        <DCCReference Include="steps\uStepFormFactory.pas"/>
-        <DCCReference Include="steps\uStepHttpRequest.pas"/>
-        <DCCReference Include="steps\uStepHttpRequestForm.pas">
-            <Form>StepHttpRequestForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepVarDefine.pas"/>
-        <DCCReference Include="steps\uStepVarDefineForm.pas">
-            <Form>StepVarDefineForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepIniWrite.pas"/>
-        <DCCReference Include="steps\uStepIniWriteForm.pas">
-            <Form>StepIniWriteForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepNullForm.pas">
-            <Form>StepNullForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepQuery.pas"/>
-        <DCCReference Include="steps\uStepQueryForm.pas">
-            <Form>StepQueryForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepSubTask.pas"/>
-        <DCCReference Include="steps\uStepSubTaskForm.pas">
-            <Form>StepSubTaskForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepFileDelete.pas"/>
-        <DCCReference Include="steps\uStepFileDeleteForm.pas">
-            <Form>StepFileDeleteForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\lib\uServiceUtil.pas"/>
-        <DCCReference Include="forms\uJobScheduleForm.pas">
-            <Form>JobScheduleForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepFactory.pas"/>
-        <DCCReference Include="forms\uEnterForm.pas">
-            <Form>EnterForm</Form>
-        </DCCReference>
-        <DCCReference Include="ctrl_forms\uServiceControlForm.pas">
-            <Form>ServiceControlForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepIniRead.pas"/>
-        <DCCReference Include="steps\uStepIniReadForm.pas">
-            <Form>StepIniReadForm</Form>
-        </DCCReference>
-        <DCCReference Include="forms\uMakeDirForm.pas">
-            <Form>MakeDirForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
-        <DCCReference Include="..\..\core\lib\uFileCleaner.pas"/>
-        <DCCReference Include="steps\uStepDatasetSpliterForm.pas">
-            <Form>StepDatasetSpliterForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\uStepWriteTxtFile.pas"/>
-        <DCCReference Include="steps\uStepWriteTxtFileForm.pas">
-            <Form>StepWriteTxtFileForm</Form>
-        </DCCReference>
-        <DCCReference Include="comm\uThreadSafeFile.pas"/>
-        <DCCReference Include="..\etl_service\uServiceConfig.pas"/>
-        <DCCReference Include="..\etl_service\uServiceRunner.pas"/>
-        <DCCReference Include="comm\uGlobalVar.pas"/>
-        <DCCReference Include="forms\uGlobalVarSettingForm.pas">
-            <Form>GlobalVarSettingForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="steps\uStepFieldsOper.pas"/>
-        <DCCReference Include="steps\uStepFieldsOperForm.pas">
-            <Form>StepFieldsOperForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="steps\uStepFastReport.pas"/>
-        <DCCReference Include="steps\uStepFastReportForm.pas">
-            <Form>StepFastReportForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="steps\uStepFormSettings.pas"/>
-        <DCCReference Include="steps\uStepJson2DataSet.pas"/>
-        <DCCReference Include="steps\uStepJson2DataSetForm.pas">
-            <Form>StepJsonDataSetForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="steps\database\uDBQueryResultForm.pas">
-            <Form>DBQueryResultForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="..\..\core\basic\uBasicLogForm.pas">
-            <Form>BasicLogForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="comm\uTaskDefine.pas"/>
-        <DCCReference Include="forms\uTaskStepSourceForm.pas">
-            <Form>TaskStepSourceForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="ctrl_forms\uHttpServerControlForm.pas">
-            <Form>HttpServerControlForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="ctrl_forms\uHttpServerRunner.pas"/>
-        <DCCReference Include="ctrl_forms\uHttpServerConfig.pas"/>
-        <DCCReference Include="..\..\common\uSelectFolderForm.pas">
-            <Form>SelectFolderForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -274,23 +116,18 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">CgtEtlTool.dpr</Source>
+                    <Source Name="MainSource">CgtEtlCtrler.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="D:\Program Files (x86)\Embarcadero\Studio\16.0\bin\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="2">
-                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\CgtEtlCtrler.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>CgtEtlTool.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>CgtEtlTool.exe</RemoteName>
+                        <RemoteName>CgtEtlCtrler.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

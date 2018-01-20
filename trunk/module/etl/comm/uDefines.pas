@@ -4,11 +4,14 @@ interface
 
 
 uses
-  uFileLogger, System.SyncObjs;
+  uFileLogger, System.SyncObjs, uHttpServerRunner;
 
 var
   AppLogger: TThreadFileLog;
   FileCritical: TCriticalSection;
+
+  //目前仅保留单实例启动情形
+  HttpServerRunner: THttpServerRunner;
 
 
 

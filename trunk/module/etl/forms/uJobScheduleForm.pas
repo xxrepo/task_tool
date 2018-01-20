@@ -50,8 +50,8 @@ begin
     LJson.AddPair(TJSONPair.Create('start_after', edtStartAfter.Text));
     LJson.AddPair(TJSONPair.Create('interval', edtInterval.Text));
     LJson.AddPair(TJSONPair.Create('time_out', edtTimeOut.Text));
-    LJson.AddPair(TJSONPair.Create('allowed_time', mmoAllowedTime.Text));
-    LJson.AddPair(TJSONPair.Create('disallowed_time', mmoDisallowedTime.Text));
+    LJson.AddPair(TJSONPair.Create('allowed_time', mmoAllowedTime.Lines.DelimitedText));
+    LJson.AddPair(TJSONPair.Create('disallowed_time', mmoDisallowedTime.Lines.DelimitedText));
   finally
     //Edited by ToString
     Result := LJson.ToJSON;
@@ -70,8 +70,8 @@ begin
     edtStartAfter.Text := GetJsonObjectValue(LJson, 'start_after', '0');
     edtInterval.Text := GetJsonObjectValue(LJson, 'interval', '3600');
     edtTimeOut.Text := GetJsonObjectValue(LJson, 'time_out', '7200');
-    mmoAllowedTime.Text := GetJsonObjectValue(LJson, 'allowed_time');
-    mmoDisallowedTime.Text := GetJsonObjectValue(LJson, 'disallowed_time');
+    mmoAllowedTime.Lines.DelimitedText := GetJsonObjectValue(LJson, 'allowed_time');
+    mmoDisallowedTime.Lines.DelimitedText := GetJsonObjectValue(LJson, 'disallowed_time');
   finally
     LJson.Free;
   end;

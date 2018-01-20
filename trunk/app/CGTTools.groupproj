@@ -9,6 +9,9 @@
         <Projects Include="..\module\etl_service\CgtEtlService.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\etl_ctrler\CgtEtlCtrler.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="..\module\http\CgtHttpServer.dproj">
             <Dependencies/>
         </Projects>
@@ -38,6 +41,15 @@
     <Target Name="CgtEtlService:Make">
         <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CgtEtlCtrler">
+        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj"/>
+    </Target>
+    <Target Name="CgtEtlCtrler:Clean">
+        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlCtrler:Make">
+        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj" Targets="Make"/>
+    </Target>
     <Target Name="CgtHttpServer">
         <MSBuild Projects="..\module\http\CgtHttpServer.dproj"/>
     </Target>
@@ -48,13 +60,13 @@
         <MSBuild Projects="..\module\http\CgtHttpServer.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtHttpServer"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtHttpServer"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtHttpServer:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtHttpServer:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtHttpServer:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtHttpServer:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

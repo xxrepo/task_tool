@@ -24,7 +24,7 @@ uses
   uFileLogger in '..\..\core\lib\uFileLogger.pas',
   uThreadQueueUtil in '..\..\core\lib\uThreadQueueUtil.pas',
   uJob in 'comm\uJob.pas',
-  uJobsForm in 'forms\uJobsForm.pas' {JobsForm},
+  uJobsMgrForm in 'forms\uJobsMgrForm.pas' {JobsForm},
   uSettingForm in 'forms\uSettingForm.pas' {SettingsForm},
   uFileUtil in '..\..\core\lib\uFileUtil.pas',
   uProjectForm in 'forms\uProjectForm.pas' {ProjectForm},
@@ -53,7 +53,7 @@ uses
   uJobScheduleForm in 'forms\uJobScheduleForm.pas' {JobScheduleForm},
   uStepFactory in 'steps\uStepFactory.pas',
   uEnterForm in 'forms\uEnterForm.pas' {EnterForm},
-  uServiceControlForm in 'forms\uServiceControlForm.pas' {ServiceControlForm},
+  uServiceControlForm in 'ctrl_forms\uServiceControlForm.pas' {ServiceControlForm},
   uStepIniRead in 'steps\uStepIniRead.pas',
   uStepIniReadForm in 'steps\uStepIniReadForm.pas' {StepIniReadForm},
   uMakeDirForm in 'forms\uMakeDirForm.pas' {MakeDirForm},
@@ -77,7 +77,11 @@ uses
   uDBQueryResultForm in 'steps\database\uDBQueryResultForm.pas' {DBQueryResultForm},
   uBasicLogForm in '..\..\core\basic\uBasicLogForm.pas' {BasicLogForm},
   uTaskDefine in 'comm\uTaskDefine.pas',
-  uTaskStepSourceForm in 'forms\uTaskStepSourceForm.pas' {TaskStepSourceForm};
+  uTaskStepSourceForm in 'forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
+  uHttpServerControlForm in 'ctrl_forms\uHttpServerControlForm.pas' {HttpServerControlForm},
+  uHttpServerRunner in 'ctrl_forms\uHttpServerRunner.pas',
+  uHttpServerConfig in 'ctrl_forms\uHttpServerConfig.pas',
+  uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm};
 
 {$R *.res}
 
@@ -96,10 +100,16 @@ begin
   Application.CreateForm(TProjectForm, ProjectForm);
   Application.CreateForm(TBasicLogForm, BasicLogForm);
   Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
+  Application.CreateForm(THttpServerControlForm, HttpServerControlForm);
+  Application.CreateForm(TSelectFolderForm, SelectFolderForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 
-
+  //全局单实例判断释放
+  if HttpServerRunner <> nil then
+  begin
+    FreeAndNil(HttpServerRunner);
+  end;
   FileCritical.Free;
   AppLogger.Free;
 end.

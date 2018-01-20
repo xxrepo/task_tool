@@ -6,7 +6,6 @@ inherited JobsForm: TJobsForm
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitTop = 8
   ExplicitWidth = 1184
   ExplicitHeight = 732
   PixelsPerInch = 96
@@ -15,6 +14,7 @@ inherited JobsForm: TJobsForm
     Top = 53
     Width = 1168
     Height = 640
+    Position = 389
     Percent = 61
     TabOrder = 1
     ExplicitTop = 53
@@ -35,8 +35,6 @@ inherited JobsForm: TJobsForm
       UsePercent = True
       Align = alClient
       TabOrder = 0
-      ExplicitTop = 53
-      ExplicitHeight = 640
       BarSize = (
         874
         0
@@ -155,7 +153,6 @@ inherited JobsForm: TJobsForm
         Align = alClient
         BorderOuter = fsFlat
         TabOrder = 0
-        ExplicitHeight = 640
         object pnl1: TPanel
           Left = 1
           Top = 1
@@ -181,9 +178,9 @@ inherited JobsForm: TJobsForm
     end
     inherited redtLog: TRichEdit
       Width = 1168
-      Height = 202
+      Height = 199
       ExplicitWidth = 1168
-      ExplicitHeight = 202
+      ExplicitHeight = 199
     end
     inherited rzpnl3: TRzPanel
       Width = 1168

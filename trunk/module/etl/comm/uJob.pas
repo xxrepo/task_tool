@@ -48,6 +48,8 @@ type
     procedure ParseScheduleConfig(AScheduleJsonStr: string);
     function CheckSchedule: Boolean;
     function IsTimeOut: Boolean;
+
+    function ToString: string;
   end;
 
 
@@ -113,6 +115,7 @@ end;
 
 destructor TJobConfig.Destroy;
 begin
+  AppLogger.Force('Job被释放：' + JobName);
   AllowedTimes.Free;
   DisallowedTimes.Free;
   inherited;
@@ -158,15 +161,26 @@ begin
       Interval := GetJsonObjectValue(LScheduleJson, 'interval', '3600', 'int');
       TimeOut := GetJsonObjectValue(LScheduleJson, 'time_out', '7200', 'int');
       AllowedTimes.NameValueSeparator := '-';
-      AllowedTimes.Text := GetJsonObjectValue(LScheduleJson, 'allowed_time');
+      AllowedTimes.DelimitedText := GetJsonObjectValue(LScheduleJson, 'allowed_time');
       DisallowedTimes.NameValueSeparator := '-';
-      DisallowedTimes.Text := GetJsonObjectValue(LScheduleJson, 'disallowed_time');
+      DisallowedTimes.DelimitedText := GetJsonObjectValue(LScheduleJson, 'disallowed_time');
     finally
       LScheduleJson.Free;
     end;
   end;
 end;
 
+
+function TJobConfig.ToString: string;
+begin
+  Result := '[Job：' + JobName + '][LastStartTime：' + FormatDateTime('yyyy-mm-dd hh:nn:ss', LastStartTime)
+            + '][Interval: ' + IntToStr(Interval)
+            + '][TaskFile: ' + TaskFile + '][Allowed Times: ' + AllowedTimes.DelimitedText
+            + '][Disallowed Times: ' + DisallowedTimes.DelimitedText
+            + '][' + IntToStr(Ord(HandleStatus)) + ']';
+  if Task <> nil then
+    Result := Result + '[Task Is not nil]';
+end;
 
 function TJobConfig.CheckSchedule: Boolean;
 var
@@ -219,6 +233,7 @@ begin
   Result := True;
   if Status = 0 then
   begin
+    AppLogger.Debug(JobName + '执行状态为禁止');
     Result := False;
     Exit;
   end;
@@ -262,10 +277,10 @@ end;
 
 procedure TJobConfig.FreeTask;
 begin
+  HandleStatus := jhsNone;
   if Task <> nil then
     FreeAndNil(Task);
   RunThread := nil;
-  HandleStatus := jhsNone;
 end;
 
 
@@ -425,6 +440,7 @@ begin
     begin
       LJob.HandleStatus := jhsNone;
     end;
+    AppLogger.Debug('Pop Job 任务异常：' + LJob.ToString);
     Exit;
   end;
 
@@ -489,6 +505,8 @@ begin
       Continue;
     end;
 
+    AppLogger.Debug('[' + IntToStr(i) + ']：' + LJob.ToString);
+
     //检查是否超时，如果超时呢？先尝试stop，然后等待？如果stop失败，证明整个Task已经异常了
     //这个时候可以尝试直接free掉这个task，必然引起这个线程内部的异常
     //如果是这个线程本身调度就死掉了呢？尝试terminate？
@@ -525,8 +543,6 @@ var
   LJob: TJobConfig;
 begin
   LJob := GetJob(AJobName);
-  if not CheckJobTask(LJob) then Exit;
-
   StartJob(LJob);
 end;
 
@@ -538,7 +554,6 @@ begin
   if not CheckJobTask(AJob) then Exit;
   if AJob.HandleStatus = jhsNone then
   begin
-
 
     LRequest.JobName := AJob.JobName;
     LRequest.TaskConfig := AJob.TaskConfigRec;

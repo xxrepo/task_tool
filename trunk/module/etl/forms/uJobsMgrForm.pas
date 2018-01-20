@@ -1,4 +1,4 @@
-unit uJobsForm;
+unit uJobsMgrForm;
 
 interface
 

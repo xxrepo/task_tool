@@ -1,29 +1,31 @@
 inherited BasicLogForm: TBasicLogForm
   Caption = #28040#24687#26085#24535
-  ClientHeight = 623
+  ClientHeight = 550
   ClientWidth = 796
   ExplicitWidth = 812
-  ExplicitHeight = 662
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 17
   object rzspltrLogForm: TRzSplitter
     Left = 0
     Top = 0
     Width = 796
-    Height = 623
+    Height = 550
     Orientation = orVertical
-    Position = 310
+    Position = 400
+    Percent = 73
     UsePercent = True
     HotSpotVisible = True
     HotSpotDirection = hsdBoth
     SplitterWidth = 7
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 623
     BarSize = (
       0
-      310
+      400
       796
-      317)
+      407)
     UpperLeftControls = ()
     LowerRightControls = (
       redtLog
@@ -32,7 +34,7 @@ inherited BasicLogForm: TBasicLogForm
       Left = 0
       Top = 45
       Width = 796
-      Height = 261
+      Height = 98
       Align = alClient
       BorderStyle = bsNone
       Font.Charset = GB2312_CHARSET
@@ -44,7 +46,7 @@ inherited BasicLogForm: TBasicLogForm
       ScrollBars = ssBoth
       TabOrder = 0
       Zoom = 100
-      ExplicitHeight = 185
+      ExplicitHeight = 261
     end
     object rzpnl3: TRzPanel
       Left = 0

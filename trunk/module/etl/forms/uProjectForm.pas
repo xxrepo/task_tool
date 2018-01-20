@@ -33,6 +33,7 @@ type
     btnServiceControl: TBitBtn;
     GlobalVarSetting: TMenuItem;
     N6: TMenuItem;
+    btnHttpServerCtrl: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure lstFilesDblClickOpen(Sender: TObject; var Handled: Boolean);
     procedure DBMgrEditClick(Sender: TObject);
@@ -48,6 +49,7 @@ type
     procedure GlobalVarSettingClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
+    procedure btnHttpServerCtrlClick(Sender: TObject);
   private
     procedure RefreshProjectFiles;
     function CheckCurrentProject: Boolean;
@@ -63,9 +65,9 @@ var
 
 implementation
 
-uses uProject, uFileUtil, uDesignTimeDefines, uDefines, uDatabasesForm, uJobsForm,
+uses uProject, uFileUtil, uDesignTimeDefines, uDefines, uDatabasesForm, uJobsMgrForm,
 uTaskEditForm, uFunctions, uMakeDirForm, System.IOUtils, System.JSON, System.Win.Registry,
-uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar;
+uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar, uHttpServerControlForm;
 
 {$R *.dfm}
 
@@ -126,6 +128,17 @@ begin
 
   Reg.CloseKey;
   Reg.Free;
+end;
+
+procedure TProjectForm.btnHttpServerCtrlClick(Sender: TObject);
+begin
+  inherited;
+  with THttpServerControlForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 end;
 
 procedure TProjectForm.btnServiceControlClick(Sender: TObject);
