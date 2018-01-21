@@ -143,8 +143,6 @@ destructor THttpServerRunner.Destroy;
 begin
   try
     FServer.Active := False;
-//    FServer.IOHandler.Shutdown;
-//    FServer.IOHandler.Free;
     FreeAndNil(FServer);
   except
 

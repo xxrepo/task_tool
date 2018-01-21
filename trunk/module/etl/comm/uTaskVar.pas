@@ -314,7 +314,9 @@ begin
           LStep.TaskBlock := ATaskBlock;
           LStep.TaskVar := Self;
 
-          LStep.InData := AInData^;
+          if AInData <> nil then
+            LStep.InData := AInData^;
+
           LStep.SubSteps := AStepConfigJson.GetValue('sub_steps') as TJSONArray;
           LStep.StepConfig.StepId := GetJsonObjectValue(AStepConfigJson, 'step_abs_id', '-1', 'int');
           LStep.StepConfig.StepType := GetJsonObjectValue(AStepConfigJson, 'step_type');

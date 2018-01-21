@@ -103,13 +103,15 @@ begin
   FFileFormat := ADtFormat;
   Critical := TCriticalSection.Create;
   FThreadCount := AThreadCount;
-  FThreadPool := TThreadPool.Create(HandleLogRequest, FThreadCount);
+  if FThreadCount > 0 then
+    FThreadPool := TThreadPool.Create(HandleLogRequest, FThreadCount);
   FUnHandledLogCount := 0;
 end;
 
 destructor TThreadFileLog.Destroy;
 begin
-  FThreadPool.Free;
+  if FThreadPool <> nil then
+    FreeAndNil(FThreadPool);
   Critical.Free;
   inherited;
 end;
@@ -183,10 +185,12 @@ begin
     InterlockedIncrement(FUnHandledLogCount);
 
     //支持单线程模式，也就是在这里直接写入文件
-    if FThreadCount = 0 then
-      HandleLogRequest(Request, nil)
+    if FThreadPool <> nil then
+      FThreadPool.Add(Request)
     else
-      FThreadPool.Add(Request);
+    begin
+      HandleLogRequest(Request, nil)
+    end;
   End;
 end;
 

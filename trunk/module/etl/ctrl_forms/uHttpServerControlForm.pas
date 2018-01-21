@@ -80,7 +80,7 @@ begin
   FHttpServerConfigRec.AllowedTimes := mmoAllowedTime.Lines.DelimitedText;
   FHttpServerConfigRec.DisallowedTimes := mmoDisallowedTime.Lines.DelimitedText;
 
-  THttpServerConfigUtil.WriteConfigTo(FHttpServerConfigRec, ExePath + 'config/local_server.ini');
+  THttpServerConfigUtil.WriteConfigTo(FHttpServerConfigRec, ExePath + 'config\local_server.ini');
 end;
 
 
@@ -112,7 +112,7 @@ end;
 procedure THttpServerControlForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  FHttpServerConfigRec := THttpServerConfigUtil.ReadConfigFrom(Exepath + 'config/local_server.ini');
+  FHttpServerConfigRec := THttpServerConfigUtil.ReadConfigFrom(Exepath + 'config\local_server.ini');
 
   edtIP.Text := FHttpServerConfigRec.IP;
   edtPort.Text := IntToStr(FHttpServerConfigRec.Port);

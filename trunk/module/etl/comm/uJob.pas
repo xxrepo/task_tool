@@ -295,7 +295,8 @@ begin
   FJobs := TStringList.Create;
   FUnHandledCount := 0;
   FThreadCount := AThreadCount;
-  FThreadPool := TThreadPool.Create(PopJobRequest, FThreadCount);
+  if FThreadCount > 0 then
+    FThreadPool := TThreadPool.Create(PopJobRequest, FThreadCount);
 
   LoadConfigFrom(AJobsFileName);
 
@@ -303,13 +304,15 @@ begin
   FGlobalVar.LoadFromFile((FRunBasePath + 'project.global'));
 end;
 
+
 destructor TJobMgr.Destroy;
 var
   i: Integer;
 begin
   Stop;
 
-  FThreadPool.Free;
+  if FThreadPool <> nil then
+    FreeAndNil(FThreadPool);
  
   //循环遍历释放task中的配置类
   for i := 0 to FJobs.Count - 1 do
@@ -413,7 +416,7 @@ begin
     end
     else if AJob.Task <> nil then
     begin
-      AppLogger.Error('TJobMgr中该任务正在执行，本次工作执行退出：' + AJob.JobName);
+      AppLogger.Error('TJobMgr中该任务正在执行，本次工作执行退出：' + AJob.ToString);
     end
     else
       Result := True;
@@ -436,11 +439,7 @@ begin
 
   if not CheckJobTask(LJob) then
   begin
-    if LJob.Task = nil then
-    begin
-      LJob.HandleStatus := jhsNone;
-    end;
-    AppLogger.Debug('Pop Job 任务异常：' + LJob.ToString);
+    AppLogger.Debug('Pop Job 任务异常：' + LRequest.JobName);
     Exit;
   end;
 
@@ -486,8 +485,14 @@ begin
   New(LRequest);
   LRequest^.JobName := AJobRequest.JobName;
   LRequest^.TaskConfig := AJobRequest.TaskConfig;
-  FThreadPool.Add(LRequest);
   InterlockedIncrement(FUnHandledCount);
+
+  if FThreadPool <> nil then
+  begin
+    FThreadPool.Add(LRequest);
+  end
+  else
+    PopJobRequest(LRequest, nil);
 end;
 
 
@@ -513,6 +518,7 @@ begin
     //对于超时的任务，必须提前进行检查，从而提前终止掉这个任务，便于重新启动
     if LJob.IsTimeOut then
     try
+      //这里需要区分任务是继续执行中，还是已经完全处于没有响应的状态
       LJob.LastStartTime := 0;
       StopJob(LJob);
 
@@ -554,14 +560,13 @@ begin
   if not CheckJobTask(AJob) then Exit;
   if AJob.HandleStatus = jhsNone then
   begin
-
+    AJob.HandleStatus := jhsWaited;
     LRequest.JobName := AJob.JobName;
     LRequest.TaskConfig := AJob.TaskConfigRec;
     LRequest.TaskConfig.RunBasePath := FRunBasePath;
     LRequest.TaskConfig.DBsConfigFile := DbsConfigFile;
 
     PushJobRequest(LRequest);
-    AJob.HandleStatus := jhsWaited;
   end;
 end;
 
