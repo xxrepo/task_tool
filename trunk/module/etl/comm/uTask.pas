@@ -10,18 +10,18 @@ type
 
   TTaskUtil = class
   public
-    class function ReadConfigFrom(ATaskFile: string): TTaskCongfigRec;
-    class procedure WriteConfigTo(ATaskConfigRec: TTaskCongfigRec; ATaskFile: string);
+    class function ReadConfigFrom(ATaskFile: string): TTaskConfigRec;
+    class procedure WriteConfigTo(ATaskConfigRec: TTaskConfigRec; ATaskFile: string);
   end;
 
 
   TTask = class
   private
+    TaskConfigRec: TTaskConfigRec;
   public
     TaskVar: TTaskVar;
-    TaskConfigRec: TTaskCongfigRec;
 
-    constructor Create(ATaskCongfigRec: TTaskCongfigRec);
+    constructor Create(ATaskCongfigRec: TTaskConfigRec);
     destructor Destroy; override;
 
     //ÔËÐÐ
@@ -40,7 +40,7 @@ const
 { TStepUtil }
 
 
-class function TTaskUtil.ReadConfigFrom(ATaskFile: string): TTaskCongfigRec;
+class function TTaskUtil.ReadConfigFrom(ATaskFile: string): TTaskConfigRec;
 var
   LFileText: string;
   LTaskConfigJson: TJSONObject;
@@ -64,7 +64,7 @@ begin
 end;
 
 
-class procedure TTaskUtil.WriteConfigTo(ATaskConfigRec: TTaskCongfigRec;
+class procedure TTaskUtil.WriteConfigTo(ATaskConfigRec: TTaskConfigRec;
   ATaskFile: string);
 var
   LTaskConfigJson: TJSONObject;
@@ -85,7 +85,7 @@ end;
 
 { TTask }
 
-constructor TTask.Create(ATaskCongfigRec: TTaskCongfigRec);
+constructor TTask.Create(ATaskCongfigRec: TTaskConfigRec);
 var
   LTaskVarRec: TTaskVarRec;
 begin

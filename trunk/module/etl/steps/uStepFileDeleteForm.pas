@@ -37,7 +37,7 @@ var
 
 implementation
 
-uses uDesignTimeDefines, uStepFileDelete;
+uses uDesignTimeDefines, uDefines, uStepFileDelete;
 
 {$R *.dfm}
 

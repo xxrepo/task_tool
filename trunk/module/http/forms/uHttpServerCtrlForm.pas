@@ -5,14 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdContext, IdCustomHTTPServer,
-  Vcl.StdCtrls, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer,
-  uVvIdHttpServer;
+  Vcl.StdCtrls, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer;
 
 type
   TForm1 = class(TForm)
     btn1: TButton;
     mmo1: TMemo;
-    idhttpsrvrJobDispatch: TIdHttpServerExt;
+    idhttpsrvrJobDispatch: TIdHTTPServer;
     procedure btn1Click(Sender: TObject);
     procedure idhttpsrvrJobDispatchCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -47,7 +46,6 @@ procedure TForm1.idhttpsrvrJobDispatchCommandGet(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
   LRequest: string;
-  LResponseInfoExt: TIdHttpResponseInfoExt;
   LStringStream: TStringStream;
 begin
   LRequest := 'Command: ' + ARequestInfo.Command;
@@ -70,9 +68,8 @@ begin
     end;
   end;
 
-  LResponseInfoExt := AResponseInfo as TIdHttpResponseInfoExt;
 
-  LResponseInfoExt.HeaderExt.Add('Access-Control-Allow-Origin: *');
+  //LResponseInfo.HeaderExt.Add('Access-Control-Allow-Origin: *');
   //LResponseInfoExt.HeaderExt.Add('Access-Control-Allow-Methods: GET,POST');
   //LResponseInfoExt.HeaderExt.Add('Access-Control-Allow-Headers: x-requested-with,content-type');
 
@@ -98,9 +95,9 @@ begin
   //ARequestInfo.PostStream.Seek(0, 0);
 
 
-  (AResponseInfo as TIdHttpResponseInfoExt).HeaderExt.Add('Access-Control-Allow-Origin: *');
+  //(AResponseInfo as TIdHttpResponseInfoExt).HeaderExt.Add('Access-Control-Allow-Origin: *');
   //(AResponseInfo as TIdHttpResponseInfoExt).HeaderExt.Add('Access-Control-Allow-Methods: GET,POST');
-  (AResponseInfo as TIdHttpResponseInfoExt).HeaderExt.Add('Access-Control-Allow-Headers: x-requested-with,content-type');
+  //(AResponseInfo as TIdHttpResponseInfoExt).HeaderExt.Add('Access-Control-Allow-Headers: x-requested-with,content-type');
 
   AResponseInfo.ContentType := 'text/plain;charset=utf-8';
   AResponseInfo.ContentEncoding := 'utf-8';

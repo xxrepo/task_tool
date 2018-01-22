@@ -54,8 +54,8 @@ type
   private
     CurrentTask: TTask; //所在的主任务
     TaskBlock: TTaskBlock; //标记当前的任务块
-    EditingTaskConfigRec: TTaskCongfigRec;    //表明当前正在编辑的资料
-    EntryTaskConfigRec: TTaskCongfigRec;
+    EditingTaskConfigRec: TTaskConfigRec;    //表明当前正在编辑的资料
+    EntryTaskConfigRec: TTaskConfigRec;
 
     procedure MakeTaskTree(ATaskStepsJsonStr: string);
     function GetNodeData(ANode: TTreeNode): TJSONObject;
@@ -85,7 +85,7 @@ uses
 
 procedure TTaskEditForm.SaveNodeAsSubTaskClick(Sender: TObject);
 var
-  LSubTaskConfigRec: TTaskCongfigRec;
+  LSubTaskConfigRec: TTaskConfigRec;
 begin
   inherited;
   if chktrTaskSteps.Selected = nil then Exit;
@@ -382,7 +382,7 @@ end;
 
 procedure TTaskEditForm.ConfigTask(ATaskFile: string; ATaskBlock: PTaskBlock = nil);
 
-  function ParseTaskConfig(AFile: string): TTaskCongfigRec;
+  function ParseTaskConfig(AFile: string): TTaskConfigRec;
   begin
     Result := TTaskUtil.ReadConfigFrom(AFile);
     Result.RunBasePath := CurrentProject.RootPath;

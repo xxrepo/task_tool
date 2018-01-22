@@ -20,7 +20,6 @@ type
 
 var
   CurrentProject: TProject;
-  ExePath: string;
 
 
 implementation

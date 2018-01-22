@@ -9,6 +9,7 @@ type
     IP: string;
     Port: Integer;
     DocRoot: string;
+    AbsDocRoot: string;
     MaxConnection: Integer;
     LogLevel: TLogLevel;
     AllowedAccessOrigins: string;

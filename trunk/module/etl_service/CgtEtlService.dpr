@@ -37,7 +37,11 @@ uses
   uStepFormSettings in '..\etl\steps\uStepFormSettings.pas',
   uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
-  uTaskDefine in '..\etl\comm\uTaskDefine.pas';
+  uTaskDefine in '..\etl\comm\uTaskDefine.pas',
+  uHttpServerConfig in '..\etl\ctrl_forms\uHttpServerConfig.pas',
+  uHttpServerRunner in '..\etl\ctrl_forms\uHttpServerRunner.pas',
+  uJobMgr in '..\etl\comm\uJobMgr.pas',
+  uJobDispatcher in '..\etl\comm\uJobDispatcher.pas';
 
 {$R *.RES}
 

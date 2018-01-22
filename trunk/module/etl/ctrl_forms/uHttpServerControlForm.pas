@@ -90,7 +90,7 @@ begin
   btnSave.Click;
   if (HttpServerRunner = nil) then
   begin
-    HttpServerRunner := THttpServerRunner.Create(nil);
+    HttpServerRunner := THttpServerRunner.Create;
   end;
   if (not HttpServerRunner.Server.Active) then
   begin

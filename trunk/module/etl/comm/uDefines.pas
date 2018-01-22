@@ -7,6 +7,7 @@ uses
   uFileLogger, System.SyncObjs, uHttpServerRunner;
 
 var
+  ExePath: string;
   AppLogger: TThreadFileLog;
   FileCritical: TCriticalSection;
 

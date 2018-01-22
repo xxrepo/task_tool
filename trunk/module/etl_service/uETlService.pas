@@ -37,18 +37,18 @@ begin
   Result := ServiceController;
 end;
 
+
 procedure TCGTEtlSrv.ServiceStart(Sender: TService; var Started: Boolean);
 var
-  LServicePath: string;
   LServiceConfig: TServiceConfig;
 begin
-  LServicePath := ExtractFilePath(ParamStr(0));
-  LServiceConfig := TServiceConfig.Create(LServicePath + 'config\service.ini');
+  ExePath := ExtractFilePath(ParamStr(0));
+  LServiceConfig := TServiceConfig.Create(ExePath + 'config\service.ini');
   try
     FileCritical := TCriticalSection.Create;
-    AppLogger := TThreadFileLog.Create(1, LServicePath + 'log\service\', 'yyyymmdd\hh', LServiceConfig.LogLevel);
+    AppLogger := TThreadFileLog.Create(1, ExePath + 'log\service\', 'yyyymmdd\hh', LServiceConfig.LogLevel);
     AppLogger.Force('Æô¶¯·þÎñ');
-    FServiceRunner := TServiceRunner.Create(LServicePath, LServiceConfig);
+    FServiceRunner := TServiceRunner.Create(ExePath, LServiceConfig);
     FServiceRunner.Start;
   finally
     LServiceConfig.Free;

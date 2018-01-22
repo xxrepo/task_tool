@@ -32,11 +32,9 @@ object Form1: TForm1
     ScrollBars = ssBoth
     TabOrder = 1
   end
-  object idhttpsrvrJobDispatch: TIdHttpServerExt
+  object idhttpsrvrJobDispatch: TIdHTTPServer
     Bindings = <>
-    OnCommandOther = idhttpsrvrJobDispatchCommandOther
-    OnCommandGet = idhttpsrvrJobDispatchCommandGet
-    Left = 48
-    Top = 24
+    Left = 32
+    Top = 32
   end
 end

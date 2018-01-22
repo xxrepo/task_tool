@@ -19,7 +19,7 @@ type
 
 implementation
 
-uses uJob, uDefines, System.SysUtils, uFileUtil;
+uses uJobMgr, uDefines, System.SysUtils, uFileUtil;
 
 { TJobRunner }
 
@@ -101,7 +101,8 @@ begin
   LDisAllowedTimes.DelimitedText := FDisAllowedTimes;
   LDisAllowedTimes.NameValueSeparator := '-';
 
-  LJobMgr := TJobMgr.Create(FJobsFile, FJobThreadCount, FLogLevel);
+  LJobMgr := TJobMgr.Create(FJobThreadCount, FLogLevel);
+  LJobMgr.LoadConfigFrom(FJobsFile);
   try
     LRec := 0;
     while not Terminated do

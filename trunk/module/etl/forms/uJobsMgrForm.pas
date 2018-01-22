@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBasicForm, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ExtCtrls, RzPanel, DBGridEhGrouping, ToolCtrlsEh, DBGridEhToolCtrls,
   DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh, Data.DB,
-  Datasnap.DBClient, Vcl.Menus, uJob, Vcl.DBCtrls, Vcl.ComCtrls, RzListVw,
+  Datasnap.DBClient, Vcl.Menus, uJobMgr, Vcl.DBCtrls, Vcl.ComCtrls, RzListVw,
   RzShellCtrls, uDesignTimeDefines, RzSplit, uFileLogger, uBasicLogForm;
 
 type
@@ -252,7 +252,8 @@ procedure TJobsForm.FormCreate(Sender: TObject);
 begin
   inherited;
   AppLogger.NoticeHandle := Handle;
-  JobMgr := TJobMgr.Create(CurrentProject.JobsFile, 2);
+  JobMgr := TJobMgr.Create(2);
+  JobMgr.LoadConfigFrom(CurrentProject.JobsFile);
   JobMgr.CallerHandle := Handle;
   lstLogs.Folder.PathName := CurrentProject.RootPath + 'task_log\';
 end;

@@ -55,7 +55,7 @@ var
 
 implementation
 
-uses uServiceUtil, uServiceConfig, uServiceRunner, uDesignTimeDefines, uFileUtil;
+uses uServiceUtil, uServiceConfig, uServiceRunner, uDefines, uFileUtil, uDesignTimeDefines;
 
 var
   ServiceConfig: TServiceConfig;

@@ -81,7 +81,9 @@ uses
   uHttpServerControlForm in 'ctrl_forms\uHttpServerControlForm.pas' {HttpServerControlForm},
   uHttpServerRunner in 'ctrl_forms\uHttpServerRunner.pas',
   uHttpServerConfig in 'ctrl_forms\uHttpServerConfig.pas',
-  uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm};
+  uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
+  uJobDispatcher in 'comm\uJobDispatcher.pas',
+  uJobMgr in 'comm\uJobMgr.pas';
 
 {$R *.res}
 

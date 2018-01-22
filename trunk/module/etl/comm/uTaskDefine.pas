@@ -5,7 +5,7 @@ interface
 type
   TTaskRunStatus = (trsUnknown, trsRunning, trsStop, trsSuspend);
 
-  TTaskCongfigRec = record
+  TTaskConfigRec = record
     FileName: string;
     TaskName: string;
     Description: string;

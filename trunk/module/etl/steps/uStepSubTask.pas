@@ -46,7 +46,7 @@ end;
 procedure TStepSubTask.StartSelfDesign;
 var
   LStepConfigJson: TJSONObject;
-  LTaskConfigRec: TTaskCongfigRec;
+  LTaskConfigRec: TTaskConfigRec;
   LTaskBlock: TTaskBlock;
   LTaskStep: TTaskStep;
 begin
@@ -77,7 +77,7 @@ end;
 procedure TStepSubTask.StartSelf;
 var
   LStepConfigJson: TJSONObject;
-  LTaskConfigRec: TTaskCongfigRec;
+  LTaskConfigRec: TTaskConfigRec;
   LTaskBlock: TTaskBlock;
 begin
   try
