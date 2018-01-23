@@ -73,8 +73,7 @@ begin
       begin
         LFieldJson := LFieldParamsJsonArray.Items[i] as TJSONObject;
         if LFieldJson = nil then Continue;
-
-        TaskVar.TaskResult.Values[GetJsonObjectValue(LFieldJson, 'param_name')] := GetParamValue(LFieldJson);
+        TaskVar.TaskResult.Values[GetJsonObjectValue(LFieldJson, 'param_name')] := StrToJsonValue(GetParamValue(LFieldJson));
       end;
     finally
       LFieldParamsJsonArray.Free;

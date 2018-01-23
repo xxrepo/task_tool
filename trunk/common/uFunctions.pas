@@ -7,6 +7,8 @@ uses
 
 
 function GetJsonObjectValue(AJsonObject: TJSONObject; AKey: string; ADefault: string = ''; AParamType: string = 'string'): Variant;
+function StrToJsonValue(const AStr: string): TJSONValue;
+
 function FindProcess(AFileName: string): boolean;
 function OpenExecutive(AFileName: string): Boolean;
 function KillProcess(ExeFileName: string): integer;
@@ -244,13 +246,32 @@ end;
 
 
 function GetJsonObjectValue(AJsonObject: TJSONObject; AKey: string; ADefault: string = ''; AParamType: string = 'string'): Variant;
+var
+  LJsonValue: TJSONValue;
 begin
   Result := ADefault;
-  if (AJsonObject <> nil) and (AJsonObject.GetValue(AKey) <> nil) then
+  if AJsonObject <> nil then
+    LJsonValue := AJsonObject.GetValue(AKey);
+  if (LJsonValue <> nil) then
   begin
-    Result := AJsonObject.GetValue(AKey).Value;
+    if (LJsonValue is TJSONObject) or (LJsonValue is TJSONArray) then
+    begin
+      Result := (LJsonValue.ToJSON);
+    end
+    else
+    begin
+      Result := LJsonValue.Value;
+    end;
   end;
   Result := VariantValueByDataType(Result);
+end;
+
+
+function StrToJsonValue(const AStr: string): TJSONValue;
+begin
+  Result := TJSONObject.ParseJSONValue(AStr);
+  if Result = nil then
+    Result := TJSONString.Create(AStr);
 end;
 
 

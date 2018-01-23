@@ -58,7 +58,7 @@ var
 begin
   if not CheckJobTask(AJob) then
   begin
-    AppLogger.Debug('Pop Job 任务异常：' + AJob.ToString);
+    AppLogger.Debug('Pop Job 任务异常');
     Exit;
   end;
 
@@ -91,7 +91,7 @@ begin
       //从Task获取执行结果
       FOutResult.Code := AJob.Task.TaskVar.TaskResult.Code;
       FOutResult.Msg := AJob.Task.TaskVar.TaskResult.Msg;
-      FOutResult.Data := AJob.Task.TaskVar.TaskResult.Data;
+      FOutResult.Data := AJob.Task.TaskVar.TaskResult.Data.ToJson;
 
       AppLogger.Force('结束执行工作：' + AJob.JobName);
       AJob.Task.TaskVar.Logger.Force('任务结束'+ AJob.JobName);

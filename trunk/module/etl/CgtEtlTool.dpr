@@ -103,11 +103,6 @@ begin
   FileCritical := TCriticalSection.Create;
 
   Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TBasicLogForm, BasicLogForm);
-  Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
-  Application.CreateForm(THttpServerControlForm, HttpServerControlForm);
-  Application.CreateForm(TSelectFolderForm, SelectFolderForm);
-  Application.CreateForm(TStepVarDefineForm, StepVarDefineForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

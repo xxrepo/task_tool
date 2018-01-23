@@ -5,7 +5,7 @@ inherited ProjectForm: TProjectForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 775
-  ExplicitHeight = 559
+  ExplicitHeight = 558
   PixelsPerInch = 96
   TextHeight = 17
   object rzpnl1: TRzPanel

@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses uDefines, System.SysUtils, uFileUtil, System.Classes;
+uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes;
 
 type
   DisParamException = class(Exception);
@@ -304,6 +304,7 @@ procedure THttpServerRunner.OutputResult(ARequestInfo: TIdHTTPRequestInfo; AResp
 var
   LRsp: string;
   LResultJson: TJSONObject;
+  LDataJson: TJSONValue;
 begin
   LRsp := ARequestInfo.Params.Values['rsp'];
 
@@ -328,7 +329,7 @@ begin
     try
       LResultJson.AddPair(TJSONPair.Create('code', TJSONNumber.Create(AOutResult.Code)));
       LResultJson.AddPair(TJSONPair.Create('msg', AOutResult.Msg));
-      LResultJson.AddPair(TJSONPair.Create('data', AOutResult.Data));
+      LResultJson.AddPair(TJSONPair.Create('data', StrToJsonValue(AOutResult.Data)));
 
       AResponseInfo.ContentText := LResultJson.ToJSON;
     finally

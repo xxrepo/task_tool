@@ -2,34 +2,34 @@ unit uTaskResult;
 
 interface
 
-uses System.Generics.Collections;
+uses System.Generics.Collections, System.JSON;
 
 type
   TTaskResult = class
   private
     FCode: Integer;
     FMsg: string;
-    FData: TDictionary<string, string>;
+    FData: TJsonValue;
 
-    function GetData: string;
-    function GetValues(const Name: string): string;
-    procedure SetValues(const Name, Value: string);
-    procedure SetData(const Value: string);
+    function GetData: TJSONValue;
+    function GetValues(const Name: string): TJsonValue;
+    procedure SetValues(const Name: string; Value: TJSONValue);
+    procedure SetData(const Value: TJSONValue);
   public
     constructor Create;
     destructor Destroy; override;
 
     property Code: Integer read FCode write FCode;
     property Msg: string read FMsg write FMsg;
-    property Data: string read GetData write SetData;
-    property Values[const Name: string]: string read GetValues write SetValues;
+    property Data: TJSONValue read GetData write SetData;
+    property Values[const Name: string]: TJSONValue read GetValues write SetValues;
 
     function ToJsonString: string;
   end;
 
 implementation
 
-uses uFunctions, System.JSON;
+uses uFunctions;
 
 { TTaskResult }
 
@@ -38,7 +38,7 @@ begin
   inherited;
   FCode := -1;
   FMsg := '很抱歉，暂未处理您的任务';
-  FData := TDictionary<string, string>.Create;
+  FData := TJSONValue.Create;
 end;
 
 
@@ -49,44 +49,39 @@ begin
 end;
 
 
-function TTaskResult.GetData: string;
-var
-  i: Integer;
-  LArray: TArray<TPair<string, string>>;
-  LValuesJson: TJsonObject;
+function TTaskResult.GetData: TJSONValue;
 begin
-  FData.TryGetValue('vv_data_no_meaning_idx', Result);
+  if FData = nil then
+    FData := TJSONValue.Create;
+  Result := FData;
+end;
 
-  if Result = '' then
+function TTaskResult.GetValues(const Name: string): TJSONValue;
+begin
+  Result := nil;
+  if (FData as TJSONObject) <> nil then
+    Result := (FData as TJSONObject).GetValue(Name) as TJSONValue;
+end;
+
+
+procedure TTaskResult.SetData(const Value: TJSONValue);
+begin
+  if FData <> nil then
+    FData.Free;
+
+  FData := Value.Clone as TJSONValue;
+end;
+
+procedure TTaskResult.SetValues(const Name: string; Value: TJSONValue);
+begin
+  if not (FData is TJSONObject) then
   begin
-    LArray := FData.ToArray;
-    try
-      LValuesJson := TJSONObject.Create;
-      for i := Low(LArray) to High(LArray) do
-      begin
-        LValuesJson.AddPair(TJSONPair.Create(LArray[i].Key, LArray[i].Value));
-      end;
-      Result := LValuesJson.ToString;
-    finally
-      LValuesJson.Free;
-    end;
+    if FData <> nil then
+      FData.Free;
+    FData := TJSONObject.Create;
   end;
-end;
 
-function TTaskResult.GetValues(const Name: string): string;
-begin
-  FData.TryGetValue(Name, Result);
-end;
-
-
-procedure TTaskResult.SetData(const Value: string);
-begin
-  FData.AddOrSetValue('vv_data_no_meaning_idx', Value);
-end;
-
-procedure TTaskResult.SetValues(const Name, Value: string);
-begin
-  FData.AddOrSetValue(Name, Value);
+  (FData as TJSONObject).AddPair(TJSONPair.Create(Name, Value));
 end;
 
 
