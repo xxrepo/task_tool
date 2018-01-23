@@ -1,11 +1,11 @@
-unit uServiceRunner;
+unit uScheduleRunner;
 
 interface
 
-uses System.Classes, uServiceConfig, uFileLogger;
+uses System.Classes, uScheduleConfig, uFileLogger;
 
 type
-  TServiceRunner = class(TThread)
+  TScheduleRunner = class(TThread)
   private
     FJobsFile: string;
     FJobThreadCount: Integer;
@@ -13,7 +13,7 @@ type
     FDisAllowedTimes: string;
     FLogLevel: TLogLevel;
   public
-    constructor Create(AExePath: string; AConfig: TServiceConfig);
+    constructor Create(AExePath: string; AConfig: TScheduleConfig);
     procedure Execute; override;
   end;
 
@@ -23,7 +23,7 @@ uses uJobMgr, uDefines, System.SysUtils, uFileUtil;
 
 { TJobRunner }
 
-constructor TServiceRunner.Create(AExePath: string; AConfig: TServiceConfig);
+constructor TScheduleRunner.Create(AExePath: string; AConfig: TScheduleConfig);
 begin
   FJobsFile := TFileUtil.GetAbsolutePathEx(AExePath, AConfig.JobsFile);
   FJobThreadCount := AConfig.ThreadCount;
@@ -37,7 +37,7 @@ begin
 end;
 
 
-procedure TServiceRunner.Execute;
+procedure TScheduleRunner.Execute;
 var
   LJobMgr: TJobMgr;
   LAllowedTimes: TStringList;

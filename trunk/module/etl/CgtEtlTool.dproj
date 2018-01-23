@@ -77,6 +77,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
@@ -210,8 +211,8 @@
             <Form>StepWriteTxtFileForm</Form>
         </DCCReference>
         <DCCReference Include="comm\uThreadSafeFile.pas"/>
-        <DCCReference Include="runners\uServiceConfig.pas"/>
-        <DCCReference Include="runners\uServiceRunner.pas"/>
+        <DCCReference Include="runners\uScheduleConfig.pas"/>
+        <DCCReference Include="runners\uScheduleRunner.pas"/>
         <DCCReference Include="comm\uGlobalVar.pas"/>
         <DCCReference Include="forms\uGlobalVarSettingForm.pas">
             <Form>GlobalVarSettingForm</Form>
@@ -279,7 +280,7 @@
                     <Source Name="MainSource">CgtEtlTool.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
+                    <Excluded_Packages Name="D:\Program Files (x86)\Embarcadero\Studio\16.0\bin\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

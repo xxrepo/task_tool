@@ -40,8 +40,8 @@ uses
   uHttpServerRunner in '..\etl\runners\uHttpServerRunner.pas',
   uJobMgr in '..\etl\comm\uJobMgr.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
-  uServiceConfig in '..\etl\runners\uServiceConfig.pas',
-  uServiceRunner in '..\etl\runners\uServiceRunner.pas';
+  uScheduleConfig in '..\etl\runners\uScheduleConfig.pas',
+  uScheduleRunner in '..\etl\runners\uScheduleRunner.pas';
 
 {$R *.RES}
 

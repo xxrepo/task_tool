@@ -2,7 +2,7 @@ unit uHttpServerRunner;
 
 interface
 
-uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig;
+uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher;
 
 type
 
@@ -40,7 +40,7 @@ type
 
 implementation
 
-uses uDefines, System.SysUtils, uFileUtil, uJobDispatcher, System.Classes;
+uses uDefines, System.SysUtils, uFileUtil, System.Classes;
 
 type
   DisParamException = class(Exception);
@@ -288,7 +288,7 @@ begin
         try
           ARequestInfo.PostStream.Seek(0, 0);
           LStringStream.LoadFromStream(ARequestInfo.PostStream);
-          LParams.AddPair(TJSONPair.Create('_POST', UTF8Decode(LStringStream.DataString)));
+          LParams.AddPair(TJSONPair.Create('_POST', UTF8ToString(LStringStream.DataString)));
         finally
           LStringStream.Free;
         end;

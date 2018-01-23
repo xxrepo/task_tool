@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBasicLogForm, Vcl.StdCtrls,
-  Vcl.Buttons, RzPanel, Vcl.ComCtrls, Vcl.ExtCtrls, RzSplit, Vcl.Mask, RzEdit,
+  Vcl.Buttons, RzPanel, Vcl.ComCtrls, Vcl.ExtCtrls, RzSplit, Vcl.Mask, RzEdit, uHttpServerRunner,
   RzBtnEdt, uHttpServerConfig;
 
 type
@@ -45,10 +45,12 @@ type
 
 var
   HttpServerControlForm: THttpServerControlForm;
+  //单实例，需要在引用这种单独引入httpserverrunner单元
+  HttpServerRunner: THttpServerRunner;
 
 implementation
 
-uses uDesignTimeDefines, uFileLogger, uSelectFolderForm, uFileUtil, uDefines, uHttpServerRunner;
+uses uDesignTimeDefines, uFileLogger, uSelectFolderForm, uFileUtil, uDefines;
 
 {$R *.dfm}
 

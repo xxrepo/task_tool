@@ -1,11 +1,11 @@
-unit uServiceConfig;
+unit uScheduleConfig;
 
 interface
 
 uses System.IniFiles, uFileLogger;
 
 type
-  TServiceConfig = class
+  TScheduleConfig = class
   private
     FIniFileName: string;
 
@@ -31,39 +31,39 @@ implementation
 
 { TAppConfig }
 
-constructor TServiceConfig.Create(AIniFileName: string);
+constructor TScheduleConfig.Create(AIniFileName: string);
 begin
   FIniFileName := AIniFileName;
   IniFile := TIniFile.Create(AIniFileName);
 end;
 
-destructor TServiceConfig.Destroy;
+destructor TScheduleConfig.Destroy;
 begin
   IniFile.Free;
   inherited;
 end;
 
-function TServiceConfig.GetAllowedTime: string;
+function TScheduleConfig.GetAllowedTime: string;
 begin
   Result := IniFile.ReadString('project', 'allowed_times', '');
 end;
 
-function TServiceConfig.GetDisallowedTimes: string;
+function TScheduleConfig.GetDisallowedTimes: string;
 begin
   Result := IniFile.ReadString('project', 'disallowed_times', '');
 end;
 
-function TServiceConfig.GetJobsFile: string;
+function TScheduleConfig.GetJobsFile: string;
 begin
   Result := IniFile.ReadString('project', 'jobs', '');
 end;
 
-function TServiceConfig.GetLogLevel: TLogLevel;
+function TScheduleConfig.GetLogLevel: TLogLevel;
 begin
   Result := TLogLevel(IniFile.ReadInteger('log', 'log_level', 0));
 end;
 
-function TServiceConfig.GetThreadCount: Integer;
+function TScheduleConfig.GetThreadCount: Integer;
 begin
   Result := IniFile.ReadInteger('project', 'handler_count', 1);
   if Result > 10 then

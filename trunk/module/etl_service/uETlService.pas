@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.SvcMgr, Vcl.Dialogs, uServiceRunner;
+  Vcl.Controls, Vcl.SvcMgr, Vcl.Dialogs, uScheduleRunner;
 
 type
   TCGTEtlSrv = class(TService)
@@ -12,7 +12,7 @@ type
     procedure ServiceStop(Sender: TService; var Stopped: Boolean);
   private
     { Private declarations }
-    FServiceRunner: TServiceRunner;
+    FServiceRunner: TScheduleRunner;
   public
     function GetServiceController: TServiceController; override;
     { Public declarations }
@@ -23,7 +23,7 @@ var
 
 implementation
 
-uses uDefines, uFileLogger, System.SyncObjs, uServiceConfig;
+uses uDefines, uFileLogger, System.SyncObjs, uScheduleConfig;
 
 {$R *.dfm}
 
@@ -40,18 +40,18 @@ end;
 
 procedure TCGTEtlSrv.ServiceStart(Sender: TService; var Started: Boolean);
 var
-  LServiceConfig: TServiceConfig;
+  LScheduleConfig: TScheduleConfig;
 begin
   ExePath := ExtractFilePath(ParamStr(0));
-  LServiceConfig := TServiceConfig.Create(ExePath + 'config\service.ini');
+  LScheduleConfig := TScheduleConfig.Create(ExePath + 'config\service.ini');
   try
     FileCritical := TCriticalSection.Create;
-    AppLogger := TThreadFileLog.Create(1, ExePath + 'log\service\', 'yyyymmdd\hh', LServiceConfig.LogLevel);
+    AppLogger := TThreadFileLog.Create(1, ExePath + 'log\service\', 'yyyymmdd\hh', LScheduleConfig.LogLevel);
     AppLogger.Force('Æô¶¯·þÎñ');
-    FServiceRunner := TServiceRunner.Create(ExePath, LServiceConfig);
+    FServiceRunner := TScheduleRunner.Create(ExePath, LScheduleConfig);
     FServiceRunner.Start;
   finally
-    LServiceConfig.Free;
+    LScheduleConfig.Free;
     Started := True;
   end;
 end;

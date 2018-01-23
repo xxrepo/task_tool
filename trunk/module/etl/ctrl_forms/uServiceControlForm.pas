@@ -55,11 +55,11 @@ var
 
 implementation
 
-uses uServiceUtil, uServiceConfig, uServiceRunner, uDefines, uFileUtil, uDesignTimeDefines;
+uses uServiceUtil, uScheduleConfig, uScheduleRunner, uDefines, uFileUtil, uDesignTimeDefines;
 
 var
-  ServiceConfig: TServiceConfig;
-  ServiceRunner: TServiceRunner;
+  ScheduleConfig: TScheduleConfig;
+  ScheduleRunner: TScheduleRunner;
 
   SERVICE_NAME: string;
 
@@ -81,19 +81,19 @@ end;
 
 procedure TServiceControlForm.TerminateTest;
 begin
-  if ServiceRunner <> nil then
+  if ScheduleRunner <> nil then
   begin
-    ServiceRunner.Terminate;
-    ServiceRunner.WaitFor;
+    ScheduleRunner.Terminate;
+    ScheduleRunner.WaitFor;
 
-    FreeAndNil(ServiceRunner);
+    FreeAndNil(ScheduleRunner);
   end;
 end;
 
 procedure TServiceControlForm.btnTestServiceClick(Sender: TObject);
 begin
   inherited;
-  if ServiceRunner <> nil then
+  if ScheduleRunner <> nil then
   begin
     try
       TerminateTest;
@@ -107,8 +107,8 @@ begin
     if SaveServiceConfig then
     begin
       try
-        ServiceRunner := TServiceRunner.Create(ExePath, ServiceConfig);
-        ServiceRunner.Start;
+        ScheduleRunner := TScheduleRunner.Create(ExePath, ScheduleConfig);
+        ScheduleRunner.Start;
         btnTestService.Caption := 'Õ£÷π≤‚ ‘';
       finally
 
@@ -180,8 +180,8 @@ procedure TServiceControlForm.FormCreate(Sender: TObject);
 begin
   inherited;
   SERVICE_NAME := 'CgtEtlSrv';
-  ServiceConfig := TServiceConfig.Create(ExePath + 'config\service.ini');
-  ServiceRunner := nil;
+  ScheduleConfig := TScheduleConfig.Create(ExePath + 'config\service.ini');
+  ScheduleRunner := nil;
   LoadServiceConfig;
 
   tmrCheckServiceStatus.Enabled := True;
@@ -191,18 +191,18 @@ procedure TServiceControlForm.FormDestroy(Sender: TObject);
 begin
   inherited;
   TerminateTest;
-  ServiceConfig.Free;
+  ScheduleConfig.Free;
 end;
 
 
 procedure TServiceControlForm.LoadServiceConfig;
 begin
   lblServiceStatusStr.Caption := TServiceUtil.QueryServiceStatusStr(SERVICE_NAME);
-  btnJobsFile.Text := ServiceConfig.JobsFile;
-  edtHandlerCount.Text := IntToStr(ServiceConfig.ThreadCount);
-  cbbLogLevel.ItemIndex := Ord(ServiceConfig.LogLevel);
-  mmoAllowedTime.Lines.DelimitedText := ServiceConfig.AllowedTimes;
-  mmoDisallowedTime.Lines.DelimitedText := ServiceConfig.DisAllowedTimes;
+  btnJobsFile.Text := ScheduleConfig.JobsFile;
+  edtHandlerCount.Text := IntToStr(ScheduleConfig.ThreadCount);
+  cbbLogLevel.ItemIndex := Ord(ScheduleConfig.LogLevel);
+  mmoAllowedTime.Lines.DelimitedText := ScheduleConfig.AllowedTimes;
+  mmoDisallowedTime.Lines.DelimitedText := ScheduleConfig.DisAllowedTimes;
 end;
 
 function TServiceControlForm.SaveServiceConfig: Boolean;
@@ -210,11 +210,11 @@ begin
   Result := False;
   if not FileExists(btnJobsFile.Text) then Exit;
 
-  ServiceConfig.IniFile.WriteString('project', 'jobs', btnJobsFile.Text);
-  ServiceConfig.IniFile.WriteInteger('project', 'handler_count', StrToIntDef(edtHandlerCount.Text, 1));
-  ServiceConfig.IniFile.WriteInteger('log', 'log_level', cbbLogLevel.ItemIndex);
-  ServiceConfig.IniFile.WriteString('project', 'allowed_times', mmoAllowedTime.Lines.DelimitedText);
-  ServiceConfig.IniFile.WriteString('project', 'disallowed_times', mmoDisAllowedTime.Lines.DelimitedText);
+  ScheduleConfig.IniFile.WriteString('project', 'jobs', btnJobsFile.Text);
+  ScheduleConfig.IniFile.WriteInteger('project', 'handler_count', StrToIntDef(edtHandlerCount.Text, 1));
+  ScheduleConfig.IniFile.WriteInteger('log', 'log_level', cbbLogLevel.ItemIndex);
+  ScheduleConfig.IniFile.WriteString('project', 'allowed_times', mmoAllowedTime.Lines.DelimitedText);
+  ScheduleConfig.IniFile.WriteString('project', 'disallowed_times', mmoDisAllowedTime.Lines.DelimitedText);
   Result := True;
 end;
 
@@ -227,7 +227,7 @@ end;
 
 procedure TServiceControlForm.RefreshServiceStatus;
 begin
-  if ServiceRunner <> nil then
+  if ScheduleRunner <> nil then
   begin
     btnInstall.Enabled := False;
     Exit;
