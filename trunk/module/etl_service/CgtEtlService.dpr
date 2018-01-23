@@ -14,7 +14,6 @@ uses
   uDefines in '..\etl\comm\uDefines.pas',
   uExceptions in '..\etl\comm\uExceptions.pas',
   uJob in '..\etl\comm\uJob.pas',
-  uServiceRunner in 'uServiceRunner.pas',
   uTask in '..\etl\comm\uTask.pas',
   uTaskVar in '..\etl\comm\uTaskVar.pas',
   uStepCondition in '..\etl\steps\uStepCondition.pas',
@@ -25,7 +24,6 @@ uses
   uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
   uStepQuery in '..\etl\steps\uStepQuery.pas',
   uStepSubTask in '..\etl\steps\uStepSubTask.pas',
-  uServiceConfig in 'uServiceConfig.pas',
   uStepIniRead in '..\etl\steps\uStepIniRead.pas',
   uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
   uStepFileDelete in '..\etl\steps\uStepFileDelete.pas',
@@ -38,10 +36,12 @@ uses
   uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
   uTaskDefine in '..\etl\comm\uTaskDefine.pas',
-  uHttpServerConfig in '..\etl\ctrl_forms\uHttpServerConfig.pas',
-  uHttpServerRunner in '..\etl\ctrl_forms\uHttpServerRunner.pas',
+  uHttpServerConfig in '..\etl\runners\uHttpServerConfig.pas',
+  uHttpServerRunner in '..\etl\runners\uHttpServerRunner.pas',
   uJobMgr in '..\etl\comm\uJobMgr.pas',
-  uJobDispatcher in '..\etl\comm\uJobDispatcher.pas';
+  uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
+  uServiceConfig in '..\etl\runners\uServiceConfig.pas',
+  uServiceRunner in '..\etl\runners\uServiceRunner.pas';
 
 {$R *.RES}
 
