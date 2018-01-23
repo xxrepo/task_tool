@@ -96,6 +96,8 @@ begin
   end;
   if (not HttpServerRunner.Server.Active) then
   begin
+
+    FHttpServerConfigRec.LogNoticeHandle := Handle;
     HttpServerRunner.Start(FHttpServerConfigRec);
   end;
   CheckServerStatus;

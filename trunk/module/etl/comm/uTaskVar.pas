@@ -4,7 +4,7 @@ interface
 
 uses
   uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
-  System.SysUtils, System.JSON;
+  System.SysUtils, System.JSON, uTaskResult;
 
 type
   TTaskVarRec = record
@@ -53,11 +53,14 @@ type
     DbConMgr: TDbConMgr;
     TaskStatus: TTaskRunStatus;
 
+    TaskResult: TTaskResult;
+
     function RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
     function GetStepData(ADataRef: string): TStepData;
-    function GetContextStepData(ADataRef: string): TStepData;
     function RegObject(ARef: string; AObject: TObject): Integer;
     function GetObject(ARef: string): TObject;
+
+    function GetContextStepData(ADataRef: string): TStepData;
 
     constructor Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
     destructor Destroy; override;
@@ -92,6 +95,7 @@ type
 
 constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
+  TaskResult := TTaskResult.Create;
   FStepStack := TStringList.Create;
 
   FToStep.OwnerBlock.BlockName := '';
@@ -154,6 +158,8 @@ begin
 
   Logger.Free;
   GlobalVar := nil;
+
+  TaskResult.Free;
   inherited;
 end;
 

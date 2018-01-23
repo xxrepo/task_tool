@@ -6,13 +6,6 @@ uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig
 
 type
 
-  TOutResult = record
-    Code: Integer;
-    Msg: string;
-    Data: string;
-  end;
-
-
   THttpServerRunner = class
   private
     FServer: TIdHttpServer;
@@ -184,7 +177,7 @@ begin
       LDisStrings.DelimitedText := ARequestInfo.Params.Values['dis'];
       if LDisStrings.Count = 2 then
       begin
-        LJobDispatcherRec^.ProjectFile := LDocPath + LDisStrings.Strings[0] + '/project.json';
+        LJobDispatcherRec^.ProjectFile := LDocPath + LDisStrings.Strings[0] + '\project.jobs';
         LJobDispatcherRec^.JobName := LDisStrings.Strings[1];
         LJobDispatcherRec^.InParams := GetRequestParams(ARequestInfo);
       end
@@ -194,10 +187,13 @@ begin
       LDisStrings.Free;
     end;
 
+    LOutResult.Code := -1;
+    LOutResult.Msg := '处理失败';
+    LOutResult.Data := '';
+
     if LJobDispatcherRec = nil then
     begin
       //输出错误结果
-      LOutResult.Code := -1;
       LOutResult.Msg := 'dis参数异常';
       LOutResult.Data := ARequestInfo.Params.Values['dis'];
     end
@@ -217,10 +213,11 @@ begin
         //否则生成jobdispatcher，直接调用
         LJobDispatcher := TJobDispatcher.Create(FServerConfigRec.LogLevel);
         try
+          LJobDispatcher.LogNoticeHandle := FServerConfigRec.LogNoticeHandle;
           LJobDispatcher.StartProjectJob(LJobDispatcherRec);
 
           //获得输出参数
-
+          LOutResult := LJobDispatcher.OutResult;
         finally
           LJobDispatcher.Free;
         end;
@@ -304,8 +301,41 @@ end;
 
 procedure THttpServerRunner.OutputResult(ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo;
   AOutResult: TOutResult);
+var
+  LRsp: string;
+  LResultJson: TJSONObject;
 begin
+  LRsp := ARequestInfo.Params.Values['rsp'];
 
+  AResponseInfo.ContentText := AOutResult.Data;
+  if AOutResult.Code < 0 then
+      AResponseInfo.ContentText := AOutResult.Msg;
+
+  if (LRsp = 'html') then
+  begin
+    AResponseInfo.ContentType := 'text/html';
+  end
+  else if (LRsp = 'htmlplain') or (LRsp = 'textplain') or (LRsp = 'plain') then
+  begin
+    AResponseInfo.ContentType := 'text/plain';
+  end
+  else
+  begin
+    //默认 json
+    AResponseInfo.ContentType := 'application/json';
+
+    LResultJson := TJSONObject.Create;
+    try
+      LResultJson.AddPair(TJSONPair.Create('code', TJSONNumber.Create(AOutResult.Code)));
+      LResultJson.AddPair(TJSONPair.Create('msg', AOutResult.Msg));
+      LResultJson.AddPair(TJSONPair.Create('data', AOutResult.Data));
+
+      AResponseInfo.ContentText := LResultJson.ToJSON;
+    finally
+      LResultJson.Free;
+    end;
+
+  end;
 end;
 
 

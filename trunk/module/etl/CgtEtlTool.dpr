@@ -83,7 +83,8 @@ uses
   uHttpServerConfig in 'runners\uHttpServerConfig.pas',
   uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
   uJobDispatcher in 'comm\uJobDispatcher.pas',
-  uJobMgr in 'comm\uJobMgr.pas';
+  uJobMgr in 'comm\uJobMgr.pas',
+  uTaskResult in 'comm\uTaskResult.pas';
 
 {$R *.res}
 

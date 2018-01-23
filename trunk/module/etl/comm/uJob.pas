@@ -18,8 +18,12 @@ type
   TJobConfig = class
   private
     FTaskConfigRec: TTaskConfigRec;
+    FHandleStatus: TJobHandleStatus;
+    FCritical: TCriticalSection;
     function GetTaskStepsStr: string;
     function GetTaskConfigRec: TTaskConfigRec;
+    function GetHandleStatus: TJobHandleStatus;
+    procedure SetHandleStatus(const Value: TJobHandleStatus);
   public
     JobName: string;
     TaskFile: string;
@@ -31,8 +35,6 @@ type
     TimeOut: Integer;
     Status: Integer;
 
-    HandleStatus: TJobHandleStatus;
-
     //线程不安全参数，仅作为临时的记录
     Task: TTask;
     RunThread: TThread;
@@ -40,6 +42,7 @@ type
 
     property TaskConfigRec: TTaskConfigRec read GetTaskConfigRec;
     property TaskStepsStr: string read GetTaskStepsStr;
+    property HandleStatus: TJobHandleStatus read GetHandleStatus write SetHandleStatus;
 
     constructor Create;
     destructor Destroy; override;
@@ -65,6 +68,7 @@ uses uDefines, uFunctions, uTaskVar, Winapi.Windows, uFileUtil, System.DateUtils
 constructor TJobConfig.Create;
 begin
   inherited;
+  FCritical := TCriticalSection.Create;
   AllowedTimes := TStringList.Create;
   DisallowedTimes := TStringList.Create;
 end;
@@ -72,12 +76,17 @@ end;
 
 destructor TJobConfig.Destroy;
 begin
-  AppLogger.Force('Job被释放：' + JobName);
   AllowedTimes.Free;
   DisallowedTimes.Free;
+  FCritical.Free;
   inherited;
 end;
 
+
+function TJobConfig.GetHandleStatus: TJobHandleStatus;
+begin
+  Result := FHandleStatus;
+end;
 
 function TJobConfig.GetTaskConfigRec: TTaskConfigRec;
 begin
@@ -127,6 +136,16 @@ begin
   end;
 end;
 
+
+procedure TJobConfig.SetHandleStatus(const Value: TJobHandleStatus);
+begin
+  FCritical.Enter;
+  try
+    FHandleStatus := Value;
+  finally
+    FCritical.Leave;
+  end;
+end;
 
 function TJobConfig.ToString: string;
 begin

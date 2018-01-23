@@ -36,7 +36,7 @@ type
     procedure StopJob(AJob: TJobConfig); overload;
     function CheckJobTask(AJob: TJobConfig): Boolean;
   public
-    CallerHandle: THandle;
+    LogNoticeHandle: THandle;
     constructor Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
     destructor Destroy; override;
 
@@ -59,7 +59,7 @@ uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uFileUtil, uTask, uTask
 
 constructor TJobMgr.Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
 begin
-  CallerHandle := 0;
+  LogNoticeHandle := 0;
   FLogLevel := ALogLevel;
 
   Critical := TCriticalSection.Create;
@@ -216,7 +216,13 @@ begin
 
   if not CheckJobTask(LJob) then
   begin
-    AppLogger.Debug('Pop Job 任务异常：' + LRequest.JobName);
+    AppLogger.Error('Pop Job 任务异常：' + LRequest.JobName);
+    Dispose(LRequest);
+    InterlockedDecrement(FUnHandledCount);
+    if LJob <> nil then
+    begin
+      LJob.FreeTask;
+    end;
     Exit;
   end;
 
@@ -227,7 +233,7 @@ begin
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     {$IFDEF PROJECT_DESIGN_MODE}
-    LJob.Task.TaskVar.Logger.NoticeHandle := CallerHandle;
+    LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
     {$ENDIF}
     try
       LJob.LastStartTime := Now;
@@ -267,8 +273,7 @@ begin
       AppLogger.Error('TJobMgr.List中未找到对应的Job对象');
       Continue;
     end;
-
-    AppLogger.Debug('[' + IntToStr(i) + ']：' + LJob.ToString);
+    //AppLogger.Debug('[GetJob][' + IntToStr(i) + ']' + LJob.ToString);
 
     //检查是否超时，如果超时呢？先尝试stop，然后等待？如果stop失败，证明整个Task已经异常了
     //这个时候可以尝试直接free掉这个task，必然引起这个线程内部的异常
@@ -288,7 +293,8 @@ begin
 
       AppLogger.Error('任务执行超时：' + Ljob.JobName);
     except
-
+      on E: Exception do
+        AppLogger.Error('TimeOutCheck Failed：' + Ljob.JobName + '： ' + E.Message);
     end;
 
     if not LJob.CheckSchedule then
@@ -315,7 +321,12 @@ procedure TJobMgr.StartJob(AJob: TJobConfig);
 var
   LRequest: PJobRequest;
 begin
-  if not CheckJobTask(AJob) then Exit;
+  if not CheckJobTask(AJob) then
+  begin
+    AppLogger.Error('[CheckJobTask Failed]' + Ajob.JobName);
+    Exit;
+  end;
+
   if AJob.HandleStatus = jhsNone then
   begin
     AJob.HandleStatus := jhsWaited;
@@ -325,6 +336,8 @@ begin
     LRequest^.TaskConfig := AJob.TaskConfigRec;
     LRequest^.TaskConfig.RunBasePath := FRunBasePath;
     LRequest^.TaskConfig.DBsConfigFile := DbsConfigFile;
+
+    AppLogger.Debug('[StartJob]' + AJob.ToString);
 
     if FThreadPool <> nil then
     begin

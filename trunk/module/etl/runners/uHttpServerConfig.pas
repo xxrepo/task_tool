@@ -11,10 +11,13 @@ type
     DocRoot: string;
     AbsDocRoot: string;
     MaxConnection: Integer;
-    LogLevel: TLogLevel;
     AllowedAccessOrigins: string;
     AllowedTimes: string;
     DisallowedTimes: string;
+
+
+    LogLevel: TLogLevel;
+    LogNoticeHandle: THandle;
   end;
 
   THttpServerConfigUtil = class
