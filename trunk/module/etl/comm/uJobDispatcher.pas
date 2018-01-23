@@ -119,6 +119,7 @@ begin
   try
     if LoadConfigFrom(AJobDispatcherRec.ProjectFile, AJobDispatcherRec.JobName) then
     begin
+      FInParams := AJobDispatcherRec.InParams;
       StartJob(AJobDispatcherRec.JobName);
     end
     else

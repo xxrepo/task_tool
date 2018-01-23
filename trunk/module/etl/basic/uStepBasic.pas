@@ -41,8 +41,6 @@ type
     procedure StopExceptionRaise(AMsg: string);
 
     procedure CheckTaskStatus;
-    procedure StartSelf; virtual;
-    procedure StartChildren(AChildStepTitle: string = ''); virtual;
     procedure RegOutDataToTaskVar; virtual; //ToDo
 
     function FormatLogMsg(ALogMsg: string): string;
@@ -54,6 +52,8 @@ type
     function GetSelfParamValue(AParamRef, AParamType: string; ADefaultValue: Variant): Variant; virtual;
 
     procedure StartSelfDesign; virtual;
+    procedure StartSelf; virtual;
+    procedure StartChildren(AChildStepTitle: string = ''); virtual;
   public
     property StepConfig: TStepConfig read FStepConfig write FStepConfig;
     property SubSteps: TJSONArray read FSubSteps write FSubSteps;

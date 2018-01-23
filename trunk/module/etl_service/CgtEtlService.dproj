@@ -128,7 +128,6 @@
         <DCCReference Include="..\etl\steps\uStepQuery.pas"/>
         <DCCReference Include="..\etl\steps\uStepSubTask.pas"/>
         <DCCReference Include="..\etl\steps\uStepIniRead.pas"/>
-        <DCCReference Include="..\etl\steps\uStepVarDefine.pas"/>
         <DCCReference Include="..\etl\steps\uStepFileDelete.pas"/>
         <DCCReference Include="..\etl\steps\uStepWriteTxtFile.pas"/>
         <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
@@ -145,6 +144,11 @@
         <DCCReference Include="..\etl\comm\uJobDispatcher.pas"/>
         <DCCReference Include="..\etl\runners\uScheduleConfig.pas"/>
         <DCCReference Include="..\etl\runners\uScheduleRunner.pas"/>
+        <DCCReference Include="..\etl\steps\uStepTaskResult.pas"/>
+        <DCCReference Include="..\etl\steps\uStepTaskResultForm.pas">
+            <Form>StepTaskResultForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

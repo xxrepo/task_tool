@@ -66,7 +66,7 @@ begin
       begin
         LValuesJson.AddPair(TJSONPair.Create(LArray[i].Key, LArray[i].Value));
       end;
-      Result := LValuesJson.ToJSON;
+      Result := LValuesJson.ToString;
     finally
       LValuesJson.Free;
     end;

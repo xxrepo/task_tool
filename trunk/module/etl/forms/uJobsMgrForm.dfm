@@ -2,14 +2,13 @@ inherited JobsForm: TJobsForm
   Caption = #25191#34892#24037#20316#31649#29702
   ClientHeight = 693
   ClientWidth = 1168
-  Font.Height = -16
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 1184
   ExplicitHeight = 732
   PixelsPerInch = 96
-  TextHeight = 19
+  TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
     Top = 53
     Width = 1168
@@ -53,12 +52,6 @@ inherited JobsForm: TJobsForm
         BorderStyle = bsNone
         DataSource = dsJobs
         DynProps = <>
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -16
-        Font.Name = 'Tahoma'
-        Font.Style = []
-        ParentFont = False
         PopupMenu = pmJobs
         TabOrder = 0
         VertScrollBar.Width = 10
@@ -179,6 +172,7 @@ inherited JobsForm: TJobsForm
     inherited redtLog: TRichEdit
       Width = 1168
       Height = 199
+      ParentFont = True
       ExplicitWidth = 1168
       ExplicitHeight = 199
     end

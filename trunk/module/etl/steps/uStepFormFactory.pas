@@ -28,6 +28,7 @@ uses
    , uStepConditionForm
    , uStepJson2DataSetForm
    , uStepFastReportForm
+   , uStepTaskResultForm
    , uStepVarDefineForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;

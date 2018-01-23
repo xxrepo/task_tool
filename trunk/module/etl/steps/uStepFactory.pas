@@ -31,6 +31,7 @@ uses
   uStepVarDefine,
   uStepFileDelete,
   uStepJson2DataSet,
+  uStepTaskResult,
   uStepFastReport;
 
 var
@@ -110,6 +111,10 @@ begin
       60020:
       begin
         Result := TStepVarDefine.Create(ATaskVar);
+      end;
+      60030:
+      begin
+        Result := TStepTaskResult.Create(ATaskVar);
       end;
       70010:
       begin
@@ -213,6 +218,15 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', '条件判断'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepCondition'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepConditionForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'CONTROL_TASKRESULT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'TaskResult任务结果'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTaskResult'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTaskResultForm'));
   SysSteps.AddElement(LRowJson);
 
 

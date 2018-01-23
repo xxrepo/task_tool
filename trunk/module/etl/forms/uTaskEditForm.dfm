@@ -45,6 +45,12 @@ inherited TaskEditForm: TTaskEditForm
         Width = 81
         Height = 33
         Caption = #20445#23384
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -14
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
         OnClick = rzbtbtnSaveClick
       end
@@ -55,6 +61,12 @@ inherited TaskEditForm: TTaskEditForm
         Height = 33
         Anchors = [akTop, akRight]
         Caption = #21478#23384#20026'...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -14
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
         Visible = False
       end
@@ -64,6 +76,12 @@ inherited TaskEditForm: TTaskEditForm
         Width = 89
         Height = 33
         Caption = #36816#34892
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -14
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
         OnClick = btnStartClick
       end
@@ -79,7 +97,7 @@ inherited TaskEditForm: TTaskEditForm
       BorderStyle = bsNone
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -14
       Font.Name = 'Tahoma'
       Font.Style = []
       Indent = 19
@@ -99,6 +117,7 @@ inherited TaskEditForm: TTaskEditForm
     inherited redtLog: TRichEdit
       Width = 858
       Height = 205
+      Font.Charset = DEFAULT_CHARSET
       ExplicitWidth = 858
       ExplicitHeight = 205
     end
@@ -108,7 +127,6 @@ inherited TaskEditForm: TTaskEditForm
       ParentFont = False
       ExplicitWidth = 858
       inherited btnClearLog: TBitBtn
-        Font.Height = -16
         ParentFont = False
       end
     end

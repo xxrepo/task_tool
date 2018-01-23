@@ -38,8 +38,8 @@ uses
   uStepFormFactory in 'steps\uStepFormFactory.pas',
   uStepHttpRequest in 'steps\uStepHttpRequest.pas',
   uStepHttpRequestForm in 'steps\uStepHttpRequestForm.pas' {StepHttpRequestForm},
-  uStepVarDefine in 'steps\uStepVarDefine.pas',
-  uStepVarDefineForm in 'steps\uStepVarDefineForm.pas' {StepVarDefineForm},
+  uStepTaskResult in 'steps\uStepTaskResult.pas',
+  uStepTaskResultForm in 'steps\uStepTaskResultForm.pas' {StepTaskResultForm},
   uStepIniWrite in 'steps\uStepIniWrite.pas',
   uStepIniWriteForm in 'steps\uStepIniWriteForm.pas' {StepIniWriteForm},
   uStepNullForm in 'steps\uStepNullForm.pas' {StepNullForm},
@@ -84,7 +84,9 @@ uses
   uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
   uJobDispatcher in 'comm\uJobDispatcher.pas',
   uJobMgr in 'comm\uJobMgr.pas',
-  uTaskResult in 'comm\uTaskResult.pas';
+  uTaskResult in 'comm\uTaskResult.pas',
+  uStepVarDefine in 'steps\uStepVarDefine.pas',
+  uStepVarDefineForm in 'steps\uStepVarDefineForm.pas' {StepVarDefineForm};
 
 {$R *.res}
 
@@ -105,6 +107,7 @@ begin
   Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
   Application.CreateForm(THttpServerControlForm, HttpServerControlForm);
   Application.CreateForm(TSelectFolderForm, SelectFolderForm);
+  Application.CreateForm(TStepVarDefineForm, StepVarDefineForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

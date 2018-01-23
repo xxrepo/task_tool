@@ -25,7 +25,6 @@ uses
   uStepQuery in '..\etl\steps\uStepQuery.pas',
   uStepSubTask in '..\etl\steps\uStepSubTask.pas',
   uStepIniRead in '..\etl\steps\uStepIniRead.pas',
-  uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
   uStepFileDelete in '..\etl\steps\uStepFileDelete.pas',
   uStepWriteTxtFile in '..\etl\steps\uStepWriteTxtFile.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
@@ -41,7 +40,9 @@ uses
   uJobMgr in '..\etl\comm\uJobMgr.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
   uScheduleConfig in '..\etl\runners\uScheduleConfig.pas',
-  uScheduleRunner in '..\etl\runners\uScheduleRunner.pas';
+  uScheduleRunner in '..\etl\runners\uScheduleRunner.pas',
+  uStepTaskResult in '..\etl\steps\uStepTaskResult.pas',
+  uStepTaskResultForm in '..\etl\steps\uStepTaskResultForm.pas' {StepTaskResultForm};
 
 {$R *.RES}
 
@@ -63,5 +64,6 @@ begin
   if not Application.DelayInitialize or Application.Installing then
     Application.Initialize;
   Application.CreateForm(TCGTEtlSrv, CGTEtlSrv);
+  Application.CreateForm(TStepTaskResultForm, StepTaskResultForm);
   Application.Run;
 end.

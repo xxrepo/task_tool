@@ -1,23 +1,22 @@
 inherited HttpServerControlForm: THttpServerControlForm
   Caption = #26412#22320'Server'#35774#32622
-  ClientHeight = 633
+  ClientHeight = 588
   ClientWidth = 646
-  Font.Height = -16
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 662
-  ExplicitHeight = 672
+  ExplicitHeight = 627
   PixelsPerInch = 96
-  TextHeight = 19
+  TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
     Width = 646
-    Height = 633
-    Position = 514
-    Percent = 82
+    Height = 588
+    Position = 411
+    Percent = 70
     UsePercent = False
     HotSpotSizePercent = 50
     ExplicitWidth = 646
-    ExplicitHeight = 581
+    ExplicitHeight = 633
     UpperLeftControls = (
       lbl1
       lblPort
@@ -44,64 +43,64 @@ inherited HttpServerControlForm: THttpServerControlForm
     object lbl1: TLabel [0]
       Left = 103
       Top = 25
-      Width = 47
-      Height = 19
+      Width = 40
+      Height = 17
       Caption = #26412#22320'IP'
     end
     object lblPort: TLabel [1]
       Left = 391
       Top = 25
-      Width = 93
-      Height = 19
+      Width = 82
+      Height = 17
       Caption = #30417#21548#31471#21475'Port'
     end
     object lblDocRoot: TLabel [2]
       Left = 46
       Top = 63
-      Width = 108
-      Height = 19
+      Width = 97
+      Height = 17
       Caption = #26681#30446#24405'DocRoot'
     end
     object lblMaxSession: TLabel [3]
       Left = 73
       Top = 101
-      Width = 80
-      Height = 19
+      Width = 70
+      Height = 17
       Caption = #26368#22823#36830#25509#25968
     end
     object lbl3: TLabel [4]
       Left = 87
       Top = 139
-      Width = 64
-      Height = 19
+      Width = 56
+      Height = 17
       Caption = #26085#24535#31561#32423
     end
     object lbl4: TLabel [5]
       Left = 73
       Top = 174
-      Width = 80
-      Height = 19
+      Width = 70
+      Height = 17
       Caption = #20801#35768#26102#38388#27573
     end
     object lbl5: TLabel [6]
       Left = 73
       Top = 235
-      Width = 80
-      Height = 19
+      Width = 70
+      Height = 17
       Caption = #31105#27490#26102#38388#27573
     end
     object lbl2: TLabel [7]
       Left = 74
       Top = 289
-      Width = 80
-      Height = 19
+      Width = 70
+      Height = 17
       Caption = #36328#22495#30333#21517#21333
     end
     object cbbLogLevel: TComboBox [8]
       Left = 173
       Top = 136
       Width = 129
-      Height = 27
+      Height = 25
       Style = csDropDownList
       ItemIndex = 0
       TabOrder = 0
@@ -132,7 +131,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 172
       Top = 60
       Width = 433
-      Height = 27
+      Height = 25
       Text = ''
       TabOrder = 3
       AltBtnWidth = 15
@@ -143,7 +142,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 173
       Top = 22
       Width = 190
-      Height = 27
+      Height = 25
       TabOrder = 4
       Text = '127.0.0.1'
     end
@@ -151,7 +150,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 494
       Top = 22
       Width = 111
-      Height = 27
+      Height = 25
       TabOrder = 5
       Text = '61288'
     end
@@ -159,7 +158,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 172
       Top = 98
       Width = 130
-      Height = 27
+      Height = 25
       TabOrder = 6
       Text = '1'
     end
@@ -199,9 +198,9 @@ inherited HttpServerControlForm: THttpServerControlForm
     end
     inherited redtLog: TRichEdit
       Width = 646
-      Height = 67
+      Height = 125
       ExplicitWidth = 646
-      ExplicitHeight = 44
+      ExplicitHeight = 67
     end
     inherited rzpnl3: TRzPanel
       Width = 646
