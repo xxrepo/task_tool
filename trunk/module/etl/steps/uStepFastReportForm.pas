@@ -13,17 +13,24 @@ uses
 type
   TStepFastReportForm = class(TStepBasicForm)
     lbl2: TLabel;
-    cdsParams: TClientDataSet;
-    dsParams: TDataSource;
-    dbnvgrParams: TDBNavigator;
-    dbgrdhInputParams: TDBGridEh;
-    lblParams: TLabel;
+    cdsDatasetParams: TClientDataSet;
+    dsDatasetParams: TDataSource;
     lbl5: TLabel;
     edtPrinterName: TEdit;
     chkPreview: TCheckBox;
     btnReportFile: TRzButtonEdit;
     dlgOpenFileName: TOpenDialog;
     btnDesign: TButton;
+    rztbshtData: TRzTabSheet;
+    lblParams: TLabel;
+    dbnvgrDatasetParams: TDBNavigator;
+    dbgrdhDatasetParams: TDBGridEh;
+    lbl3: TLabel;
+    dbnvgrVarParams: TDBNavigator;
+    dbgrdhVarParams: TDBGridEh;
+    dsVarParams: TDataSource;
+    cdsVarParams: TClientDataSet;
+    frxrprt1: TfrxReport;
     procedure btnOKClick(Sender: TObject);
     procedure btnReportFileButtonClick(Sender: TObject);
     procedure btnDesignClick(Sender: TObject);
@@ -51,8 +58,8 @@ begin
   inherited;
   with Step as TStepFastReport do
   begin
-    DBDataSetsConfigStr := DataSetToJsonStr(cdsParams);
-    DBVariablesConfigStr := DataSetToJsonStr(cdsParams);
+    DBDataSetsConfigStr := DataSetToJsonStr(cdsDatasetParams);
+    DBVariablesConfigStr := DataSetToJsonStr(cdsVarParams);
     ReportFile := btnReportFile.Text;
     Preview := chkPreview.Checked;
     PrinterName := edtPrinterName.Text;
@@ -76,7 +83,7 @@ begin
   inherited;
   LStep := TStepFastReport(Step);
 
-  LStep.Reporter.DesignReport();
+  LStep.Reporter.DesignReport;
 end;
 
 procedure TStepFastReportForm.ParseStepConfig(AConfigJsonStr: string);
@@ -89,9 +96,10 @@ begin
   chkPreview.Checked := LStep.Preview;
   edtPrinterName.Text := LStep.PrinterName;
   btnReportFile.Text := LStep.ReportFile;
-  JsonToDataSet(LStep.DBDataSetsConfigStr, cdsParams);
+  JsonToDataSet(LStep.DBDataSetsConfigStr, cdsDatasetParams);
+  JsonToDataSet(LStep.DBVariablesConfigStr, cdsVarParams);
 
-  dbgrdhInputParams.Columns.FindColumnByName('Column_1_dataset_object_ref').PickList.Text :=
+  dbgrdhDatasetParams.Columns.FindColumnByName('Column_1_dataset_object_ref').PickList.Text :=
            TStepFormSettings.GetRegistedObjectStrings(TaskVar).PickList;
 end;
 

@@ -105,7 +105,7 @@ begin
       //从Task获取执行结果
       FOutResult.Code := LJob.Task.TaskVar.TaskResult.Code;
       FOutResult.Msg := LJob.Task.TaskVar.TaskResult.Msg;
-      FOutResult.Data := LJob.Task.TaskVar.TaskResult.Data.ToJson;
+      FOutResult.Data := LJob.Task.TaskVar.TaskResult.DataStr;
 
       AppLogger.Force('结束执行工作：' + LJob.JobName);
       LJob.Task.TaskVar.Logger.Force('任务结束'+ LJob.JobName);

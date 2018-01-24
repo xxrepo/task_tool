@@ -8,6 +8,7 @@ uses
 
 function GetJsonObjectValue(AJsonObject: TJSONObject; AKey: string; ADefault: string = ''; AParamType: string = 'string'): Variant;
 function StrToJsonValue(const AStr: string): TJSONValue;
+function JsonValueToStr(const AJsonValue: TJSONValue): string;
 
 function FindProcess(AFileName: string): boolean;
 function OpenExecutive(AFileName: string): Boolean;
@@ -272,6 +273,18 @@ begin
   Result := TJSONObject.ParseJSONValue(AStr);
   if Result = nil then
     Result := TJSONString.Create(AStr);
+end;
+
+
+function JsonValueToStr(const AJsonValue: TJSONValue): string;
+begin
+  Result := '';
+  if AJsonValue = nil then Exit;
+
+  if (AJsonValue is TJSONObject) or (AJsonValue is TJSONArray) then
+    Result := AJsonValue.ToJSON
+  else
+    Result := AJsonValue.Value;
 end;
 
 

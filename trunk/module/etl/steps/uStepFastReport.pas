@@ -39,7 +39,7 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines;
+  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Vcl.Forms;
 
 { TStepQuery }
 
@@ -91,12 +91,11 @@ end;
 procedure TStepFastReport.StartSelfDesign;
 var
   LDBDataSet: TfrxDBDataset;
-  LDBDataSetsJsonArray: TJSONArray;
-  LDBDataSetConfigJson: TJSONObject;
+  LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
+  LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
 begin
   try
-    //RegisterClass(TfrxDBDataSet);
     FReporter := TfrxReport.Create(nil);
 
     //创建datasets
@@ -118,26 +117,44 @@ begin
       end;
     end;
 
+    LDBVarJsonArray := TJSONObject.ParseJSONValue(FDBVariablesConfigStr) as TJSONArray;
+    if LDBVarJsonArray <> nil then
+    begin
+      for i := 0 to LDBVarJsonArray.Count - 1 do
+      begin
+        LDBVarJsonObj := LDBVarJsonArray.Items[i] as TJSONObject;
+        if LDBVarJsonObj = nil then Continue;
+
+        with FReporter.Variables.Add do
+        begin
+          Name := GetJsonObjectValue(LDBVarJsonObj, 'param_name');
+          Value := GetParamValue(LDBVarJsonObj);
+        end;
+      end;
+    end;
+
+
     //创建加载各个variables  (TaskVar.ToStepId = StepConfig.StepId) and
     if FileExists(FAbsoluteReportFile) then
       FReporter.LoadFromFile(FAbsoluteReportFile);
   finally
     if LDBDataSetsJsonArray <> nil then
       FreeAndNil(LDBDataSetsJsonArray);
+    if LDBVarJsonArray <> nil then
+      FreeAndNil(LDBVarJsonArray);
   end;
 end;
 
 procedure TStepFastReport.StartSelf;
 var
   LDBDataSet: TfrxDBDataset;
-  LDBDataSetsJsonArray: TJSONArray;
-  LDBDataSetConfigJson: TJSONObject;
+  LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
+  LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
 begin
   try
     CheckTaskStatus;
 
-    //RegisterClass(TfrxDBDataSet);
     FReporter := TfrxReport.Create(nil);
 
     //创建datasets
@@ -168,6 +185,21 @@ begin
       end;
     end;
 
+    LDBVarJsonArray := TJSONObject.ParseJSONValue(FDBVariablesConfigStr) as TJSONArray;
+    if LDBVarJsonArray <> nil then
+    begin
+      for i := 0 to LDBVarJsonArray.Count - 1 do
+      begin
+        LDBVarJsonObj := LDBVarJsonArray.Items[i] as TJSONObject;
+        if LDBVarJsonObj = nil then Continue;
+
+        with FReporter.Variables.Add do
+        begin
+          Name := GetJsonObjectValue(LDBVarJsonObj, 'param_name');
+          Value := GetParamValue(LDBVarJsonObj);
+        end;
+      end;
+    end;
 
     //创建加载各个variables
     FReporter.LoadFromFile(FAbsoluteReportFile);
@@ -179,6 +211,8 @@ begin
   finally
     if LDBDataSetsJsonArray <> nil then
       FreeAndNil(LDBDataSetsJsonArray);
+    if LDBVarJsonArray <> nil then
+      FreeAndNil(LDBVarJsonArray);
   end;
 end;
 

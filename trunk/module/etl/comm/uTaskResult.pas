@@ -9,12 +9,13 @@ type
   private
     FCode: Integer;
     FMsg: string;
-    FData: TJsonValue;
+    FData: TJSONValue;
 
     function GetData: TJSONValue;
     function GetValues(const Name: string): TJsonValue;
     procedure SetValues(const Name: string; Value: TJSONValue);
     procedure SetData(const Value: TJSONValue);
+    function GetDataStr: string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -23,6 +24,7 @@ type
     property Msg: string read FMsg write FMsg;
     property Data: TJSONValue read GetData write SetData;
     property Values[const Name: string]: TJSONValue read GetValues write SetValues;
+    property DataStr: string read GetDataStr;
 
     function ToJsonString: string;
   end;
@@ -49,11 +51,17 @@ begin
 end;
 
 
-function TTaskResult.GetData: TJSONValue;
+function TTaskResult.GetData: TJsonValue;
 begin
   if FData = nil then
     FData := TJSONValue.Create;
+
   Result := FData;
+end;
+
+function TTaskResult.GetDataStr: string;
+begin
+  Result := JsonValueToStr(FData);
 end;
 
 function TTaskResult.GetValues(const Name: string): TJSONValue;
@@ -62,7 +70,6 @@ begin
   if (FData as TJSONObject) <> nil then
     Result := (FData as TJSONObject).GetValue(Name) as TJSONValue;
 end;
-
 
 procedure TTaskResult.SetData(const Value: TJSONValue);
 begin
