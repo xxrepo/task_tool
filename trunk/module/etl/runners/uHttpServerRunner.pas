@@ -2,8 +2,7 @@ unit uHttpServerRunner;
 
 interface
 
-uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher,
-uJobAsyncHandlerForm;
+uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher;
 
 type
 
@@ -12,7 +11,7 @@ type
     FServer: TIdHttpServer;
     FServerConfigRec: THttpServerConfigRec;
 
-    FJobAsyncHandlerForm: TJobAsyncHandlerForm;
+    FJobDispatcher: TJobDispatcher;
 
     procedure OnServerCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -38,7 +37,7 @@ type
 
 implementation
 
-uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows;
+uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows, System.Math;
 
 type
   DisParamException = class(Exception);
@@ -48,8 +47,6 @@ type
 constructor THttpServerRunner.Create;
 begin
   inherited;
-  FJobAsyncHandlerForm := TJobAsyncHandlerForm.Create(nil);
-
   FServer := TIdHTTPServer.Create(nil);
   FServer.ServerSoftware := 'Cgt Lite Server 1.0';
   FServer.OnCommandGet := OnServerCommandGet;
@@ -64,7 +61,8 @@ begin
     FServer.Active := False;
     FreeAndNil(FServer);
 
-    FJobAsyncHandlerForm.Free;
+    if FJobDispatcher <> nil then
+      FreeAndNil(FJobDispatcher);
   except
 
   end;
@@ -80,6 +78,10 @@ begin
       FServer.StopListening;
       FServer.Active := False;
     end;
+
+    if FJobDispatcher <> nil then
+      FreeAndNil(FJobDispatcher);
+    FJobDispatcher := TJobDispatcher.Create(Min(AServerConfigRec.MaxConnection + 1, 10));
 
     FServerConfigRec := AServerConfigRec;
     FServerConfigRec.AbsDocRoot := TFileUtil.GetAbsolutePathEx(ExePath, AServerConfigRec.DocRoot);
@@ -167,7 +169,7 @@ var
   LDocPath: string;
   LDisStrings: TStringList;
   LJobDispatcherRec: PJobDispatcherRec;
-  LJobDispatcher: TJobDispatcher;
+  LSyncJobDispatcher: TJobDispatcher;
   LOutResult: TOutResult;
 begin
   LLocalDoc := ExpandFilename(FServerConfigRec.AbsDocRoot + ARequestInfo.Document);
@@ -210,24 +212,24 @@ begin
     else
     begin
       //执行jobdispatcher，如果传入的是异步消息，则发送job的消息到AsyncJobHandlerForm
-      if ARequestInfo.Params.Values['vv_async'].Length > 0 then
+      if ARequestInfo.Params.Values['no_rsp'].Length > 0 then
       begin
         LOutResult.Code := 1;
-        LOutResult.Msg := '请求处理中';
+        LOutResult.Msg := 'No Response Request';
         //设置输出结果
-        PostMessage(FJobAsyncHandlerForm.Handle, VV_MSG_HANDLE_ASYNC_JOB, Integer(LJobDispatcherRec), 0);
+        FJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
       end
       else
       begin
         //否则生成jobdispatcher，直接调用
-        LJobDispatcher := TJobDispatcher.Create;
+        LSyncJobDispatcher := TJobDispatcher.Create;
         try
-          LJobDispatcher.StartProjectJob(LJobDispatcherRec);
+          LSyncJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
 
           //获得输出参数
-          LOutResult := LJobDispatcher.OutResult;
+          LOutResult := LSyncJobDispatcher.OutResult;
         finally
-          LJobDispatcher.Free;
+          LSyncJobDispatcher.Free;
         end;
       end;
     end;

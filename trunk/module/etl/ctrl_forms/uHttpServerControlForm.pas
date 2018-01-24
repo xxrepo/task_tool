@@ -36,6 +36,7 @@ type
     procedure btnStopClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure lblMaxSessionClick(Sender: TObject);
   private
     { Private declarations }
     FHttpServerConfigRec: THttpServerConfigRec;
@@ -143,6 +144,12 @@ begin
   if HttpServerRunner <> nil then
     HttpServerRunner.LogNoticeHandle := 0;
   AppLogger.NoticeHandle := 0;
+end;
+
+procedure THttpServerControlForm.lblMaxSessionClick(Sender: TObject);
+begin
+  inherited;
+  ShowMsg(IntToStr(Handle));
 end;
 
 procedure THttpServerControlForm.CheckServerStatus;

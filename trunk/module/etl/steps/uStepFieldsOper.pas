@@ -141,7 +141,12 @@ begin
 
   //循环遍历整个INDATA，依次计算整个min, max, 以及用 , 分隔的concat, 同时计算这个分隔的concat的md5
   LRows := TJSONObject.ParseJSONValue(LTargetData.Data) as TJSONArray;
-  if (LRows = nil) or (LRows.Count = 0) then Exit;
+  if (LRows = nil) then Exit;
+  if (LRows.Count = 0) then
+  begin
+    LRows.Free;
+    Exit;
+  end;
 
   try
     Result := ScanRow(LRows.Items[0] as TJSONObject);

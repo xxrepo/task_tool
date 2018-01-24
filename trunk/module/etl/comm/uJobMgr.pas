@@ -24,7 +24,6 @@ type
     //在线程中实际处理task_request的方法
     procedure HandleJobRequest(Data: Pointer; AThread: TThread);
 
-    function GetJob(AJobName: string): TJobConfig;
     function GetDbsConfigFile: string;
 
   protected
@@ -32,12 +31,13 @@ type
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
 
+    function GetJob(AJobName: string): TJobConfig;
+    function CheckJobTask(AJob: TJobConfig): Boolean;
     procedure StartJob(AJob: TJobConfig); overload; virtual;
     procedure StopJob(AJob: TJobConfig); overload;
-    function CheckJobTask(AJob: TJobConfig): Boolean;
   public
     LogNoticeHandle: THandle;
-    constructor Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
+    constructor Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll); virtual;
     destructor Destroy; override;
 
     procedure Start;

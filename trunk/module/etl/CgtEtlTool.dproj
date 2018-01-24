@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>CgtEtlTool.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -263,10 +263,6 @@
         <DCCReference Include="steps\uStepVarDefine.pas"/>
         <DCCReference Include="steps\uStepVarDefineForm.pas">
             <Form>StepVarDefineForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="forms\uJobAsyncHandlerForm.pas">
-            <Form>JobAsyncHandlerForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

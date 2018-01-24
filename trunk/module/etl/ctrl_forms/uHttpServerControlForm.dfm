@@ -79,6 +79,7 @@ inherited HttpServerControlForm: THttpServerControlForm
         Width = 70
         Height = 17
         Caption = #26368#22823#36830#25509#25968
+        OnClick = lblMaxSessionClick
       end
       object lblPort: TLabel
         Left = 391

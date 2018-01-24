@@ -28,12 +28,12 @@ type
   private
     FInParams: string;
     FOutResult: TOutResult;
-  protected
-    procedure StartJob(AJob: TJobConfig); override;
-  public
-    constructor Create; overload;
 
-    procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec);
+    procedure StartJobSync(AJobName: string);
+  public
+    constructor Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll); override;
+
+    procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const ASync: Boolean = True);
 
     property OutResult: TOutResult read FOutResult;
   end;
@@ -45,28 +45,30 @@ uses
 
 { TJobDispatcher }
 
-constructor TJobDispatcher.Create;
+constructor TJobDispatcher.Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll);
 begin
-  inherited Create(0);
+  inherited Create(AThreadCount, ALogLevel);
   FOutResult.Code := -1;
   FOutResult.Msg := '处理失败';
 end;
 
 
 
-procedure TJobDispatcher.StartJob(AJob: TJobConfig);
+procedure TJobDispatcher.StartJobSync(AJobName: string);
 var
   LTaskConfigRec: TTaskConfigRec;
   LTaskInitParams: PStepData;
+  LJob: TJobConfig;
 begin
-  if not CheckJobTask(AJob) then
+  LJob := GetJob(AJobName);
+  if not CheckJobTask(LJob) then
   begin
     AppLogger.Debug('Pop Job 任务异常');
     Exit;
   end;
 
   //重新生成task，执行
-  LTaskConfigRec := AJob.TaskConfigRec;
+  LTaskConfigRec := LJob.TaskConfigRec;
   LTaskConfigRec.RunBasePath := FRunBasePath;
   LTaskConfigRec.DBsConfigFile := DbsConfigFile;
 
@@ -75,48 +77,48 @@ begin
   LTaskInitParams^.DataType := sdtText;
   LTaskInitParams^.Data := FInParams;
 
-  AJob.Task := TTask.Create(LTaskConfigRec);
+  LJob.Task := TTask.Create(LTaskConfigRec);
   try
-    AJob.HandleStatus := jhsRun;
-    AJob.LastStartTime := Now;
-    AJob.RunThread := nil;
-    AJob.JobRequest := nil;
-    AJob.Task.TaskVar.GlobalVar := FGlobalVar;
-    AJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
-    AJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
+    LJob.HandleStatus := jhsRun;
+    LJob.LastStartTime := Now;
+    LJob.RunThread := nil;
+    LJob.JobRequest := nil;
+    LJob.Task.TaskVar.GlobalVar := FGlobalVar;
+    LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
+    LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
 
     try
-      AJob.Task.TaskVar.Logger.Force('任务开始'+ AJob.JobName);
-      AppLogger.Force('开始执行工作：' + AJob.JobName);
+      LJob.Task.TaskVar.Logger.Force('任务开始'+ LJob.JobName);
+      AppLogger.Force('开始执行工作：' + LJob.JobName);
 
-      AJob.Task.Start(LTaskInitParams);
+      LJob.Task.Start(LTaskInitParams);
 
       //从Task获取执行结果
-      FOutResult.Code := AJob.Task.TaskVar.TaskResult.Code;
-      FOutResult.Msg := AJob.Task.TaskVar.TaskResult.Msg;
-      FOutResult.Data := AJob.Task.TaskVar.TaskResult.Data.ToJson;
+      FOutResult.Code := LJob.Task.TaskVar.TaskResult.Code;
+      FOutResult.Msg := LJob.Task.TaskVar.TaskResult.Msg;
+      FOutResult.Data := LJob.Task.TaskVar.TaskResult.Data.ToJson;
 
-      AppLogger.Force('结束执行工作：' + AJob.JobName);
-      AJob.Task.TaskVar.Logger.Force('任务结束'+ AJob.JobName);
+      AppLogger.Force('结束执行工作：' + LJob.JobName);
+      LJob.Task.TaskVar.Logger.Force('任务结束'+ LJob.JobName);
     except
       on E: Exception do
       begin
-        FOutResult.Msg := '执行工作异常退出：' + AJob.JobName + '，原因：' + E.Message;
+        FOutResult.Msg := '执行工作异常退出：' + LJob.JobName + '，原因：' + E.Message;
 
-        AJob.LastStartTime := 0;
+        LJob.LastStartTime := 0;
         AppLogger.Fatal(FOutResult.Msg);
       end;
     end;
   finally
     //释放入参
     Dispose(LTaskInitParams);
-    AJob.FreeTask;
+    LJob.FreeTask;
   end;
 end;
 
 
 
-procedure TJobDispatcher.StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec);
+procedure TJobDispatcher.StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const ASync: Boolean = True);
 begin
   //在这里进行释放
   try
@@ -126,7 +128,12 @@ begin
       FLogLevel := AJobDispatcherRec.LogLevel;
       LogNoticeHandle := AJobDispatcherRec.LogNoticeHandle;
 
-      StartJob(AJobDispatcherRec.JobName);
+      if ASync then
+      begin
+        StartJobSync(AJobDispatcherRec.JobName);
+      end
+      else
+        StartJob(AJobDispatcherRec.JobName);
     end
     else
     begin
