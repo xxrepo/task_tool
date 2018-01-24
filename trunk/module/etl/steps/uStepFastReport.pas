@@ -11,6 +11,8 @@ type
   private
     FReporter: TfrxReport;
     FDBDatasets: TStringList;
+    FDBVariables: TJSONObject;
+
     //
     FDBDataSetsConfigStr: string;
     FDBVariablesConfigStr: string;
@@ -18,6 +20,7 @@ type
     FPrinterName: string;
     FReportFile: string;
     FAbsoluteReportFile: string;
+    procedure OnReporterGetValue(const VarName: string; var Value: Variant);
   protected
     procedure StartSelf; override;
     procedure StartSelfDesign; override;
@@ -61,8 +64,11 @@ begin
     end;
     FDBDatasets.Free;
   end;
+  if FDBVariables <> nil then
+    FreeAndNil(FDBVariables);
   inherited;
 end;
+
 
 procedure TStepFastReport.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
@@ -128,7 +134,7 @@ begin
         with FReporter.Variables.Add do
         begin
           Name := GetJsonObjectValue(LDBVarJsonObj, 'param_name');
-          Value := GetParamValue(LDBVarJsonObj);
+          //Value := QuotedStr(GetParamValue(LDBVarJsonObj));
         end;
       end;
     end;
@@ -156,6 +162,7 @@ begin
     CheckTaskStatus;
 
     FReporter := TfrxReport.Create(nil);
+    FReporter.OnGetValue := OnReporterGetValue;
 
     //创建datasets
     FReporter.DataSets.Clear;
@@ -188,16 +195,14 @@ begin
     LDBVarJsonArray := TJSONObject.ParseJSONValue(FDBVariablesConfigStr) as TJSONArray;
     if LDBVarJsonArray <> nil then
     begin
+      FDBVariables := TJSONObject.Create;
       for i := 0 to LDBVarJsonArray.Count - 1 do
       begin
         LDBVarJsonObj := LDBVarJsonArray.Items[i] as TJSONObject;
         if LDBVarJsonObj = nil then Continue;
 
-        with FReporter.Variables.Add do
-        begin
-          Name := GetJsonObjectValue(LDBVarJsonObj, 'param_name');
-          Value := GetParamValue(LDBVarJsonObj);
-        end;
+        FDBVariables.AddPair(TJSONPair.Create(GetJsonObjectValue(LDBVarJsonObj, 'param_name'),
+                                  LDBVarJsonObj.Clone as TJSONObject));
       end;
     end;
 
@@ -207,12 +212,29 @@ begin
     //根据预览进行打印输出，运行在service的情况下不能提供预览功能，只能直接输出到指定的文件夹
     FReporter.PrepareReport;
 
+    //通知Application主窗口已经需要展示ReportPreview
+
     FReporter.ShowReport;
   finally
     if LDBDataSetsJsonArray <> nil then
       FreeAndNil(LDBDataSetsJsonArray);
     if LDBVarJsonArray <> nil then
       FreeAndNil(LDBVarJsonArray);
+  end;
+end;
+
+
+procedure TStepFastReport.OnReporterGetValue(const VarName: string;
+  var Value: Variant);
+var
+  LVarJsonDefine: TJSONObject;
+begin
+  if FDBVariables = nil then Exit;
+  
+  LVarJsonDefine := FDBVariables.GetValue(VarName) as TJSONObject;
+  if LVarJsonDefine <> nil then
+  begin
+    Value := GetParamValue(LVarJsonDefine);
   end;
 end;
 

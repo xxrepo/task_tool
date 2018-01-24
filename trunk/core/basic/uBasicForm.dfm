@@ -12,7 +12,7 @@ object BasicForm: TBasicForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poOwnerFormCenter
+  Position = poDesktopCenter
   OnKeyPress = FormKeyPress
   PixelsPerInch = 96
   TextHeight = 17

@@ -330,7 +330,7 @@ var
 begin
   if not CheckJobTask(AJob) then
   begin
-    AppLogger.Error('[CheckJobTask Failed]' + Ajob.JobName);
+    AppLogger.Error('[CheckJobTask Failed]');
     Exit;
   end;
 

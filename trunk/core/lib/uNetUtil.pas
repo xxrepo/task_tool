@@ -16,7 +16,7 @@ type
 
 implementation
 
-uses Winapi.WinInet, System.NetEncoding, Web.HTTPApp, uDefines;
+uses Winapi.WinInet, System.NetEncoding, Web.HTTPApp;
 
 
 class function TNetUtil.InternetConnected: Boolean;
@@ -55,7 +55,6 @@ begin
     else
       LRestRequest.Method := rmPOST;
     LRestRequest.Params.Assign(AParams);
-    LRestRequest.Params.AddCookie('http_agent_ver', APP_VER);
 
     //调用接口
     LRestRequest.Execute;

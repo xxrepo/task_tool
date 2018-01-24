@@ -216,7 +216,7 @@ begin
       begin
         LOutResult.Code := 1;
         LOutResult.Msg := 'No Response Request';
-        //设置输出结果
+        //设置输出结果，同时应该通知宿主窗口接收到了一条异步消息
         FJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
       end
       else
