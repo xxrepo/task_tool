@@ -41,7 +41,7 @@ begin
   try
     Result.IP := LIniFile.ReadString('local_server', 'ip', '127.0.0.1');
     Result.Port := LIniFile.ReadInteger('local_server', 'port', 61288);
-    Result.DocRoot := LIniFile.ReadString('local_server', 'document_root', '');
+    Result.DocRoot := LIniFile.ReadString('local_server', 'document_root', '.\projects\');
     Result.MaxConnection := LIniFile.ReadInteger('local_server', 'max_connection', 0);
     Result.LogLevel := TLogLevel(LIniFile.ReadInteger('local_server', 'log_level', 0));
     Result.AllowedAccessOrigins := LIniFile.ReadString('local_server', 'allowed_access_origins', '');

@@ -29,6 +29,7 @@ type
     btnStart: TBitBtn;
     btnStop: TBitBtn;
     btnSave: TBitBtn;
+    rzpnl1: TRzPanel;
     procedure FormCreate(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnDocRootButtonClick(Sender: TObject);

@@ -56,7 +56,7 @@ type
     TaskResult: TTaskResult;
 
     function RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
-    function GetStepData(ADataRef: string): TStepData;
+    function GetRegisteredStepData(ADataRef: string): TStepData;
     function RegObject(ARef: string; AObject: TObject): Integer;
     function GetObject(ARef: string): TObject;
 
@@ -164,7 +164,7 @@ begin
 end;
 
 
-function TTaskVar.GetStepData(ADataRef: string): TStepData;
+function TTaskVar.GetRegisteredStepData(ADataRef: string): TStepData;
 var
   idx: Integer;
   LStepData: TStepDataStore;
