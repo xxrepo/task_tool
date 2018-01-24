@@ -128,13 +128,18 @@ begin
       TaskVar.InitStartContext;
       TaskVar.StartStep(LTaskBlock, LTaskConfigJson, AInitData);//@LInitInData);
     except
+      on E: StopTaskGracefulException do
+      begin
+        //正常退出
+        TaskVar.Logger.Info(E.Message);
+      end;
       on E: StepException do
       begin
-        TaskVar.Logger.Error('Task.Start中遇到StepException异常');
+        TaskVar.Logger.Error(E.Message);
       end;
       on E: StopTaskException do
       begin
-        TaskVar.Logger.Error('任务执行终止');
+        TaskVar.Logger.Error('任务执行终止：' + E.Message);
       end;
     end;
   finally

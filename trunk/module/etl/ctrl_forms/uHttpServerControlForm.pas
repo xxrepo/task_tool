@@ -97,12 +97,12 @@ begin
   end;
   if (not HttpServerRunner.Server.Active) then
   begin
-
-    FHttpServerConfigRec.LogNoticeHandle := Handle;
+    HttpServerRunner.LogNoticeHandle := Handle;
     HttpServerRunner.Start(FHttpServerConfigRec);
   end;
   CheckServerStatus;
 end;
+
 
 procedure THttpServerControlForm.btnStopClick(Sender: TObject);
 begin
@@ -113,6 +113,7 @@ begin
     CheckServerStatus;
   end;
 end;
+
 
 procedure THttpServerControlForm.FormCreate(Sender: TObject);
 begin
@@ -131,12 +132,16 @@ begin
   CheckServerStatus;
 
   AppLogger.NoticeHandle := Handle;
+  if HttpServerRunner <> nil then
+    HttpServerRunner.LogNoticeHandle := Handle;
 end;
 
 
 procedure THttpServerControlForm.FormDestroy(Sender: TObject);
 begin
   inherited;
+  if HttpServerRunner <> nil then
+    HttpServerRunner.LogNoticeHandle := 0;
   AppLogger.NoticeHandle := 0;
 end;
 

@@ -15,9 +15,7 @@ type
     AllowedTimes: string;
     DisallowedTimes: string;
 
-
     LogLevel: TLogLevel;
-    LogNoticeHandle: THandle;
   end;
 
   THttpServerConfigUtil = class

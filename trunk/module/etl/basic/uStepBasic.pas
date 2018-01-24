@@ -11,7 +11,6 @@ type
   TStepBasic = class(TPersistent)
   private
     FStepConfig: TStepConfig;
-    //FStepDefine: TStepDefine;
     FInDataJson: TJSONValue;
 
     function GetInData: TStepData;
@@ -87,7 +86,6 @@ var
   LMsg: string;
 begin
   LMsg := FormatLogMsg(AMsg);
-  TaskVar.Logger.Error(LMsg);
   raise StopTaskException.Create(LMsg);
 end;
 

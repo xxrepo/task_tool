@@ -1,9 +1,9 @@
 inherited StepTaskResultForm: TStepTaskResultForm
   Caption = 'Task Result '#20219#21153#32467#26524#35774#32622
-  ClientHeight = 487
+  ClientHeight = 507
   ClientWidth = 710
   ExplicitWidth = 716
-  ExplicitHeight = 516
+  ExplicitHeight = 536
   PixelsPerInch = 96
   TextHeight = 17
   object lbl3: TLabel [0]
@@ -14,7 +14,7 @@ inherited StepTaskResultForm: TStepTaskResultForm
     Caption = 'Step'#35828#26126
   end
   inherited pnlOper: TPanel
-    Top = 430
+    Top = 450
     Width = 710
     ExplicitTop = 430
     ExplicitWidth = 710
@@ -29,15 +29,17 @@ inherited StepTaskResultForm: TStepTaskResultForm
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Width = 710
-    Height = 430
+    Height = 450
     ExplicitWidth = 710
     ExplicitHeight = 430
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitWidth = 706
       ExplicitHeight = 403
       object lblParams: TLabel [1]
-        Left = 52
+        Left = 51
         Top = 208
         Width = 57
         Height = 17
@@ -149,6 +151,16 @@ inherited StepTaskResultForm: TStepTaskResultForm
         Width = 305
         Height = 25
         TabOrder = 5
+      end
+      object chkExitTask: TCheckBox
+        Left = 142
+        Top = 385
+        Width = 97
+        Height = 17
+        Caption = #32467#26463'Task'
+        Checked = True
+        State = cbChecked
+        TabOrder = 6
       end
     end
   end

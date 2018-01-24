@@ -12,8 +12,10 @@ type
   StepException = class(CgtException);
 
   StopTaskException = class(CgtException);
+  StopTaskGracefulException = class(CgtException);
 
   StopStepException = class(CgtException);
+
 
 implementation
 

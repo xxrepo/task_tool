@@ -21,6 +21,7 @@ type
     lbl3: TLabel;
     edtMsg: TEdit;
     lbl4: TLabel;
+    chkExitTask: TCheckBox;
     procedure btnOKClick(Sender: TObject);
   private
 
@@ -49,6 +50,7 @@ begin
     FieldParams := DataSetToJsonStr(cdsParams);
     Code := edtCode.Text;
     Msg := edtMsg.Text;
+    ExitTask := chkExitTask.Checked;
   end;
 end;
 
@@ -62,6 +64,7 @@ begin
   JsonToDataSet(LStep.FieldParams, cdsParams);
   edtCode.Text := LStep.Code;
   edtMsg.Text := LStep.Msg;
+  chkExitTask.Checked := LStep.ExitTask;
 end;
 
 initialization

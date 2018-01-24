@@ -11,8 +11,7 @@ inherited HttpServerControlForm: THttpServerControlForm
   inherited rzspltrLogForm: TRzSplitter
     Width = 689
     Height = 609
-    Position = 510
-    Percent = 84
+    Position = 413
     UsePercent = False
     HotSpotSizePercent = 50
     ExplicitWidth = 689
@@ -26,7 +25,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 0
       Top = 0
       Width = 689
-      Height = 510
+      Height = 413
       Align = alClient
       AutoSize = True
       BorderOuter = fsFlat
@@ -40,8 +39,8 @@ inherited HttpServerControlForm: THttpServerControlForm
         Caption = #26412#22320'IP'
       end
       object lbl2: TLabel
-        Left = 74
-        Top = 289
+        Left = 73
+        Top = 295
         Width = 70
         Height = 17
         Caption = #36328#22495#30333#21517#21333
@@ -191,7 +190,7 @@ inherited HttpServerControlForm: THttpServerControlForm
     end
     inherited redtLog: TRichEdit
       Width = 689
-      Height = 47
+      Height = 144
       ExplicitWidth = 689
       ExplicitHeight = 32
     end

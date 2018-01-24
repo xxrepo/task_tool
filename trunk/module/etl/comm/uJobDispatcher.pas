@@ -11,6 +11,9 @@ type
     ProjectFile: string;
     JobName: string;
     InParams: string;
+
+    LogLevel: TLogLevel;
+    LogNoticeHandle: THandle;
   end;
 
   TOutResult = record
@@ -28,7 +31,7 @@ type
   protected
     procedure StartJob(AJob: TJobConfig); override;
   public
-    constructor Create(const ALogLevel: TLogLevel = llAll); overload;
+    constructor Create; overload;
 
     procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec);
 
@@ -42,9 +45,9 @@ uses
 
 { TJobDispatcher }
 
-constructor TJobDispatcher.Create(const ALogLevel: TLogLevel);
+constructor TJobDispatcher.Create;
 begin
-  inherited Create(0, ALogLevel);
+  inherited Create(0);
   FOutResult.Code := -1;
   FOutResult.Msg := '¥¶¿Ì ß∞‹';
 end;
@@ -120,6 +123,9 @@ begin
     if LoadConfigFrom(AJobDispatcherRec.ProjectFile, AJobDispatcherRec.JobName) then
     begin
       FInParams := AJobDispatcherRec.InParams;
+      FLogLevel := AJobDispatcherRec.LogLevel;
+      LogNoticeHandle := AJobDispatcherRec.LogNoticeHandle;
+
       StartJob(AJobDispatcherRec.JobName);
     end
     else

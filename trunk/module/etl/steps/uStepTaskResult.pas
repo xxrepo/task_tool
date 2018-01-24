@@ -10,6 +10,7 @@ type
     FCode: string;
     FMsg: string;
     FFieldParams: string;
+    FExitTask: Boolean;
   protected
     procedure StartSelf; override;
     procedure StartSelfDesign; override;
@@ -21,6 +22,7 @@ type
     property Code: string read FCode write FCode;
     property Msg: string read FMsg write FMsg;
     property FieldParams: string read FFieldParams write FFieldParams;
+    property ExitTask: Boolean read FExitTask write FExitTask;
   end;
 
 implementation
@@ -37,6 +39,7 @@ begin
   AToConfig.AddPair(TJSONPair.Create('out_params', FFieldParams));
   AToConfig.AddPair(TJSONPair.Create('code', FCode));
   AToConfig.AddPair(TJSONPair.Create('msg', FMsg));
+  AToConfig.AddPair(TJSONPair.Create('exit', BoolToStr(FExitTask)));
 end;
 
 
@@ -46,6 +49,7 @@ begin
   FFieldParams := GetJsonObjectValue(StepConfig.ConfigJson, 'out_params');
   FCode := GetJsonObjectValue(StepConfig.ConfigJson, 'code');
   FMsg := GetJsonObjectValue(StepConfig.ConfigJson, 'msg');
+  FExitTask := StrToBoolDef(GetJsonObjectValue(StepConfig.ConfigJson, 'exit'), True);
 end;
 
 
@@ -81,6 +85,10 @@ begin
   finally
     TaskVar.TaskResult.Code := StrToIntDef(FCode, 0);
     TaskVar.TaskResult.Msg := FMsg;
+
+    //ÅÐ¶ÏÊÇ·ñÒªÍË³öTask
+    if ExitTask then
+      raise StopTaskGracefulException.Create(FormatLogMsg('Exit Task'));
   end;
 end;
 

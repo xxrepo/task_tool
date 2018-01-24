@@ -2,7 +2,8 @@ unit uHttpServerRunner;
 
 interface
 
-uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher;
+uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher,
+uJobAsyncHandlerForm;
 
 type
 
@@ -10,6 +11,8 @@ type
   private
     FServer: TIdHttpServer;
     FServerConfigRec: THttpServerConfigRec;
+
+    FJobAsyncHandlerForm: TJobAsyncHandlerForm;
 
     procedure OnServerCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -23,6 +26,8 @@ type
     procedure OutputResult(ARequestInfo: TIdHTTPRequestInfo;
       AResponseInfo: TIdHTTPResponseInfo; AOutResult: TOutResult);
   public
+    LogNoticeHandle: THandle;
+
     constructor Create;
     destructor Destroy; override;
 
@@ -33,7 +38,7 @@ type
 
 implementation
 
-uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes;
+uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows;
 
 type
   DisParamException = class(Exception);
@@ -43,7 +48,10 @@ type
 constructor THttpServerRunner.Create;
 begin
   inherited;
+  FJobAsyncHandlerForm := TJobAsyncHandlerForm.Create(nil);
+
   FServer := TIdHTTPServer.Create(nil);
+  FServer.ServerSoftware := 'Cgt Lite Server 1.0';
   FServer.OnCommandGet := OnServerCommandGet;
   FServer.OnCommandOther := OnServerCommandOther;
 end;
@@ -55,6 +63,8 @@ begin
   try
     FServer.Active := False;
     FreeAndNil(FServer);
+
+    FJobAsyncHandlerForm.Free;
   except
 
   end;
@@ -100,7 +110,6 @@ begin
   HandleCommandRequest(AContext, ARequestInfo, AResponseInfo);
 
   //设置输出
-  AResponseInfo.Server := 'CGT SERVER 1.0';
   AResponseInfo.CharSet := 'utf-8';
 end;
 
@@ -117,7 +126,6 @@ begin
   AResponseInfo.ContentType := 'text/plain;charset=utf-8';
 
   //设置输出
-  AResponseInfo.Server := 'CGT SERVER 1.0';
   AResponseInfo.ContentEncoding := 'utf-8';
 end;
 
@@ -180,6 +188,8 @@ begin
         LJobDispatcherRec^.ProjectFile := LDocPath + LDisStrings.Strings[0] + '\project.jobs';
         LJobDispatcherRec^.JobName := LDisStrings.Strings[1];
         LJobDispatcherRec^.InParams := GetRequestParams(ARequestInfo);
+        LJobDispatcherRec^.LogLevel := FServerConfigRec.LogLevel;
+        LJobDispatcherRec^.LogNoticeHandle := LogNoticeHandle;
       end
       else
         Dispose(LJobDispatcherRec);
@@ -202,18 +212,16 @@ begin
       //执行jobdispatcher，如果传入的是异步消息，则发送job的消息到AsyncJobHandlerForm
       if ARequestInfo.Params.Values['vv_async'].Length > 0 then
       begin
-        //设置输出结果
-        //PostMessage
-
         LOutResult.Code := 1;
         LOutResult.Msg := '请求处理中';
+        //设置输出结果
+        PostMessage(FJobAsyncHandlerForm.Handle, VV_MSG_HANDLE_ASYNC_JOB, Integer(LJobDispatcherRec), 0);
       end
       else
       begin
         //否则生成jobdispatcher，直接调用
-        LJobDispatcher := TJobDispatcher.Create(FServerConfigRec.LogLevel);
+        LJobDispatcher := TJobDispatcher.Create;
         try
-          LJobDispatcher.LogNoticeHandle := FServerConfigRec.LogNoticeHandle;
           LJobDispatcher.StartProjectJob(LJobDispatcherRec);
 
           //获得输出参数

@@ -86,7 +86,8 @@ uses
   uJobMgr in 'comm\uJobMgr.pas',
   uTaskResult in 'comm\uTaskResult.pas',
   uStepVarDefine in 'steps\uStepVarDefine.pas',
-  uStepVarDefineForm in 'steps\uStepVarDefineForm.pas' {StepVarDefineForm};
+  uStepVarDefineForm in 'steps\uStepVarDefineForm.pas' {StepVarDefineForm},
+  uJobAsyncHandlerForm in 'forms\uJobAsyncHandlerForm.pas' {JobAsyncHandlerForm};
 
 {$R *.res}
 
@@ -103,6 +104,7 @@ begin
   FileCritical := TCriticalSection.Create;
 
   Application.CreateForm(TProjectForm, ProjectForm);
+  Application.CreateForm(TJobAsyncHandlerForm, JobAsyncHandlerForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 
