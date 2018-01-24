@@ -3,7 +3,8 @@ unit uJobMgr;
 interface
 
 uses
-  uJob, System.SysUtils, System.SyncObjs, uThreadQueueUtil, System.Classes, uFileLogger, uGlobalVar;
+  uJob, System.SysUtils, System.SyncObjs, uThreadQueueUtil, System.Classes, uFileLogger,
+  uGlobalVar, uStepDefines;
 
 type
   //本类用于实际运行时对任务的处理和管理
@@ -19,22 +20,23 @@ type
 
     FUnHandledCount: Integer;
 
-    Critical: TCriticalSection;
 
-    //在线程中实际处理task_request的方法
-    procedure HandleJobRequest(Data: Pointer; AThread: TThread);
 
     function GetDbsConfigFile: string;
+    procedure HandleJobRequest(Data: Pointer; AThread: TThread); virtual;
 
   protected
     FLogLevel: TLogLevel;
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
+    FCritical: TCriticalSection;
 
     function GetJob(AJobName: string): TJobConfig;
     function CheckJobTask(AJob: TJobConfig): Boolean;
     procedure StartJob(AJob: TJobConfig); overload; virtual;
     procedure StopJob(AJob: TJobConfig); overload;
+
+    function GetTaskInitParams: PStepData; virtual;
   public
     LogNoticeHandle: THandle;
     constructor Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll); virtual;
@@ -53,7 +55,7 @@ type
 
 implementation
 
-uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uFileUtil, uTask, uTaskDefine, Winapi.Windows;
+uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uTaskDefine, uFileUtil, uTask, Winapi.Windows;
 
 { TJobMgr }
 
@@ -62,7 +64,7 @@ begin
   LogNoticeHandle := 0;
   FLogLevel := ALogLevel;
 
-  Critical := TCriticalSection.Create;
+  FCritical := TCriticalSection.Create;
   FJobs := TStringList.Create;
   FUnHandledCount := 0;
   FThreadCount := AThreadCount;
@@ -91,7 +93,7 @@ begin
   if FGlobalVar <> nil then
     FreeAndNil(FGlobalVar);
 
-  FreeAndNil(Critical);
+  FreeAndNil(FCritical);
   inherited;
 end;
 
@@ -113,6 +115,11 @@ begin
   end;
 end;
 
+
+function TJobMgr.GetTaskInitParams: PStepData;
+begin
+  Result := nil;
+end;
 
 //这个一但load完成，不允许再次变更配置，因此，建议本配置在本类创建时进行处理，不再运行中开放给外部
 function TJobMgr.LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
@@ -185,7 +192,7 @@ end;
 function TJobMgr.CheckJobTask(AJob: TJobConfig): Boolean;
 begin
   Result := False;
-  Critical.Enter;
+  FCritical.Enter;
   try
     if AJob = nil then
     begin
@@ -198,7 +205,7 @@ begin
     else
       Result := True;
   finally
-    Critical.Leave;
+    FCritical.Leave;
   end;
 end;
 
@@ -242,7 +249,7 @@ begin
 
       LJob.Task.TaskVar.Logger.Force('任务开始'+ LRequest.JobName);
       AppLogger.Force('开始执行工作：' + LRequest.JobName);
-      LJob.Task.Start;
+      LJob.Task.Start(GetTaskInitParams);
       AppLogger.Force('结束执行工作：' + LRequest.JobName);
       LJob.Task.TaskVar.Logger.Force('任务结束'+ LRequest.JobName);
     except

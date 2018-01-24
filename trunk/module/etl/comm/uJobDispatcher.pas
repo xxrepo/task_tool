@@ -2,7 +2,7 @@ unit uJobDispatcher;
 
 interface
 
-uses uJobMgr, uJob, uFileLogger;
+uses uJobMgr, uJob, uFileLogger, System.Classes, uStepDefines;
 
 type
   PJobDispatcherRec = ^TJobdispatcherRec;
@@ -30,6 +30,9 @@ type
     FOutResult: TOutResult;
 
     procedure StartJobSync(AJobName: string);
+
+  protected
+    function GetTaskInitParams: PStepData; override;
   public
     constructor Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll); override;
 
@@ -41,7 +44,7 @@ type
 implementation
 
 uses
-  uTaskDefine, uDefines, uTask, System.SysUtils, uStepDefines;
+  uTaskDefine, uDefines, uTask, System.SysUtils;
 
 { TJobDispatcher }
 
@@ -53,11 +56,22 @@ begin
 end;
 
 
+function TJobDispatcher.GetTaskInitParams: PStepData;
+begin
+  FCritical.Enter;
+  try
+    New(Result);
+    Result^.DataType := sdtText;
+    Result^.Data := FInParams;
+  finally
+    FCritical.Leave;
+  end;
+end;
+
 
 procedure TJobDispatcher.StartJobSync(AJobName: string);
 var
   LTaskConfigRec: TTaskConfigRec;
-  LTaskInitParams: PStepData;
   LJob: TJobConfig;
 begin
   LJob := GetJob(AJobName);
@@ -71,11 +85,6 @@ begin
   LTaskConfigRec := LJob.TaskConfigRec;
   LTaskConfigRec.RunBasePath := FRunBasePath;
   LTaskConfigRec.DBsConfigFile := DbsConfigFile;
-
-  //设置Task的入参
-  New(LTaskInitParams);
-  LTaskInitParams^.DataType := sdtText;
-  LTaskInitParams^.Data := FInParams;
 
   LJob.Task := TTask.Create(LTaskConfigRec);
   try
@@ -91,7 +100,7 @@ begin
       LJob.Task.TaskVar.Logger.Force('任务开始'+ LJob.JobName);
       AppLogger.Force('开始执行工作：' + LJob.JobName);
 
-      LJob.Task.Start(LTaskInitParams);
+      LJob.Task.Start(GetTaskInitParams);
 
       //从Task获取执行结果
       FOutResult.Code := LJob.Task.TaskVar.TaskResult.Code;
@@ -110,8 +119,6 @@ begin
       end;
     end;
   finally
-    //释放入参
-    Dispose(LTaskInitParams);
     LJob.FreeTask;
   end;
 end;

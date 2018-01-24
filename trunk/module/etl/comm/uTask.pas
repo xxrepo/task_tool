@@ -25,7 +25,7 @@ type
     destructor Destroy; override;
 
     //运行
-    procedure Start(const AInitData: PStepData = nil);
+    procedure Start(AInitData: PStepData = nil);
 
 
   end;
@@ -106,45 +106,49 @@ begin
 end;
 
 
-procedure TTask.Start(const AInitData: PStepData = nil);
+procedure TTask.Start(AInitData: PStepData = nil);
 var
   LTaskConfigJson: TJSONObject;
-  //LInitInData: TStepData;
   LTaskBlock: TTaskBlock;
 begin
-  LTaskConfigJson := TJSONObject.ParseJSONValue(TaskConfigRec.StepsStr) as TJSONObject;
-  if LTaskConfigJson = nil then
-    raise TaskConfigException.Create('task配置文件加载异常，请确认Task文件正常保存后再运行');
-
   try
-    //本入口是顶级BlockName的入口，所有task启动时的起始入口
-    LTaskBlock.BlockName := '';
-    LTaskBlock._ENTRY_FILE := TaskConfigRec.FileName;
+    LTaskConfigJson := TJSONObject.ParseJSONValue(TaskConfigRec.StepsStr) as TJSONObject;
+    if LTaskConfigJson = nil then
+      raise TaskConfigException.Create('task配置文件加载异常，请确认Task文件正常保存后再运行');
 
-    TaskVar.TaskVarRec.TaskName := TaskConfigRec.TaskName;
-    TaskVar.TaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
     try
-      //清空调用栈
-      TaskVar.InitStartContext;
-      TaskVar.StartStep(LTaskBlock, LTaskConfigJson, AInitData);//@LInitInData);
-    except
-      on E: StopTaskGracefulException do
-      begin
-        //正常退出
-        TaskVar.Logger.Info(E.Message);
+      //本入口是顶级BlockName的入口，所有task启动时的起始入口
+      LTaskBlock.BlockName := '';
+      LTaskBlock._ENTRY_FILE := TaskConfigRec.FileName;
+
+      TaskVar.TaskVarRec.TaskName := TaskConfigRec.TaskName;
+      TaskVar.TaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
+      try
+        //清空调用栈
+        TaskVar.InitStartContext;
+        TaskVar.StartStep(LTaskBlock, LTaskConfigJson, AInitData);
+      except
+        on E: StopTaskGracefulException do
+        begin
+          //正常退出
+          TaskVar.Logger.Info(E.Message);
+        end;
+        on E: StepException do
+        begin
+          TaskVar.Logger.Error(E.Message);
+        end;
+        on E: StopTaskException do
+        begin
+          TaskVar.Logger.Error('任务执行终止：' + E.Message);
+        end;
       end;
-      on E: StepException do
-      begin
-        TaskVar.Logger.Error(E.Message);
-      end;
-      on E: StopTaskException do
-      begin
-        TaskVar.Logger.Error('任务执行终止：' + E.Message);
-      end;
+    finally
+      LTaskConfigJson.Free;
+      TaskVar.TaskStatus := trsStop;
     end;
   finally
-    LTaskConfigJson.Free;
-    TaskVar.TaskStatus := trsStop;
+    if AInitData <> nil then
+      Dispose(AInitData);
   end;
 end;
 
