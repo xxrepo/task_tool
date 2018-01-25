@@ -1,21 +1,21 @@
 inherited HttpServerControlForm: THttpServerControlForm
   Caption = #26412#22320'Server'#35774#32622
-  ClientHeight = 609
+  ClientHeight = 604
   ClientWidth = 689
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 705
-  ExplicitHeight = 648
+  ExplicitHeight = 643
   PixelsPerInch = 96
   TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
     Width = 689
-    Height = 609
-    Position = 413
+    Height = 604
+    Position = 410
     UsePercent = False
     HotSpotSizePercent = 50
     ExplicitWidth = 689
-    ExplicitHeight = 603
+    ExplicitHeight = 604
     UpperLeftControls = (
       rzpnl1)
     LowerRightControls = (
@@ -25,12 +25,12 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 0
       Top = 0
       Width = 689
-      Height = 413
+      Height = 410
       Align = alClient
       AutoSize = True
       BorderOuter = fsFlat
       TabOrder = 0
-      ExplicitHeight = 450
+      ExplicitHeight = 510
       object lbl1: TLabel
         Left = 103
         Top = 25
@@ -191,9 +191,9 @@ inherited HttpServerControlForm: THttpServerControlForm
     end
     inherited redtLog: TRichEdit
       Width = 689
-      Height = 144
+      Height = 142
       ExplicitWidth = 689
-      ExplicitHeight = 32
+      ExplicitHeight = 42
     end
     inherited rzpnl3: TRzPanel
       Width = 689

@@ -5,10 +5,10 @@ inherited CtrlMainForm: TCtrlMainForm
   ClientWidth = 337
   PopupMenu = pmTray
   Position = poScreenCenter
-  OnClick = FormClick
   OnClose = FormClose
+  OnCreate = FormCreate
   ExplicitWidth = 343
-  ExplicitHeight = 181
+  ExplicitHeight = 182
   PixelsPerInch = 96
   TextHeight = 17
   object lbl1: TLabel
@@ -24,21 +24,18 @@ inherited CtrlMainForm: TCtrlMainForm
     Font.Style = []
     ParentFont = False
   end
-  object trycnTool: TRzTrayIcon
-    PopupMenu = pmTray
-    Left = 200
-    Top = 8
-  end
   object pmTray: TPopupMenu
-    Left = 256
-    Top = 8
+    Left = 280
+    Top = 16
     object N1: TMenuItem
       Caption = #26412#22320#26381#21153
       object N5: TMenuItem
         Caption = #21551#21160
+        OnClick = N5Click
       end
       object N6: TMenuItem
         Caption = #20572#27490
+        OnClick = N6Click
       end
       object N7: TMenuItem
         Caption = #35774#32622
@@ -57,9 +54,22 @@ inherited CtrlMainForm: TCtrlMainForm
     object N8: TMenuItem
       Caption = '-'
     end
+    object N10: TMenuItem
+      Caption = #20851#20110#26234#33021#21161#25163
+      OnClick = N10Click
+    end
+    object N11: TMenuItem
+      Caption = '-'
+    end
     object N9: TMenuItem
       Caption = #36864#20986
       OnClick = N9Click
     end
+  end
+  object rztrycnTool: TRzTrayIcon
+    PopupMenu = pmTray
+    OnLButtonDblClick = rztrycnToolLButtonDblClick
+    Left = 280
+    Top = 88
   end
 end

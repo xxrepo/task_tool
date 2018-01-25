@@ -93,6 +93,7 @@ begin
       Port := AServerConfigRec.Port;
     end;
     FServer.DefaultPort := AServerConfigRec.Port;
+    FServer.MaxConnections := FServerConfigRec.MaxConnection;
     FServer.Active := True;
   except
     on E: Exception do
@@ -212,25 +213,19 @@ begin
     else
     begin
       //执行jobdispatcher，如果传入的是异步消息，则发送job的消息到AsyncJobHandlerForm
-      if ARequestInfo.Params.Values['no_rsp'].Length > 0 then
+      if ARequestInfo.Params.Values['vv_unblock'].Length > 0 then
       begin
         LOutResult.Code := 1;
-        LOutResult.Msg := 'No Response Request';
+        LOutResult.Msg := 'No Response In UnBlock Request';
+
         //设置输出结果，同时应该通知宿主窗口接收到了一条异步消息
         FJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
       end
       else
       begin
-        //否则生成jobdispatcher，直接调用
-        LSyncJobDispatcher := TJobDispatcher.Create;
-        try
-          LSyncJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
-
-          //获得输出参数
-          LOutResult := LSyncJobDispatcher.OutResult;
-        finally
-          LSyncJobDispatcher.Free;
-        end;
+        FJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
+        //获得输出参数
+        LOutResult := FJobDispatcher.OutResult;
       end;
     end;
 

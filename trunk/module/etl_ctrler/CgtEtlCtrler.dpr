@@ -48,7 +48,11 @@ uses
   uStepWriteTxtFile in '..\etl\steps\uStepWriteTxtFile.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uDesignTimeDefines in '..\etl\comm\uDesignTimeDefines.pas',
-  uProject in '..\etl\comm\uProject.pas';
+  uProject in '..\etl\comm\uProject.pas',
+  Vcl.Themes,
+  Vcl.Styles,
+  uUserNotify in '..\..\common\uUserNotify.pas',
+  uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm};
 
 {$R *.res}
 
@@ -65,8 +69,10 @@ begin
   FileCritical := TCriticalSection.Create;
 
 
+  Application.Title := '采购通智能助手1.0';
   Application.CreateForm(TCtrlMainForm, CtrlMainForm);
   Application.CreateForm(THttpServerControlForm, HttpServerControlForm);
+  Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
   CtrlMainForm.Close;
   Application.Run;
 

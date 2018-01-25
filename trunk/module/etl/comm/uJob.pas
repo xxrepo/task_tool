@@ -51,6 +51,8 @@ type
     function CheckSchedule: Boolean;
     function IsTimeOut: Boolean;
 
+    procedure Stop;
+
     function ToString: string;
     procedure FreeTask;
   end;
@@ -76,6 +78,8 @@ end;
 
 destructor TJobConfig.Destroy;
 begin
+  FreeTask;
+
   AllowedTimes.Free;
   DisallowedTimes.Free;
   FCritical.Free;
@@ -145,6 +149,12 @@ begin
   finally
     FCritical.Leave;
   end;
+end;
+
+procedure TJobConfig.Stop;
+begin
+  if (Task <> nil) and (Task.TaskVar <> nil) then
+    Task.TaskVar.TaskStatus := trsStop;
 end;
 
 function TJobConfig.ToString: string;
@@ -253,10 +263,14 @@ end;
 
 procedure TJobConfig.FreeTask;
 begin
-  HandleStatus := jhsNone;
-  if Task <> nil then
-    FreeAndNil(Task);
-  RunThread := nil;
+  try
+    HandleStatus := jhsNone;
+    if Task <> nil then
+      FreeAndNil(Task);
+    RunThread := nil;
+  finally
+
+  end;
 end;
 
 end.

@@ -4,28 +4,22 @@ interface
 
 uses
   uJob, System.SysUtils, System.SyncObjs, uThreadQueueUtil, System.Classes, uFileLogger,
-  uGlobalVar, uStepDefines;
+  uGlobalVar, uStepDefines, uUserNotify;
 
 type
   //本类用于实际运行时对任务的处理和管理
   TJobMgr = class
   private
     FJobs: TStringList;
-
-
     FThreadPool: TThreadPool;
     FThreadCount: Integer;
-
-
-
-    FUnHandledCount: Integer;
-
-
 
     function GetDbsConfigFile: string;
     procedure HandleJobRequest(Data: Pointer; AThread: TThread); virtual;
 
   protected
+    FUnHandledCount: Integer;
+    FUserNotifier: TUserNotify;
     FLogLevel: TLogLevel;
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
@@ -70,6 +64,7 @@ begin
   FThreadCount := AThreadCount;
   if FThreadCount > 0 then
     FThreadPool := TThreadPool.Create(HandleJobRequest, FThreadCount);
+  FUserNotifier := TUserNotify.Create;
 end;
 
 
@@ -77,6 +72,8 @@ destructor TJobMgr.Destroy;
 var
   i: Integer;
 begin
+  FUserNotifier.Free;
+
   Stop;
 
   if FThreadPool <> nil then
@@ -238,6 +235,7 @@ begin
   try
     LJob.HandleStatus := jhsRun;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
+    LJob.Task.TaskVar.SetUserNotifier(FUserNotifier);
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     {$IFDEF PROJECT_DESIGN_MODE}
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
@@ -247,11 +245,11 @@ begin
       LJob.RunThread := AThread;
       LJob.JobRequest := Data;
 
-      LJob.Task.TaskVar.Logger.Force('任务开始'+ LRequest.JobName);
       AppLogger.Force('开始执行工作：' + LRequest.JobName);
+      LJob.Task.TaskVar.Logger.Force('任务开始'+ LRequest.JobName);
       LJob.Task.Start(GetTaskInitParams);
-      AppLogger.Force('结束执行工作：' + LRequest.JobName);
       LJob.Task.TaskVar.Logger.Force('任务结束'+ LRequest.JobName);
+      AppLogger.Force('结束执行工作：' + LRequest.JobName);
     except
       on E: Exception do
       begin
@@ -262,7 +260,8 @@ begin
   finally
     Dispose(LRequest);
     InterlockedDecrement(FUnHandledCount);
-    LJob.FreeTask;
+    if LJob <> nil then
+      LJob.FreeTask;
   end;
 end;
 
@@ -373,9 +372,9 @@ begin
   try
     //因为task的释放和本设置是工作在不同的线程中，有可能在子线程中task已经释放
     //但主线程仍然在操作
-    if (AJob <> nil) and (AJob.Task <> nil) then
+    if (AJob <> nil) then
     begin
-      AJob.Task.TaskVar.TaskStatus := trsStop;
+      AJob.Stop;
     end;
   finally
 

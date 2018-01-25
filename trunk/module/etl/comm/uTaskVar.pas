@@ -4,7 +4,7 @@ interface
 
 uses
   uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
-  System.SysUtils, System.JSON, uTaskResult;
+  System.SysUtils, System.JSON, uTaskResult, uUserNotify;
 
 type
   TTaskVarRec = record
@@ -30,6 +30,7 @@ type
 
   TTaskVar = class
   private
+    FUserNotifier: TUserNotify;
     FOwner: TObject;
     FStepDataList: TStringList;
     FRegistedObjectList: TStringList;
@@ -65,6 +66,10 @@ type
     constructor Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
     destructor Destroy; override;
 
+
+    //用于对需要消息调用的窗口的封装
+    procedure SetUserNotifier(ANotifier: TUserNotify);
+    function BlockNotify(AMsg: string): Integer;
 
     procedure InitStartContext;
     procedure StartStep(const ATaskBlock: TTaskBlock; const AStepConfigJson: TJSONObject; const AInData: PStepData);
@@ -117,25 +122,6 @@ begin
 end;
 
 
-procedure TTaskVar.DebugToStep(AStepId: Integer; ABlock: TTaskBlock);
-begin
-  FToStep.Id := AStepId;
-  FToStep.OwnerBlock := ABlock;
-  FTaskMode := tmDebug;
-end;
-
-procedure TTaskVar.DesignToStep(AStepId: Integer; ABlock: TTaskBlock);
-begin
-  FToStep.Id := AStepId;
-  FToStep.OwnerBlock := ABlock;
-  FTaskMode := tmDesigning;
-end;
-
-function TTaskVar.IsToStep(ATaskStep: TTaskStep): Boolean;
-begin
-  Result := (ATaskStep.OwnerBlock.BlockName = FToStep.OwnerBlock.BlockName) and (ATaskStep.Id = FToStep.Id);
-end;
-
 destructor TTaskVar.Destroy;
 var
   i: Integer;
@@ -157,10 +143,43 @@ begin
   FStepDataList.Free;
 
   Logger.Free;
+
+  //这另个类共享来自jobmgr中的方法
   GlobalVar := nil;
+  FUserNotifier := nil;
 
   TaskResult.Free;
   inherited;
+end;
+
+
+function TTaskVar.BlockNotify(AMsg: string): Integer;
+begin
+  Result := 0;
+  if FUserNotifier = nil then Exit;
+
+  Result := FUserNotifier.BlockNotify(AMsg);
+end;
+
+
+procedure TTaskVar.DebugToStep(AStepId: Integer; ABlock: TTaskBlock);
+begin
+  FToStep.Id := AStepId;
+  FToStep.OwnerBlock := ABlock;
+  FTaskMode := tmDebug;
+end;
+
+
+procedure TTaskVar.DesignToStep(AStepId: Integer; ABlock: TTaskBlock);
+begin
+  FToStep.Id := AStepId;
+  FToStep.OwnerBlock := ABlock;
+  FTaskMode := tmDesigning;
+end;
+
+function TTaskVar.IsToStep(ATaskStep: TTaskStep): Boolean;
+begin
+  Result := (ATaskStep.OwnerBlock.BlockName = FToStep.OwnerBlock.BlockName) and (ATaskStep.Id = FToStep.Id);
 end;
 
 
@@ -286,6 +305,11 @@ begin
   PopSteps;
 end;
 
+
+procedure TTaskVar.SetUserNotifier(ANotifier: TUserNotify);
+begin
+  FUserNotifier := ANotifier;
+end;
 
 procedure TTaskVar.StartStep(const ATaskBlock: TTaskBlock; const AStepConfigJson: TJSONObject; const AInData: PStepData);
 var

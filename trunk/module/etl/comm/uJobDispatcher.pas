@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-  uTaskDefine, uDefines, uTask, System.SysUtils;
+  uTaskDefine, uDefines, uTask, System.SysUtils, Winapi.Windows;
 
 { TJobDispatcher }
 
@@ -81,6 +81,8 @@ begin
     Exit;
   end;
 
+  InterlockedIncrement(FUnHandledCount);
+
   //重新生成task，执行
   LTaskConfigRec := LJob.TaskConfigRec;
   LTaskConfigRec.RunBasePath := FRunBasePath;
@@ -93,22 +95,26 @@ begin
     LJob.RunThread := nil;
     LJob.JobRequest := nil;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
+    LJob.Task.TaskVar.SetUserNotifier(FUserNotifier);
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
 
     try
-      LJob.Task.TaskVar.Logger.Force('任务开始'+ LJob.JobName);
       AppLogger.Force('开始执行工作：' + LJob.JobName);
 
+      LJob.Task.TaskVar.Logger.Force('任务开始'+ LJob.JobName);
       LJob.Task.Start(GetTaskInitParams);
 
       //从Task获取执行结果
-      FOutResult.Code := LJob.Task.TaskVar.TaskResult.Code;
-      FOutResult.Msg := LJob.Task.TaskVar.TaskResult.Msg;
-      FOutResult.Data := LJob.Task.TaskVar.TaskResult.DataStr;
+      if LJob.Task <> nil then
+      begin
+        FOutResult.Code := LJob.Task.TaskVar.TaskResult.Code;
+        FOutResult.Msg := LJob.Task.TaskVar.TaskResult.Msg;
+        FOutResult.Data := LJob.Task.TaskVar.TaskResult.DataStr;
+        LJob.Task.TaskVar.Logger.Force('任务结束'+ LJob.JobName);
+      end;
 
       AppLogger.Force('结束执行工作：' + LJob.JobName);
-      LJob.Task.TaskVar.Logger.Force('任务结束'+ LJob.JobName);
     except
       on E: Exception do
       begin
@@ -119,7 +125,9 @@ begin
       end;
     end;
   finally
-    LJob.FreeTask;
+    InterlockedDecrement(FUnHandledCount);
+    if LJob <> nil then
+      LJob.FreeTask;
   end;
 end;
 

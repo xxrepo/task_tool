@@ -42,7 +42,7 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Vcl.Forms;
+  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Winapi.Windows, uUserNotify, Vcl.Controls;
 
 { TStepQuery }
 
@@ -51,7 +51,6 @@ var
   i: Integer;
 begin
   //释放掉所有的dbdataset
-
   if FReporter <> nil then
   begin
     FreeAndNil(FReporter);
@@ -213,8 +212,8 @@ begin
     FReporter.PrepareReport;
 
     //通知Application主窗口已经需要展示ReportPreview
-
-    FReporter.ShowReport;
+    if TaskVar.BlockNotify('您有新的报表处理好了.') = mrOk then
+      FReporter.ShowReport;
   finally
     if LDBDataSetsJsonArray <> nil then
       FreeAndNil(LDBDataSetsJsonArray);
