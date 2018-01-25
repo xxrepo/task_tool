@@ -57,14 +57,14 @@ end;
 
 destructor THttpServerRunner.Destroy;
 begin
-  try
-    FServer.Active := False;
-    FreeAndNil(FServer);
 
+  try
+    FJobDispatcher.ClearNotificationForms;
     if FJobDispatcher <> nil then
       FreeAndNil(FJobDispatcher);
-  except
-
+  finally
+    FServer.Active := False;
+    FreeAndNil(FServer);
   end;
   inherited;
 end;
@@ -225,7 +225,8 @@ begin
       begin
         FJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
         //获得输出参数
-        LOutResult := FJobDispatcher.OutResult;
+        if FJobDispatcher <> nil then
+          LOutResult := FJobDispatcher.OutResult;
       end;
     end;
 

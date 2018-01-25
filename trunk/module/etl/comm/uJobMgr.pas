@@ -44,6 +44,7 @@ type
 
     function LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 
+    procedure ClearNotificationForms;
     property DbsConfigFile: string read GetDbsConfigFile;
   end;
 
@@ -52,6 +53,11 @@ implementation
 uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uTaskDefine, uFileUtil, uTask, Winapi.Windows;
 
 { TJobMgr }
+
+procedure TJobMgr.ClearNotificationForms;
+begin
+  FUserNotifier.Clear;
+end;
 
 constructor TJobMgr.Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
 begin

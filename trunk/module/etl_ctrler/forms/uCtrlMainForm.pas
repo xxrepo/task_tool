@@ -60,6 +60,7 @@ begin
   inherited;
   Application.ShowMainForm := False;
   rztrycnTool.Hint := Caption;
+  N5Click(Sender);
 end;
 
 
@@ -103,8 +104,16 @@ begin
 end;
 
 procedure TCtrlMainForm.N9Click(Sender: TObject);
+var
+  i: Integer;
+  LForm: TForm;
 begin
   inherited;
+  for i := Screen.FormCount - 1 downto 0 do begin
+    LForm := Screen.Forms[i];
+    if LForm <> nil then
+      SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
+  end;
   Application.Terminate;
 end;
 
