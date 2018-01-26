@@ -19,7 +19,7 @@ type
 
   protected
     FUnHandledCount: Integer;
-    FUserNotifier: TUserNotify;
+    //FUserNotifier: TUserNotify;
     FLogLevel: TLogLevel;
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
@@ -44,7 +44,6 @@ type
 
     function LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 
-    procedure ClearNotificationForms;
     procedure ClearTaskStacks;
 
     property DbsConfigFile: string read GetDbsConfigFile;
@@ -55,11 +54,6 @@ implementation
 uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uTaskDefine, uFileUtil, uTask, Winapi.Windows;
 
 { TJobMgr }
-
-procedure TJobStarter.ClearNotificationForms;
-begin
-  FUserNotifier.Clear;
-end;
 
 procedure TJobStarter.ClearTaskStacks;
 var
@@ -87,7 +81,6 @@ begin
   FThreadCount := AThreadCount;
   if FThreadCount > 0 then
     FThreadPool := TThreadPool.Create(HandleJobRequest, FThreadCount);
-  FUserNotifier := TUserNotify.Create;
 end;
 
 
@@ -95,8 +88,6 @@ destructor TJobStarter.Destroy;
 var
   i: Integer;
 begin
-  FUserNotifier.Free;
-
   Stop;
 
   if FThreadPool <> nil then
@@ -261,7 +252,6 @@ begin
   try
     LJob.HandleStatus := jhsRun;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
-    LJob.Task.TaskVar.SetUserNotifier(FUserNotifier);
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     {$IFDEF PROJECT_DESIGN_MODE}
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;

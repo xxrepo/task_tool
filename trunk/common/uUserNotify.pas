@@ -16,6 +16,8 @@ type
     function BlockNotify(AMsg: string): Integer;
 
     procedure Clear;
+
+    class function BlockUiNotify(AMsg: string): Integer;
   end;
 
 implementation
@@ -42,6 +44,18 @@ begin
         FreeAndNil(LForm);
       end;
     end;
+  finally
+
+  end;
+end;
+
+class function TUserNotify.BlockUiNotify(AMsg: string): Integer;
+begin
+  Application.NormalizeTopMosts;
+  with TUserNotifyMsgForm.Create(Application) do
+  try
+    lblMsg.Caption := AMsg;
+    ShowModal;
   finally
 
   end;

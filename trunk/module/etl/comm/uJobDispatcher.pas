@@ -4,6 +4,8 @@ interface
 
 uses uJobStarter, uJob, uFileLogger, System.Classes, uStepDefines, System.Contnrs, System.SyncObjs;
 
+
+
 type
   PJobDispatcherRec = ^TJobdispatcherRec;
 
@@ -29,14 +31,14 @@ type
     FInParams: string;
     FOutResult: TOutResult;
 
-    procedure StartJobSync(AJobName: string);
+    procedure StartJobWithResult(AJobName: string);
 
   protected
     function GetTaskInitParams: PStepData; override;
   public
     constructor Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll); override;
 
-    procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const ASync: Boolean = True);
+    procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
 
     property OutResult: TOutResult read FOutResult;
   end;
@@ -81,7 +83,7 @@ begin
 end;
 
 
-procedure TJobDispatcher.StartJobSync(AJobName: string);
+procedure TJobDispatcher.StartJobWithResult(AJobName: string);
 var
   LTaskConfigRec: TTaskConfigRec;
   LJob: TJobConfig;
@@ -107,7 +109,6 @@ begin
     LJob.RunThread := nil;
     LJob.JobRequest := nil;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
-    LJob.Task.TaskVar.SetUserNotifier(FUserNotifier);
     LJob.Task.TaskVar.CanBlockUI := False;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
@@ -150,7 +151,7 @@ end;
 
 
 
-procedure TJobDispatcher.StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const ASync: Boolean = True);
+procedure TJobDispatcher.StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
 begin
   //在这里进行释放
   try
@@ -162,18 +163,16 @@ begin
 
       //TODO 在这里进行blockui属性的设置，根据预先设计好的属性，走不同的调用方法
 
-      if ASync then
+      if AWithResult then
       begin
-        StartJobSync(AJobDispatcherRec.JobName);
+        StartJobWithResult(AJobDispatcherRec.JobName);
       end
       else
         StartJob(AJobDispatcherRec.JobName);
     end
     else
     begin
-      FOutResult.Msg := '加载Project文件失败：' + AJobDispatcherRec.ProjectFile
-                        + '; Job: ' + AJobDispatcherRec.JobName
-                        + '; InParams: ' + AJobDispatcherRec.InParams;
+      FOutResult.Msg := 'LoadJobConfig任务文件未成功';
       AppLogger.Fatal(FOutResult.Msg);
     end;
   finally
@@ -218,10 +217,10 @@ begin
 
     if ADispatcher <> nil then
     begin
-      ADispatcher.ClearNotificationForms;
-      ADispatcher.ClearTaskStacks;
-
-      Sleep(200);
+//      ADispatcher.ClearNotificationForms;
+//      ADispatcher.ClearTaskStacks;
+//
+//      Sleep(200);
 
       ADispatcher.Free;
     end;

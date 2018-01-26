@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBasicForm, RzTray, Vcl.Menus,
-  Vcl.StdCtrls, uDefines, Vcl.ExtCtrls;
+  Vcl.StdCtrls, uDefines, Vcl.ExtCtrls, uJobDispatcher;
 
 type
   TCtrlMainForm = class(TBasicForm)
@@ -30,14 +30,17 @@ type
     procedure N6Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure N10Click(Sender: TObject);
-    procedure rztrycnToolLButtonDblClick(Sender: TObject);
-    procedure MsgRestoreApplicationHandler(var AMsg: TMessage); message VVMSG_RESTORE_APPLICATION_FORM;
+    procedure FormDestroy(Sender: TObject);
   private
+    FJobDispatchers: TJobDispatcherList;
+
     procedure HideForm;
     { Private declarations }
   public
     { Public declarations }
     procedure ShowTopMost;
+    procedure MsgBlockUiJobRequestHandler(var AMsg: TMessage); message VVMSG_BLOCKUI_JOB_REQUEST;
+
   end;
 
 var
@@ -59,10 +62,17 @@ end;
 procedure TCtrlMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
+  FJobDispatchers := TJobDispatcherList.Create;
   rztrycnTool.Hint := Caption;
   N5Click(Sender);
 end;
 
+
+procedure TCtrlMainForm.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FJobDispatchers.Free;
+end;
 
 procedure TCtrlMainForm.N10Click(Sender: TObject);
 begin
@@ -120,12 +130,6 @@ begin
 end;
 
 
-procedure TCtrlMainForm.rztrycnToolLButtonDblClick(Sender: TObject);
-begin
-  inherited;
-  HideForm;
-end;
-
 procedure TCtrlMainForm.ShowTopMost;
 begin
   Show;
@@ -134,19 +138,26 @@ end;
 
 procedure TCtrlMainForm.HideForm;
 begin
-  if Self.Visible then
-  begin
-    Hide;
+  Self.Visible := False;
+end;
+
+
+procedure TCtrlMainForm.MsgBlockUiJobRequestHandler(var AMsg: TMessage);
+var
+  LJobDispatcherRec: PJobDispatcherRec;
+  LJobDispatcher: TJobDispatcher;
+begin
+  if AMsg.Msg <> VVMSG_BLOCKUI_JOB_REQUEST then Exit;
+
+  LJobDispatcherRec := PJobDispatcherRec(AMsg.WParam);
+  if LJobDispatcherRec = nil then Exit;
+
+  LJobDispatcher := FJobDispatchers.NewDispatcher(0);
+  try
+    LJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
+  finally
+    FJobDispatchers.FreeDispatcher(LJobDispatcher);
   end;
 end;
-
-
-procedure TCtrlMainForm.MsgRestoreApplicationHandler(var AMsg: TMessage);
-begin
-  rztrycnTool.RestoreApp;
-end;
-
-
-
 
 end.

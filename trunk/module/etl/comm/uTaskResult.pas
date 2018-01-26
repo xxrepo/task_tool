@@ -39,7 +39,7 @@ constructor TTaskResult.Create;
 begin
   inherited;
   FCode := -1;
-  FMsg := '很抱歉，暂未处理您的任务';
+  FMsg := '很抱歉，未能成功处理您的任务';
   FData := TJSONString.Create;
 end;
 

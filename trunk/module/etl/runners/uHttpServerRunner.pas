@@ -12,7 +12,7 @@ type
     FServer: TIdHttpServer;
     FServerConfigRec: THttpServerConfigRec;
     FStatus: TRunnerStatus;
-    FBlockUIJobDispatcher: TJobDispatcher;
+    //FBlockUIJobDispatcher: TJobDispatcher;
 
     FJobDispatchers: TJobDispatcherList;
 
@@ -67,12 +67,12 @@ begin
     try
       FJobDispatchers.Free;
     finally
-      FBlockUIJobDispatcher.ClearNotificationForms;
-      FBlockUIJobDispatcher.ClearTaskStacks;
-      Sleep(200);
-
-      if FBlockUIJobDispatcher <> nil then
-        FreeAndNil(FBlockUIJobDispatcher);
+//      FBlockUIJobDispatcher.ClearNotificationForms;
+//      FBlockUIJobDispatcher.ClearTaskStacks;
+//      Sleep(200);
+//
+//      if FBlockUIJobDispatcher <> nil then
+//        FreeAndNil(FBlockUIJobDispatcher);
     end;
   finally
     //对线程退出进行延时处理
@@ -94,9 +94,9 @@ begin
       FServer.Active := False;
     end;
 
-    if FBlockUIJobDispatcher <> nil then
-      FreeAndNil(FBlockUIJobDispatcher);
-    FBlockUIJobDispatcher := TJobDispatcher.Create(Min(AServerConfigRec.MaxConnection + 1, 10));
+//    if FBlockUIJobDispatcher <> nil then
+//      FreeAndNil(FBlockUIJobDispatcher);
+//    FBlockUIJobDispatcher := TJobDispatcher.Create(Min(AServerConfigRec.MaxConnection + 1, 10));
 
     FServerConfigRec := AServerConfigRec;
     FServerConfigRec.AbsDocRoot := TFileUtil.GetAbsolutePathEx(ExePath, AServerConfigRec.DocRoot);
@@ -235,10 +235,10 @@ begin
         LOutResult.Msg := 'No Response In BlockUI Request';
 
         //设置输出结果，同时应该通知宿主窗口接收到了一条异步消息
-        FBlockUIJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+        //FBlockUIJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
 
         //激活application
-        PostMessage(Application.MainFormHandle, VVMSG_RESTORE_APPLICATION_FORM, 0, 0);
+        PostMessage(Application.MainFormHandle, VVMSG_BLOCKUI_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
       end
       else
       begin

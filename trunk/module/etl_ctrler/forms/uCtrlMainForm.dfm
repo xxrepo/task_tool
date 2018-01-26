@@ -7,8 +7,9 @@ inherited CtrlMainForm: TCtrlMainForm
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   ExplicitWidth = 343
-  ExplicitHeight = 182
+  ExplicitHeight = 181
   PixelsPerInch = 96
   TextHeight = 17
   object lbl1: TLabel
@@ -69,7 +70,6 @@ inherited CtrlMainForm: TCtrlMainForm
   object rztrycnTool: TRzTrayIcon
     HideOnStartup = True
     PopupMenu = pmTray
-    OnLButtonDblClick = rztrycnToolLButtonDblClick
     Left = 280
     Top = 88
   end
