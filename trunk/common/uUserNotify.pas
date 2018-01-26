@@ -20,19 +20,18 @@ type
 
 implementation
 
-uses Vcl.Forms, System.SysUtils, Winapi.Windows, Winapi.Messages;
+uses Vcl.Forms, System.SysUtils, Winapi.Windows, Winapi.Messages, System.Classes;
 
 { TUserNotify }
 
 function TUserNotify.BlockNotify(AMsg: string): Integer;
 var
   LForm: TUserNotifyMsgForm;
-  idx: Integer;
 begin
   //该方法仅仅在具有交互的系统中进行处理，为编译带来较好的维护性
   try
     LForm := TUserNotifyMsgForm.Create(Application);
-    idx := FNotifyForms.Add(LForm);
+    FNotifyForms.Add(LForm);
     with LForm do
     try
       lblMsg.Caption := AMsg;

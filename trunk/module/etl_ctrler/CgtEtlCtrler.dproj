@@ -130,7 +130,7 @@
         <DCCReference Include="..\etl\comm\uGlobalVar.pas"/>
         <DCCReference Include="..\etl\comm\uJob.pas"/>
         <DCCReference Include="..\etl\comm\uJobDispatcher.pas"/>
-        <DCCReference Include="..\etl\comm\uJobMgr.pas"/>
+        <DCCReference Include="..\etl\comm\uJobStarter.pas"/>
         <DCCReference Include="..\etl\comm\uTask.pas"/>
         <DCCReference Include="..\etl\comm\uTaskDefine.pas"/>
         <DCCReference Include="..\etl\comm\uTaskResult.pas"/>
@@ -160,6 +160,7 @@
             <Form>UserNotifyMsgForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -575,12 +576,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>

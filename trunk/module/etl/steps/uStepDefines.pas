@@ -65,7 +65,7 @@ uses uFunctions;
 destructor TStepConfig.Destroy;
 begin
   if FConfigJson <> nil then
-    FConfigJson.Free;
+    FreeAndNil(FConfigJson);
   inherited;
 end;
 

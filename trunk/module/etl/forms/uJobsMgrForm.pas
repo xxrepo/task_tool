@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBasicForm, Vcl.StdCtrls, Vcl.Buttons,
   Vcl.ExtCtrls, RzPanel, DBGridEhGrouping, ToolCtrlsEh, DBGridEhToolCtrls,
   DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh, Data.DB,
-  Datasnap.DBClient, Vcl.Menus, uJobMgr, Vcl.DBCtrls, Vcl.ComCtrls, RzListVw,
+  Datasnap.DBClient, Vcl.Menus, uJobStarter, Vcl.DBCtrls, Vcl.ComCtrls, RzListVw,
   RzShellCtrls, uDesignTimeDefines, RzSplit, uFileLogger, uBasicLogForm;
 
 type
@@ -54,7 +54,7 @@ type
   private
     { Private declarations }
     JobsFile: string;
-    JobMgr: TJobMgr;
+    JobStarter: TJobStarter;
 
     procedure RefreshData;
     procedure SaveData;
@@ -116,7 +116,7 @@ begin
   if tmrJobsSchedule.Enabled then
   begin
     tmrJobsSchedule.Enabled := False;
-    JobMgr.Stop;
+    JobStarter.Stop;
     btnStartAll.Caption := '启动全部任务';
   end
   else
@@ -132,7 +132,7 @@ begin
   try
     if cdsJobs.RecordCount > 0 then
     begin
-      JobMgr.StartJob(cdsJobs.FieldByName('job_name').AsString);
+      JobStarter.StartJob(cdsJobs.FieldByName('job_name').AsString);
     end;
   finally
 
@@ -142,7 +142,7 @@ end;
 procedure TJobsForm.btnStopJobClick(Sender: TObject);
 begin
   inherited;
-  JobMgr.StopJob(cdsJobs.FieldByName('job_name').AsString);
+  JobStarter.StopJob(cdsJobs.FieldByName('job_name').AsString);
 end;
 
 
@@ -252,9 +252,9 @@ procedure TJobsForm.FormCreate(Sender: TObject);
 begin
   inherited;
   AppLogger.NoticeHandle := Handle;
-  JobMgr := TJobMgr.Create(2);
+  JobStarter := TJobStarter.Create(2);
   //JobMgr.LoadConfigFrom(CurrentProject.JobsFile);
-  JobMgr.LogNoticeHandle := Handle;
+  JobStarter.LogNoticeHandle := Handle;
   lstLogs.Folder.PathName := CurrentProject.RootPath + 'task_log\';
 end;
 
@@ -262,7 +262,7 @@ procedure TJobsForm.FormDestroy(Sender: TObject);
 begin
   AppLogger.NoticeHandle := 0;
   SaveData;
-  JobMgr.Free;
+  JobStarter.Free;
 end;
 
 procedure TJobsForm.SaveData;
@@ -285,7 +285,7 @@ begin
   try
     if cdsJobs.RecordCount > 0 then
     begin
-      JobMgr.Start;
+      JobStarter.Start;
     end;
   finally
 
@@ -301,7 +301,7 @@ begin
   try
     if FileExists(JobsFile) then
     begin
-      if JobMgr.LoadConfigFrom(JobsFile) then
+      if JobStarter.LoadConfigFrom(JobsFile) then
       begin
         cdsJobs.EmptyDataSet;
         LStringList.LoadFromFile(JobsFile);

@@ -1,4 +1,4 @@
-unit uJobMgr;
+unit uJobStarter;
 
 interface
 
@@ -8,7 +8,7 @@ uses
 
 type
   //本类用于实际运行时对任务的处理和管理
-  TJobMgr = class
+  TJobStarter = class
   private
     FJobs: TStringList;
     FThreadPool: TThreadPool;
@@ -45,6 +45,8 @@ type
     function LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 
     procedure ClearNotificationForms;
+    procedure ClearTaskStacks;
+
     property DbsConfigFile: string read GetDbsConfigFile;
   end;
 
@@ -54,12 +56,27 @@ uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uTaskDefine, uFileUtil,
 
 { TJobMgr }
 
-procedure TJobMgr.ClearNotificationForms;
+procedure TJobStarter.ClearNotificationForms;
 begin
   FUserNotifier.Clear;
 end;
 
-constructor TJobMgr.Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
+procedure TJobStarter.ClearTaskStacks;
+var
+  i: Integer;
+  LJob: TJobConfig;
+begin
+  for i := 0 to FJobs.Count - 1 do
+  begin
+    LJob := (TJobConfig(FJobs.Objects[i]));
+    if (LJob <> nil) and (LJob.Task <> nil) then
+    begin
+      LJob.Task.TaskVar.ClearStacks;
+    end;
+  end;
+end;
+
+constructor TJobStarter.Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll);
 begin
   LogNoticeHandle := 0;
   FLogLevel := ALogLevel;
@@ -74,7 +91,7 @@ begin
 end;
 
 
-destructor TJobMgr.Destroy;
+destructor TJobStarter.Destroy;
 var
   i: Integer;
 begin
@@ -93,6 +110,7 @@ begin
   end;
   FreeAndNil(FJobs);
 
+
   if FGlobalVar <> nil then
     FreeAndNil(FGlobalVar);
 
@@ -100,17 +118,19 @@ begin
   inherited;
 end;
 
-function TJobMgr.GetDbsConfigFile: string;
+function TJobStarter.GetDbsConfigFile: string;
 begin
   Result := FRunBasePath + 'project.dbs';
 end;
 
 
-function TJobMgr.GetJob(AJobName: string): TJobConfig;
+function TJobStarter.GetJob(AJobName: string): TJobConfig;
 var
   i: Integer;
 begin
   Result := nil;
+  if FJobs = nil then Exit;
+
   i := FJobs.IndexOf(AJobName);
   if i > -1 then
   begin
@@ -119,13 +139,13 @@ begin
 end;
 
 
-function TJobMgr.GetTaskInitParams: PStepData;
+function TJobStarter.GetTaskInitParams: PStepData;
 begin
   Result := nil;
 end;
 
 //这个一但load完成，不允许再次变更配置，因此，建议本配置在本类创建时进行处理，不再运行中开放给外部
-function TJobMgr.LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
+function TJobStarter.LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 var
   LJobConfigs: TJSONArray;
   LJobConfigJson: TJSONObject;
@@ -192,7 +212,7 @@ begin
 end;
 
 
-function TJobMgr.CheckJobTask(AJob: TJobConfig): Boolean;
+function TJobStarter.CheckJobTask(AJob: TJobConfig): Boolean;
 begin
   Result := False;
   FCritical.Enter;
@@ -215,7 +235,7 @@ end;
 
 //这里必须线程安全，因为会存在若干的线程来操作同一段代码，要么都是局部变量
 //要么是线程安全的变量
-procedure TJobMgr.HandleJobRequest(Data: Pointer; AThread: TThread);
+procedure TJobStarter.HandleJobRequest(Data: Pointer; AThread: TThread);
 var
   LRequest: PJobRequest;
   LJob: TJobConfig;
@@ -272,7 +292,7 @@ begin
 end;
 
 
-procedure TJobMgr.Start;
+procedure TJobStarter.Start;
 var
   i: Integer;
   LJob: TJobConfig;
@@ -320,7 +340,7 @@ end;
 
 
 //PushToJobRequest的调用别名
-procedure TJobMgr.StartJob(AJobName: string);
+procedure TJobStarter.StartJob(AJobName: string);
 var
   LJob: TJobConfig;
 begin
@@ -329,7 +349,7 @@ begin
 end;
 
 
-procedure TJobMgr.StartJob(AJob: TJobConfig);
+procedure TJobStarter.StartJob(AJob: TJobConfig);
 var
   LRequest: PJobRequest;
 begin
@@ -361,7 +381,7 @@ begin
 end;
 
 
-procedure TJobMgr.Stop;
+procedure TJobStarter.Stop;
 var
   i: Integer;
 begin
@@ -373,7 +393,7 @@ end;
 
 
 
-procedure TJobMgr.StopJob(AJob: TJobConfig);
+procedure TJobStarter.StopJob(AJob: TJobConfig);
 begin
   try
     //因为task的释放和本设置是工作在不同的线程中，有可能在子线程中task已经释放
@@ -388,7 +408,7 @@ begin
 end;
 
 
-procedure TJobMgr.StopJob(AJobName: string);
+procedure TJobStarter.StopJob(AJobName: string);
 var
   LJob: TJobConfig;
 begin

@@ -53,7 +53,7 @@ type
 
     procedure Stop;
 
-    function ToString: string;
+    function ToString: string; override;
     procedure FreeTask;
   end;
 
@@ -272,5 +272,6 @@ begin
 
   end;
 end;
+
 
 end.

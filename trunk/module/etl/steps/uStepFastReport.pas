@@ -3,11 +3,11 @@ unit uStepFastReport;
 interface
 
 uses
-  uStepBasic, System.JSON, Datasnap.DBClient, Data.DB, frxClass, frxBarcode, frxDBSet, frxRich,
+  uStepUiBasic, System.JSON, Datasnap.DBClient, Data.DB, frxClass, frxBarcode, frxDBSet, frxRich,
   System.Classes;
 
 type
-  TStepFastReport = class (TStepBasic)
+  TStepFastReport = class (TStepUiBasic)
   private
     FReporter: TfrxReport;
     FDBDatasets: TStringList;
@@ -59,9 +59,10 @@ begin
   begin
     for i := FDBDatasets.Count - 1 downto 0 do
     begin
-      TfrxDBDataset(FDBDatasets.Objects[i]).Free;
+      if FDBDatasets.Objects[i] <> nil then
+        TfrxDBDataset(FDBDatasets.Objects[i]).Free;
     end;
-    FDBDatasets.Free;
+    FreeAndNil(FDBDatasets);
   end;
   if FDBVariables <> nil then
     FreeAndNil(FDBVariables);
@@ -212,8 +213,9 @@ begin
     FReporter.PrepareReport;
 
     //通知Application主窗口已经需要展示ReportPreview
-    if TaskVar.BlockNotify('您有新的报表处理好了.') = mrOk then
-      FReporter.ShowReport;
+    TaskVar.BlockNotify('正在为您准备报表 ' + StepConfig.Description);
+
+    FReporter.ShowReport;
   finally
     if LDBDataSetsJsonArray <> nil then
       FreeAndNil(LDBDataSetsJsonArray);

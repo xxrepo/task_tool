@@ -40,7 +40,7 @@ begin
   inherited;
   FCode := -1;
   FMsg := '很抱歉，暂未处理您的任务';
-  FData := TJSONValue.Create;
+  FData := TJSONString.Create;
 end;
 
 
@@ -54,7 +54,7 @@ end;
 function TTaskResult.GetData: TJsonValue;
 begin
   if FData = nil then
-    FData := TJSONValue.Create;
+    FData := TJSONString.Create;
 
   Result := FData;
 end;

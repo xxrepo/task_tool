@@ -30,7 +30,6 @@ inherited HttpServerControlForm: THttpServerControlForm
       AutoSize = True
       BorderOuter = fsFlat
       TabOrder = 0
-      ExplicitHeight = 510
       object lbl1: TLabel
         Left = 103
         Top = 25
@@ -193,7 +192,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Width = 689
       Height = 142
       ExplicitWidth = 689
-      ExplicitHeight = 42
+      ExplicitHeight = 142
     end
     inherited rzpnl3: TRzPanel
       Width = 689

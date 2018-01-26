@@ -43,11 +43,11 @@ type
 
     function PushStep(const ATaskStep: TTaskStep; const AStep: TObject): Integer;
     procedure PopStep(const ATaskStep: TTaskStep);
-    procedure PopSteps;
     function GetTaskStepIdxName(ATaskStep: TTaskStep): string;
   public
     TaskVarRec: TTaskVarRec;
     GlobalVar: TGlobalVar;
+    CanBlockUI: Boolean;
 
     Logger: TThreadFileLog;
 
@@ -71,11 +71,11 @@ type
     procedure SetUserNotifier(ANotifier: TUserNotify);
     function BlockNotify(AMsg: string): Integer;
 
-    procedure InitStartContext;
     procedure StartStep(const ATaskBlock: TTaskBlock; const AStepConfigJson: TJSONObject; const AInData: PStepData);
 
     function IsToStep(ATaskStep: TTaskStep): Boolean;
     function GetStepFromStack(ATaskStep: TTaskStep): TObject;
+    procedure ClearStacks;
 
     procedure DesignToStep(AStepId: Integer; ABlock: TTaskBlock);
     procedure DebugToStep(AStepId: Integer; ABlock: TTaskBlock);
@@ -98,8 +98,27 @@ type
 
 { TTaskVar }
 
+procedure TTaskVar.ClearStacks;
+var
+  i: Integer;
+  LStep: TStepBasic;
+begin
+  for i := FStepStack.Count - 1 downto 0 do
+  begin
+    try
+      LStep := TStepBasic(FStepStack.Objects[i]);
+      if LStep <> nil then
+        FreeAndNil(LStep);
+      FStepStack.Delete(i);
+    finally
+
+    end;
+  end;
+end;
+
 constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
+  CanBlockUI := True;
   TaskResult := TTaskResult.Create;
   FStepStack := TStringList.Create;
 
@@ -128,7 +147,7 @@ var
   LStepData: TStepDataStore;
 begin
   //ÊÍ·Å¸÷¸öStep
-  PopSteps;
+  ClearStacks;
   FStepStack.Free;
 
   DbConMgr.Free;
@@ -298,14 +317,6 @@ begin
 end;
 
 
-
-procedure TTaskVar.InitStartContext;
-begin
-  TaskStatus := trsRunning;
-  PopSteps;
-end;
-
-
 procedure TTaskVar.SetUserNotifier(ANotifier: TUserNotify);
 begin
   FUserNotifier := ANotifier;
@@ -433,20 +444,6 @@ begin
     if LStep <> nil then
       FreeAndNil(LStep);
     FStepStack.Delete(idx);
-  end;
-end;
-
-procedure TTaskVar.PopSteps;
-var
-  i: Integer;
-  LStep: TStepBasic;
-begin
-  for i := FStepStack.Count - 1 downto 0 do
-  begin
-    LStep := TStepBasic(FStepStack.Objects[i]);
-    if LStep <> nil then
-      FreeAndNil(LStep);
-    FStepStack.Delete(i);
   end;
 end;
 

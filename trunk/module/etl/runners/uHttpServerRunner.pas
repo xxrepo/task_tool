@@ -5,13 +5,16 @@ interface
 uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher;
 
 type
+  TRunnerStatus = (rsNone, rsRunning, rsStop, rsDestroy);
 
   THttpServerRunner = class
   private
     FServer: TIdHttpServer;
     FServerConfigRec: THttpServerConfigRec;
+    FStatus: TRunnerStatus;
+    FBlockUIJobDispatcher: TJobDispatcher;
 
-    FJobDispatcher: TJobDispatcher;
+    FJobDispatchers: TJobDispatcherList;
 
     procedure OnServerCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -37,7 +40,7 @@ type
 
 implementation
 
-uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows, System.Math;
+uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows, System.Math, Vcl.Forms;
 
 type
   DisParamException = class(Exception);
@@ -51,18 +54,30 @@ begin
   FServer.ServerSoftware := 'Cgt Lite Server 1.0';
   FServer.OnCommandGet := OnServerCommandGet;
   FServer.OnCommandOther := OnServerCommandOther;
+
+  FJobDispatchers := TJobDispatcherList.Create;
 end;
 
 
 
 destructor THttpServerRunner.Destroy;
 begin
-
+  FStatus := rsDestroy;
   try
-    FJobDispatcher.ClearNotificationForms;
-    if FJobDispatcher <> nil then
-      FreeAndNil(FJobDispatcher);
+    try
+      FJobDispatchers.Free;
+    finally
+      FBlockUIJobDispatcher.ClearNotificationForms;
+      FBlockUIJobDispatcher.ClearTaskStacks;
+      Sleep(200);
+
+      if FBlockUIJobDispatcher <> nil then
+        FreeAndNil(FBlockUIJobDispatcher);
+    end;
   finally
+    //对线程退出进行延时处理
+    Sleep(200);
+
     FServer.Active := False;
     FreeAndNil(FServer);
   end;
@@ -79,9 +94,9 @@ begin
       FServer.Active := False;
     end;
 
-    if FJobDispatcher <> nil then
-      FreeAndNil(FJobDispatcher);
-    FJobDispatcher := TJobDispatcher.Create(Min(AServerConfigRec.MaxConnection + 1, 10));
+    if FBlockUIJobDispatcher <> nil then
+      FreeAndNil(FBlockUIJobDispatcher);
+    FBlockUIJobDispatcher := TJobDispatcher.Create(Min(AServerConfigRec.MaxConnection + 1, 10));
 
     FServerConfigRec := AServerConfigRec;
     FServerConfigRec.AbsDocRoot := TFileUtil.GetAbsolutePathEx(ExePath, AServerConfigRec.DocRoot);
@@ -95,6 +110,7 @@ begin
     FServer.DefaultPort := AServerConfigRec.Port;
     FServer.MaxConnections := FServerConfigRec.MaxConnection;
     FServer.Active := True;
+    FStatus := rsRunning;
   except
     on E: Exception do
       AppLogger.Fatal('LocalServer启动失败：' + E.Message);
@@ -213,20 +229,30 @@ begin
     else
     begin
       //执行jobdispatcher，如果传入的是异步消息，则发送job的消息到AsyncJobHandlerForm
-      if ARequestInfo.Params.Values['vv_unblock'].Length > 0 then
+      if ARequestInfo.Params.Values['vv_blockui'].Length > 0 then
       begin
         LOutResult.Code := 1;
-        LOutResult.Msg := 'No Response In UnBlock Request';
+        LOutResult.Msg := 'No Response In BlockUI Request';
 
         //设置输出结果，同时应该通知宿主窗口接收到了一条异步消息
-        FJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+        FBlockUIJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+
+        //激活application
+        PostMessage(Application.MainFormHandle, VVMSG_RESTORE_APPLICATION_FORM, 0, 0);
       end
       else
       begin
-        FJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
-        //获得输出参数
-        if FJobDispatcher <> nil then
-          LOutResult := FJobDispatcher.OutResult;
+        //这里可以引入临时变量尝试
+        LSyncJobDispatcher := FJobDispatchers.NewDispatcher;
+        try
+          LSyncJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
+
+          if LSyncJobDispatcher <> nil then
+            LOutResult := LSyncJobDispatcher.OutResult;
+        finally
+          if FStatus <> rsDestroy then
+            FJobDispatchers.FreeDispatcher(LSyncJobDispatcher);
+        end;
       end;
     end;
 
@@ -310,7 +336,6 @@ procedure THttpServerRunner.OutputResult(ARequestInfo: TIdHTTPRequestInfo; AResp
 var
   LRsp: string;
   LResultJson: TJSONObject;
-  LDataJson: TJSONValue;
 begin
   LRsp := ARequestInfo.Params.Values['rsp'];
 

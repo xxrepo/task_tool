@@ -19,7 +19,7 @@ type
 
 implementation
 
-uses uJobMgr, uDefines, System.SysUtils, uFileUtil;
+uses uJobStarter, uDefines, System.SysUtils, uFileUtil;
 
 { TJobRunner }
 
@@ -39,7 +39,7 @@ end;
 
 procedure TScheduleRunner.Execute;
 var
-  LJobMgr: TJobMgr;
+  LJobStarter: TJobStarter;
   LAllowedTimes: TStringList;
   LDisAllowedTimes: TStringList;
   LNowStr: string;
@@ -101,8 +101,8 @@ begin
   LDisAllowedTimes.DelimitedText := FDisAllowedTimes;
   LDisAllowedTimes.NameValueSeparator := '-';
 
-  LJobMgr := TJobMgr.Create(FJobThreadCount, FLogLevel);
-  LJobMgr.LoadConfigFrom(FJobsFile);
+  LJobStarter := TJobStarter.Create(FJobThreadCount, FLogLevel);
+  LJobStarter.LoadConfigFrom(FJobsFile);
   try
     LRec := 0;
     while not Terminated do
@@ -119,7 +119,7 @@ begin
       LNowStr := FormatDateTime('hh:nn:ss', Now);
       if IsAllowed and (not IsDisallowed) then
       begin
-        LJobMgr.Start;
+        LJobStarter.Start;
       end;
 
       //每秒执行一次
@@ -128,7 +128,7 @@ begin
   finally
     LDisAllowedTimes.Free;
     LAllowedTimes.Free;
-    LJobMgr.Free;
+    LJobStarter.Free;
   end;
 end;
 

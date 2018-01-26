@@ -172,7 +172,6 @@ inherited JobsForm: TJobsForm
     inherited redtLog: TRichEdit
       Width = 1168
       Height = 199
-      ParentFont = True
       ExplicitWidth = 1168
       ExplicitHeight = 199
     end

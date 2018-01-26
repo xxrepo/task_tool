@@ -24,7 +24,7 @@ uses
   uGlobalVar in '..\etl\comm\uGlobalVar.pas',
   uJob in '..\etl\comm\uJob.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
-  uJobMgr in '..\etl\comm\uJobMgr.pas',
+  uJobStarter in '..\etl\comm\uJobStarter.pas',
   uTask in '..\etl\comm\uTask.pas',
   uTaskDefine in '..\etl\comm\uTaskDefine.pas',
   uTaskResult in '..\etl\comm\uTaskResult.pas',
@@ -52,7 +52,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   uUserNotify in '..\..\common\uUserNotify.pas',
-  uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm};
+  uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
+  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas';
 
 {$R *.res}
 

@@ -125,7 +125,7 @@ begin
       TaskVar.TaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
       try
         //Çå¿Õµ÷ÓÃÕ»
-        TaskVar.InitStartContext;
+        TaskVar.TaskStatus := trsRunning;
         TaskVar.StartStep(LTaskBlock, LTaskConfigJson, AInitData);
       except
         on E: StopTaskGracefulException do

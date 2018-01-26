@@ -5,6 +5,7 @@ inherited UserNotifyMsgForm: TUserNotifyMsgForm
   ClientWidth = 367
   Font.Height = -16
   FormStyle = fsStayOnTop
+  OnCreate = FormCreate
   ExplicitWidth = 373
   ExplicitHeight = 185
   PixelsPerInch = 96
@@ -33,5 +34,11 @@ inherited UserNotifyMsgForm: TUserNotifyMsgForm
     Caption = #25105#30693#36947#20102
     TabOrder = 0
     OnClick = rzpnl1Click
+  end
+  object tmrClose: TTimer
+    Interval = 200
+    OnTimer = tmrCloseTimer
+    Left = 280
+    Top = 56
   end
 end

@@ -37,13 +37,16 @@ uses
   uTaskDefine in '..\etl\comm\uTaskDefine.pas',
   uHttpServerConfig in '..\etl\runners\uHttpServerConfig.pas',
   uHttpServerRunner in '..\etl\runners\uHttpServerRunner.pas',
-  uJobMgr in '..\etl\comm\uJobMgr.pas',
+  uJobStarter in '..\etl\comm\uJobStarter.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
   uScheduleConfig in '..\etl\runners\uScheduleConfig.pas',
   uScheduleRunner in '..\etl\runners\uScheduleRunner.pas',
   uStepTaskResult in '..\etl\steps\uStepTaskResult.pas',
   uTaskResult in '..\etl\comm\uTaskResult.pas',
-  uStepVarDefine in '..\etl\steps\uStepVarDefine.pas';
+  uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
+  uUserNotify in '..\..\common\uUserNotify.pas',
+  uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
+  uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm};
 
 {$R *.RES}
 
@@ -65,5 +68,7 @@ begin
   if not Application.DelayInitialize or Application.Installing then
     Application.Initialize;
   Application.CreateForm(TCGTEtlSrv, CGTEtlSrv);
+  Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
+  Application.CreateForm(TBasicForm, BasicForm);
   Application.Run;
 end.
