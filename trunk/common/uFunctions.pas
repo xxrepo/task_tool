@@ -13,6 +13,7 @@ function JsonValueToStr(const AJsonValue: TJSONValue): string;
 function FindProcess(AFileName: string): boolean;
 function OpenExecutive(AFileName: string): Boolean;
 function KillProcess(ExeFileName: string): integer;
+function DblClickProcessTray(const ProcessID: THandle): Boolean;
 function EnablePrivilege(hToken: Cardinal; PrivName: string; bEnable: Boolean): Boolean;
 function Md5String(AText: string): string;
 
@@ -36,8 +37,8 @@ function GetRowInJsonArray(const AJsonArray: TJSONArray; AFieldName: string; AFi
 implementation
 
 uses
-  Winapi.TlHelp32, System.SysUtils, Winapi.ShellAPI,
-    System.Classes, IdHash, IdHashMessageDigest, System.Variants;
+  Winapi.TlHelp32, System.SysUtils, Winapi.ShellAPI, Vcl.Controls, Winapi.Messages,
+    System.Classes, IdHash, IdHashMessageDigest, System.Variants, Winapi.CommCtrl;
 
 
 function VariantValueByDataType(AVar: Variant; ADataType: string = 'string'): Variant;
@@ -347,6 +348,58 @@ begin
 end;
 
 
+
+function DblClickProcessTray(const ProcessID: THandle): Boolean;
+var
+  h: THandle;
+  p: PTBBUTTON;
+  i: Integer;
+  b: _TBBUTTON;
+  hTray: Cardinal;
+  //dw: Cardinal;
+  dw: THandle;
+  TrayPid: Cardinal;
+  TempPid: Cardinal;
+  IcoHwnd: Cardinal;
+  r: TRect;
+  point: TPoint;
+begin
+  Result := False;
+
+  hTray := FindWindow('Shell_TrayWnd', nil);
+  hTray := FindWindowEx(hTray, 0, 'TrayNotifyWnd', nil);
+  hTray := FindWindowEx(hTray, 0, 'SysPager', nil);
+  hTray := FindWindowEx(hTray, 0, 'ToolbarWindow32', nil);
+  GetWindowThreadProcessId(hTray, TrayPid);
+  h := OpenProcess(PROCESS_ALL_ACCESS, False, TrayPid);
+  p := VirtualAllocEx(h, nil, SizeOf(b) + SizeOf(r), MEM_RESERVE or MEM_COMMIT, PAGE_READWRITE);  dw := 0;
+
+  for i := 0 to SendMessage(hTray, TB_BUTTONCOUNT, 0, 0) - 1 do
+  begin
+    ZeroMemory(@b, SizeOf(b));
+    WriteProcessMemory(h, p, @b, SizeOf(b), dw);
+    SendMessage(hTray, TB_GETBUTTON, i, LPARAM(p));
+    ReadProcessMemory(h, p, @b, SizeOf(b), dw);
+    ReadProcessMemory(h, Pointer(b.dwData), @IcoHwnd, 4, dw);//返回到本地的结构中dwData成员表示托盘图标句柄所在的位置
+    GetWindowThreadProcessId(IcoHwnd, TempPid);
+    if TempPid = ProcessID then
+    begin
+      SendMessage(hTray, TB_GETITEMRECT, i, LPARAM(LPARAM(p) + SizeOf(b)));
+      ReadProcessMemory(h, Pointer(LPARAM(p) + SizeOf(b)), @r, SizeOf(r), dw);
+      ClientToScreen(hTray, point);
+      point.X := point.X + r.Left;
+      point.Y := point.Y + r.Top;
+      SetCursorPos(point.X, point.Y);//菜单弹出位置
+      {按下右键弹出菜单，不能松开右键，否则可能弹出系统任务栏菜单}
+      //Result := (0 = SendMessage(hTray, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(r.Left, r.Top)));
+      Result := (0 = SendMessage(hTray, WM_LBUTTONDBLCLK, MK_LBUTTON, MAKELPARAM(r.Left, r.Top)));
+      Break;
+    end;
+  end;
+
+  VirtualFreeEx(h, p, 0, MEM_RELEASE);
+  CloseHandle(h);
+end;
 
 
 function EnablePrivilege(hToken: Cardinal; PrivName: string; bEnable: Boolean): Boolean;

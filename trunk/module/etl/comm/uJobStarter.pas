@@ -19,7 +19,6 @@ type
 
   protected
     FUnHandledCount: Integer;
-    //FUserNotifier: TUserNotify;
     FLogLevel: TLogLevel;
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
@@ -380,7 +379,6 @@ begin
     StopJob(TJobConfig(FJobs.Objects[i]));
   end;
 end;
-
 
 
 procedure TJobStarter.StopJob(AJob: TJobConfig);

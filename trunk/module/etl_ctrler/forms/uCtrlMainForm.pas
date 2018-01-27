@@ -33,14 +33,14 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure rztrycnToolRestoreApp(Sender: TObject);
   private
-    FBlockUiJobDispatcher: TJobDispatcher;
+    FInteractiveJobDispatcher: TJobDispatcher;
 
     procedure HideForm;
     { Private declarations }
   public
     { Public declarations }
     procedure ShowTopMost;
-    procedure MsgBlockUiJobRequestHandler(var AMsg: TMessage); message VVMSG_BLOCKUI_JOB_REQUEST;
+    procedure MsgInteractiveJobRequestHandler(var AMsg: TMessage); message VVMSG_INTERACTIVE_JOB_REQUEST;
 
   end;
 
@@ -49,7 +49,7 @@ var
 
 implementation
 
-uses uHttpServerControlForm, uDesignTimeDefines, uUserNotifyMsgForm;
+uses uHttpServerControlForm, uDesignTimeDefines, uFunctions;
 
 {$R *.dfm}
 
@@ -63,7 +63,7 @@ end;
 procedure TCtrlMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  FBlockUiJobDispatcher := TJobDispatcher.Create(1);
+  FInteractiveJobDispatcher := TJobDispatcher.Create;
   rztrycnTool.Hint := Caption;
   N5Click(Sender);
 end;
@@ -72,7 +72,7 @@ end;
 procedure TCtrlMainForm.FormDestroy(Sender: TObject);
 begin
   inherited;
-  FBlockUiJobDispatcher.Free;
+  FInteractiveJobDispatcher.Free;
 end;
 
 procedure TCtrlMainForm.N10Click(Sender: TObject);
@@ -149,19 +149,24 @@ begin
 end;
 
 
-procedure TCtrlMainForm.MsgBlockUiJobRequestHandler(var AMsg: TMessage);
+procedure TCtrlMainForm.MsgInteractiveJobRequestHandler(var AMsg: TMessage);
 var
   LJobDispatcherRec: PJobDispatcherRec;
 begin
-  //要给与用户适当的提示，并且适度激活本应用程序，主窗口仅仅用于做美化后的消息展示
-  rztrycnTool.RestoreApp;
 
-  if AMsg.Msg <> VVMSG_BLOCKUI_JOB_REQUEST then Exit;
+  //要给与用户适当的提示，并且适度激活本应用程序，主窗口仅仅用于做美化后的消息展示
+  //rztrycnTool.RestoreApp;
+  FormStyle := fsStayOnTop;
+  Application.Restore;
+  SetForegroundWindow(Handle);
+
+  if AMsg.Msg <> VVMSG_INTERACTIVE_JOB_REQUEST then Exit;
 
   LJobDispatcherRec := PJobDispatcherRec(AMsg.WParam);
   if LJobDispatcherRec = nil then Exit;
 
-  FBlockUiJobDispatcher.StartProjectJob(LJobDispatcherRec);
+  //Interactive的Job同样是没有结果输出的，那如何标记Job为Interactive，在Job设计阶段进行标记，否则异常出错
+  FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
 end;
 
 end.

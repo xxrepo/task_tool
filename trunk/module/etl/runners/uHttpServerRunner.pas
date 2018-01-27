@@ -229,16 +229,13 @@ begin
     else
     begin
       //执行jobdispatcher，如果传入的是异步消息，则发送job的消息到AsyncJobHandlerForm
-      if ARequestInfo.Params.Values['vv_blockui'].Length > 0 then
+      if ARequestInfo.Params.Values['vv_interactive'].Length > 0 then
       begin
         LOutResult.Code := 1;
-        LOutResult.Msg := 'No Response In BlockUI Request';
-
-        //设置输出结果，同时应该通知宿主窗口接收到了一条异步消息
-        //FBlockUIJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+        LOutResult.Msg := 'No Response In Interactive Request';
 
         //激活application
-        PostMessage(Application.MainFormHandle, VVMSG_BLOCKUI_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
+        PostMessage(Application.MainFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
       end
       else
       begin

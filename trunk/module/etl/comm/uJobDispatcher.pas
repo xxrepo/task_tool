@@ -36,7 +36,7 @@ type
   protected
     function GetTaskInitParams: PStepData; override;
   public
-    constructor Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll); override;
+    constructor Create(const ALogLevel: TLogLevel = llAll);
 
     procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
 
@@ -50,7 +50,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function NewDispatcher(AThreadCount: Integer = 0): TJobDispatcher;
+    function NewDispatcher: TJobDispatcher;
     procedure FreeDispatcher(ADispatcher: TJobDispatcher);
     procedure Clear;
   end;
@@ -62,9 +62,9 @@ uses
 
 { TJobDispatcher }
 
-constructor TJobDispatcher.Create(AThreadCount: Integer = 0; const ALogLevel: TLogLevel = llAll);
+constructor TJobDispatcher.Create(const ALogLevel: TLogLevel = llAll);
 begin
-  inherited Create(AThreadCount, ALogLevel);
+  inherited Create(0, ALogLevel);
   FOutResult.Code := -1;
   FOutResult.Msg := '¥¶¿Ì ß∞‹';
 end;
@@ -191,11 +191,11 @@ begin
 end;
 
 
-function TJobDispatcherList.NewDispatcher(AThreadCount: Integer = 0): TJobDispatcher;
+function TJobDispatcherList.NewDispatcher: TJobDispatcher;
 begin
   FCritical.Enter;
   try
-    Result := TJobDispatcher.Create(AThreadCount);
+    Result := TJobDispatcher.Create;
     if Result <> nil then
     FList.Add(Result);
   finally
