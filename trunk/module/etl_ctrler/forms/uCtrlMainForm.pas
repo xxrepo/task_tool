@@ -31,8 +31,9 @@ type
     procedure FormCreate(Sender: TObject);
     procedure N10Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure rztrycnToolRestoreApp(Sender: TObject);
   private
-    FJobDispatchers: TJobDispatcherList;
+    FBlockUiJobDispatcher: TJobDispatcher;
 
     procedure HideForm;
     { Private declarations }
@@ -62,7 +63,7 @@ end;
 procedure TCtrlMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  FJobDispatchers := TJobDispatcherList.Create;
+  FBlockUiJobDispatcher := TJobDispatcher.Create(1);
   rztrycnTool.Hint := Caption;
   N5Click(Sender);
 end;
@@ -71,7 +72,7 @@ end;
 procedure TCtrlMainForm.FormDestroy(Sender: TObject);
 begin
   inherited;
-  FJobDispatchers.Free;
+  FBlockUiJobDispatcher.Free;
 end;
 
 procedure TCtrlMainForm.N10Click(Sender: TObject);
@@ -130,6 +131,12 @@ begin
 end;
 
 
+procedure TCtrlMainForm.rztrycnToolRestoreApp(Sender: TObject);
+begin
+  inherited;
+  HideForm;
+end;
+
 procedure TCtrlMainForm.ShowTopMost;
 begin
   Show;
@@ -145,19 +152,16 @@ end;
 procedure TCtrlMainForm.MsgBlockUiJobRequestHandler(var AMsg: TMessage);
 var
   LJobDispatcherRec: PJobDispatcherRec;
-  LJobDispatcher: TJobDispatcher;
 begin
+  //要给与用户适当的提示，并且适度激活本应用程序，主窗口仅仅用于做美化后的消息展示
+  rztrycnTool.RestoreApp;
+
   if AMsg.Msg <> VVMSG_BLOCKUI_JOB_REQUEST then Exit;
 
   LJobDispatcherRec := PJobDispatcherRec(AMsg.WParam);
   if LJobDispatcherRec = nil then Exit;
 
-  LJobDispatcher := FJobDispatchers.NewDispatcher(0);
-  try
-    LJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
-  finally
-    FJobDispatchers.FreeDispatcher(LJobDispatcher);
-  end;
+  FBlockUiJobDispatcher.StartProjectJob(LJobDispatcherRec);
 end;
 
 end.

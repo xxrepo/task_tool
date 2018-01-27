@@ -213,7 +213,6 @@ begin
     FReporter.PrepareReport;
 
     //通知Application主窗口已经需要展示ReportPreview
-    //TaskVar.BlockNotify('正在为您准备报表 ' + StepConfig.Description);
     TUserNotify.BlockUiNotify('正在为您准备报表 ' + StepConfig.Description);
 
     FReporter.ShowReport;

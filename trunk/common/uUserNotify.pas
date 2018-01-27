@@ -51,7 +51,6 @@ end;
 
 class function TUserNotify.BlockUiNotify(AMsg: string): Integer;
 begin
-  Application.NormalizeTopMosts;
   with TUserNotifyMsgForm.Create(Application) do
   try
     lblMsg.Caption := AMsg;

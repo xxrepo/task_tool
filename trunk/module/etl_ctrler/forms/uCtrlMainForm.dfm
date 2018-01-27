@@ -70,6 +70,7 @@ inherited CtrlMainForm: TCtrlMainForm
   object rztrycnTool: TRzTrayIcon
     HideOnStartup = True
     PopupMenu = pmTray
+    OnRestoreApp = rztrycnToolRestoreApp
     Left = 280
     Top = 88
   end

@@ -63,7 +63,7 @@ begin
   {$ENDIF}
 
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
+  Application.MainFormOnTaskbar := False;
 
   ExePath := ExtractFilePath(Application.ExeName);
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
