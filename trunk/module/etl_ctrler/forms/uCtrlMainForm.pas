@@ -63,6 +63,7 @@ end;
 procedure TCtrlMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
+  Application.ShowMainForm := False;
   FInteractiveJobDispatcher := TJobDispatcher.Create;
   rztrycnTool.Hint := Caption;
   N5Click(Sender);
