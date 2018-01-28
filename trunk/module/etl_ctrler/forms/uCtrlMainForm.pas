@@ -165,6 +165,13 @@ begin
   //如果已经在运行Interactive任务，则继续发送一条重复的消息给app，等待下次消息循环开始时进行调用
   if FInteractiveJobDispatcher.UnHandledCount > 0 then
   begin
+    AMsg.LParam := AMsg.LParam + 1;
+    if AMsg.LParam = 5 then Exit;
+    if AMsg.LParam = 3 then
+    begin
+      FInteractiveJobDispatcher.ClearTaskStacks;
+    end;
+
     PostMessage(Handle, VVMSG_INTERACTIVE_JOB_REQUEST, AMsg.WParam, AMsg.LParam);
     Exit;
   end;
