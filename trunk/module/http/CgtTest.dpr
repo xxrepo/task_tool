@@ -1,4 +1,4 @@
-program CgtHttpServer;
+program CgtTest;
 
 uses
   Vcl.Forms,

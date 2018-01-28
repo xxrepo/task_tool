@@ -34,7 +34,7 @@ object Form1: TForm1
   end
   object idhttpsrvrJobDispatch: TIdHTTPServer
     Bindings = <>
-    Left = 32
-    Top = 32
+    Left = 64
+    Top = 24
   end
 end
