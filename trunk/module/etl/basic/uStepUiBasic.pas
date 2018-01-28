@@ -7,7 +7,7 @@ uses uStepBasic;
 type
   TStepUiBasic = class(TStepBasic)
   protected
-    procedure CheckBlockUI;
+    procedure CheckUserInteractive;
   public
     procedure Start; override;
   end;
@@ -16,17 +16,17 @@ implementation
 
 { TStepUiBasic }
 
-procedure TStepUiBasic.CheckBlockUI;
+procedure TStepUiBasic.CheckUserInteractive;
 begin
-  if not TaskVar.CanBlockUI then
+  if TaskVar.Interactive <> 1 then
   begin
-    //StopExceptionRaise('必须运行在BlockUI环境中');
+    StopExceptionRaise('必须运行在Interactive交互模式，请检查Job的Interactive属性');
   end;
 end;
 
 procedure TStepUiBasic.Start;
 begin
-  CheckBlockUI;
+  CheckUserInteractive;
   inherited Start;
 end;
 

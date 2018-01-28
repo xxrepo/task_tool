@@ -212,7 +212,8 @@ begin
     //根据预览进行打印输出，运行在service的情况下不能提供预览功能，只能直接输出到指定的文件夹
     FReporter.PrepareReport;
 
-    //通知Application主窗口已经需要展示ReportPreview//TUserNotify.BlockUiNotify('正在为您准备报表 ' + StepConfig.Description);
+    //通知Application主窗口已经需要展示ReportPreview，通常由web通知即可
+    //TUserNotify.BlockUiNotify('正在为您准备报表 ' + StepConfig.Description);
 
     FReporter.ShowReport;
   finally

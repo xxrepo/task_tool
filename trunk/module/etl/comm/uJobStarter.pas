@@ -16,9 +16,10 @@ type
 
     function GetDbsConfigFile: string;
     procedure HandleJobRequest(Data: Pointer; AThread: TThread); virtual;
+    function GetUnHandledCount: Integer;
 
   protected
-    FUnHandledCount: Integer;
+    FUnHandledCount: Int64;
     FLogLevel: TLogLevel;
     FRunBasePath: string;
     FGlobalVar: TGlobalVar;
@@ -46,6 +47,7 @@ type
     procedure ClearTaskStacks;
 
     property DbsConfigFile: string read GetDbsConfigFile;
+    property UnHandledCount: Integer read GetUnHandledCount;
   end;
 
 implementation
@@ -134,6 +136,11 @@ begin
   Result := nil;
 end;
 
+function TJobStarter.GetUnhandledCount: Integer;
+begin
+  Result := TInterlocked.Read(FUnHandledCount)
+end;
+
 //这个一但load完成，不允许再次变更配置，因此，建议本配置在本类创建时进行处理，不再运行中开放给外部
 function TJobStarter.LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 var
@@ -183,6 +190,7 @@ begin
           LJobConfig.TaskFile := TFileUtil.GetAbsolutePathEx(
                                         FRunBasePath,
                                         GetJsonObjectValue(LJobConfigJson, 'task_file', ''));
+          LJobConfig.Interactive := GetJsonObjectValue(LJobConfigJson, 'interactive', '0', 'int');
           LJobConfig.Status := StrToIntDef(GetJsonObjectValue(LJobConfigJson, 'status', '0'), 0);
           LJobConfig.ParseScheduleConfig(GetJsonObjectValue(LJobConfigJson, 'schedule'));
           LJobConfig.HandleStatus := jhsNone;
@@ -238,7 +246,7 @@ begin
   begin
     AppLogger.Error('Pop Job 任务异常：' + LRequest.JobName);
     Dispose(LRequest);
-    InterlockedDecrement(FUnHandledCount);
+    TInterlocked.Decrement(FUnHandledCount);
     if LJob <> nil then
     begin
       LJob.FreeTask;
@@ -250,6 +258,7 @@ begin
   LJob.Task := TTask.Create(LRequest.TaskConfig);
   try
     LJob.HandleStatus := jhsRun;
+    LJob.Task.TaskVar.Interactive := LJob.Interactive;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     {$IFDEF PROJECT_DESIGN_MODE}
@@ -274,7 +283,7 @@ begin
     end;
   finally
     Dispose(LRequest);
-    InterlockedDecrement(FUnHandledCount);
+    TInterlocked.Decrement(FUnHandledCount);
     if LJob <> nil then
       LJob.FreeTask;
   end;
@@ -351,7 +360,7 @@ begin
   if AJob.HandleStatus = jhsNone then
   begin
     AJob.HandleStatus := jhsWaited;
-    InterlockedIncrement(FUnHandledCount);
+    TInterlocked.Increment(FUnHandledCount);
     New(LRequest);
     LRequest^.JobName := AJob.JobName;
     LRequest^.TaskConfig := AJob.TaskConfigRec;

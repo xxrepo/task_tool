@@ -6,7 +6,7 @@ inherited JobsForm: TJobsForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 1184
-  ExplicitHeight = 732
+  ExplicitHeight = 731
   PixelsPerInch = 96
   TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
@@ -114,11 +114,16 @@ inherited JobsForm: TJobsForm
             CellButtons = <>
             DynProps = <>
             EditButtons = <>
-            FieldName = 'time_out'
+            FieldName = 'interactive'
             Footers = <>
-            Title.Caption = #36229#26102
-            Visible = False
-            Width = 80
+            KeyList.Strings = (
+              '0'
+              '1')
+            PickList.Strings = (
+              #21542
+              #26159)
+            Title.Caption = 'Interactive'#20132#20114#24335#20219#21153
+            Width = 140
           end
           item
             CellButtons = <>
@@ -253,12 +258,13 @@ inherited JobsForm: TJobsForm
   end
   object cdsJobs: TClientDataSet
     PersistDataPacket.Data = {
-      AE0000009619E0BD010000001800000006000000000003000000AE0007736F72
+      C20000009619E0BD010000001800000007000000000003000000C20007736F72
       745F6E6F0400010000000000086A6F625F6E616D650100490000000100055749
       445448020002008000097461736B5F66696C6502004900000001000557494454
       48020002000001087363686564756C6502004900000001000557494454480200
-      020000040874696D655F6F757404000100000000000673746174757301004900
-      000001000557494454480200020014000000}
+      020000040874696D655F6F757404000100000000000B696E7465726163746976
+      6504000100000000000673746174757301004900000001000557494454480200
+      020014000000}
     Active = True
     Aggregates = <>
     FieldDefs = <
@@ -283,6 +289,10 @@ inherited JobsForm: TJobsForm
       end
       item
         Name = 'time_out'
+        DataType = ftInteger
+      end
+      item
+        Name = 'interactive'
         DataType = ftInteger
       end
       item

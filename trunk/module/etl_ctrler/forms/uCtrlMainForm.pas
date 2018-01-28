@@ -36,6 +36,7 @@ type
     FInteractiveJobDispatcher: TJobDispatcher;
 
     procedure HideForm;
+    procedure CloseAppForms;
     { Private declarations }
   public
     { Public declarations }
@@ -63,7 +64,7 @@ end;
 procedure TCtrlMainForm.FormCreate(Sender: TObject);
 begin
   inherited;
-  Application.ShowMainForm := False;
+  //Application.ShowMainForm := False;
   FInteractiveJobDispatcher := TJobDispatcher.Create;
   rztrycnTool.Hint := Caption;
   N5Click(Sender);
@@ -116,7 +117,7 @@ begin
   end;
 end;
 
-procedure TCtrlMainForm.N9Click(Sender: TObject);
+procedure TCtrlMainForm.CloseAppForms;
 var
   i: Integer;
   LForm: TForm;
@@ -127,7 +128,11 @@ begin
     if LForm <> nil then
       SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
   end;
+end;
 
+procedure TCtrlMainForm.N9Click(Sender: TObject);
+begin
+  CloseAppForms;
   Application.Terminate;
 end;
 
@@ -153,10 +158,17 @@ end;
 procedure TCtrlMainForm.MsgInteractiveJobRequestHandler(var AMsg: TMessage);
 var
   LJobDispatcherRec: PJobDispatcherRec;
+  i: Integer;
 begin
+  CloseAppForms;
 
-  //要给与用户适当的提示，并且适度激活本应用程序，主窗口仅仅用于做美化后的消息展示
-  //rztrycnTool.RestoreApp;
+  //如果已经在运行Interactive任务，则继续发送一条重复的消息给app，等待下次消息循环开始时进行调用
+  if FInteractiveJobDispatcher.UnHandledCount > 0 then
+  begin
+    PostMessage(Handle, VVMSG_INTERACTIVE_JOB_REQUEST, AMsg.WParam, AMsg.LParam);
+    Exit;
+  end;
+
   FormStyle := fsStayOnTop;
   Application.Restore;
   SetForegroundWindow(Handle);
@@ -166,8 +178,7 @@ begin
   LJobDispatcherRec := PJobDispatcherRec(AMsg.WParam);
   if LJobDispatcherRec = nil then Exit;
 
-  //Interactive的Job同样是没有结果输出的，那如何标记Job为Interactive，在Job设计阶段进行标记，否则异常出错
-  FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+  FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec);
 end;
 
 end.

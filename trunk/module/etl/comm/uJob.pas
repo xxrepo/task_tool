@@ -33,6 +33,7 @@ type
     AllowedTimes: TStringList;
     DisallowedTimes: TStringList;
     TimeOut: Integer;
+    Interactive: Integer;
     Status: Integer;
 
     //线程不安全参数，仅作为临时的记录
@@ -163,6 +164,7 @@ begin
             + '][Interval: ' + IntToStr(Interval)
             + '][TaskFile: ' + TaskFile + '][Allowed Times: ' + AllowedTimes.DelimitedText
             + '][Disallowed Times: ' + DisallowedTimes.DelimitedText
+            + '][Interactive: ' + IntToStr(Interactive)
             + '][' + IntToStr(Ord(HandleStatus)) + ']';
   if Task <> nil then
     Result := Result + '[Task Is not nil]';

@@ -46,7 +46,8 @@ uses
   uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
-  uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm};
+  uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm},
+  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas';
 
 {$R *.RES}
 

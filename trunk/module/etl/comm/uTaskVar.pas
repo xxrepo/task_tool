@@ -54,7 +54,7 @@ type
 
     //默认的TaskVar都是没有结果返回的，比如后台服务程序中的ScheduleRunner中
     //但是，对于httpService这种调用而言，通常都是需要结果返回的
-    CanBlockUI: Boolean;
+    Interactive: Integer;
     TaskResult: TTaskResult;
 
     function RegStepData(ADataRef: string; ADataValue: TStepData): Integer;
@@ -114,7 +114,7 @@ end;
 
 constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
-  CanBlockUI := True;
+  Interactive := 0;
   TaskResult := TTaskResult.Create;
   FStepStack := TStringList.Create;
 

@@ -88,7 +88,8 @@ uses
   uStepVarDefineForm in 'steps\uStepVarDefineForm.pas' {StepVarDefineForm},
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
-  uJobStarter in 'comm\uJobStarter.pas';
+  uJobStarter in 'comm\uJobStarter.pas',
+  uStepUiBasic in 'basic\uStepUiBasic.pas';
 
 {$R *.res}
 

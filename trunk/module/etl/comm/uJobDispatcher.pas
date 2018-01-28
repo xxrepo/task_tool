@@ -95,7 +95,7 @@ begin
     Exit;
   end;
 
-  InterlockedIncrement(FUnHandledCount);
+  TInterlocked.Increment(FUnHandledCount);
 
   //重新生成task，执行
   LTaskConfigRec := LJob.TaskConfigRec;
@@ -108,8 +108,8 @@ begin
     LJob.LastStartTime := Now;
     LJob.RunThread := nil;
     LJob.JobRequest := nil;
+    LJob.Task.TaskVar.Interactive := LJob.Interactive;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
-    LJob.Task.TaskVar.CanBlockUI := False;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
 
@@ -142,7 +142,7 @@ begin
       end;
     end;
   finally
-    InterlockedDecrement(FUnHandledCount);
+    TInterlocked.Decrement(FUnHandledCount);
     LJob := GetJob(AJobName);
     if LJob <> nil then
       LJob.FreeTask;

@@ -4,10 +4,9 @@ inherited UserNotifyMsgForm: TUserNotifyMsgForm
   ClientHeight = 156
   ClientWidth = 367
   Font.Height = -16
-  FormStyle = fsStayOnTop
   OnCreate = FormCreate
   ExplicitWidth = 373
-  ExplicitHeight = 185
+  ExplicitHeight = 184
   PixelsPerInch = 96
   TextHeight = 19
   object lblMsg: TRzLabel
