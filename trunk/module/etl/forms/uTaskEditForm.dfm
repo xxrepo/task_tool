@@ -117,7 +117,6 @@ inherited TaskEditForm: TTaskEditForm
     inherited redtLog: TRichEdit
       Width = 858
       Height = 205
-      Font.Charset = DEFAULT_CHARSET
       ExplicitWidth = 858
       ExplicitHeight = 205
     end
@@ -127,6 +126,7 @@ inherited TaskEditForm: TTaskEditForm
       ParentFont = False
       ExplicitWidth = 858
       inherited btnClearLog: TBitBtn
+        Font.Height = -16
         ParentFont = False
       end
     end
@@ -159,6 +159,13 @@ inherited TaskEditForm: TTaskEditForm
       OnClick = StepDelClick
     end
     object N2: TMenuItem
+      Caption = '-'
+    end
+    object AddParentNode: TMenuItem
+      Caption = #28155#21152#19978#32423'Step'
+      OnClick = AddParentNodeClick
+    end
+    object N5: TMenuItem
       Caption = '-'
     end
     object RunToStep: TMenuItem

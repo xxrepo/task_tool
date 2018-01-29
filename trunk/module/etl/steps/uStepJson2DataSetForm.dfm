@@ -2,7 +2,6 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
   Caption = 'Json'#36716'DataSet'
   ClientHeight = 530
   OnCreate = FormCreate
-  ExplicitWidth = 320
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 17
@@ -24,41 +23,44 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
     ExplicitHeight = 473
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
+      ExplicitWidth = 673
       ExplicitHeight = 446
       object lbl2: TLabel [1]
         Left = 52
-        Top = 112
+        Top = 232
         Width = 56
         Height = 17
         Caption = #21407#22987#25968#25454
       end
       object lblParams: TLabel [2]
         Left = 52
-        Top = 172
+        Top = 292
         Width = 56
         Height = 17
         Caption = #23383#27573#21442#25968
       end
       object lbl3: TLabel [4]
         Left = 24
-        Top = 366
+        Top = 110
         Width = 84
         Height = 17
         Caption = #20027#25968#25454#28304#21517#31216
       end
       object lbl4: TLabel [5]
         Left = 24
-        Top = 406
+        Top = 150
         Width = 84
         Height = 17
         Caption = #20027#25968#25454#28304#23383#27573
       end
       object lbl5: TLabel [6]
-        Left = 52
-        Top = 326
-        Width = 56
+        Left = 24
+        Top = 190
+        Width = 84
         Height = 17
-        Caption = #32034#24341#23383#27573
+        Caption = #32034#24341#23545#24212#23383#27573
       end
       inherited edtDescription: TEdit
         TabOrder = 4
@@ -69,14 +71,14 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
       end
       object edtDataRef: TEdit
         Left = 142
-        Top = 109
+        Top = 229
         Width = 305
         Height = 25
         TabOrder = 1
       end
       object dbnvgrParams: TDBNavigator
         Left = 142
-        Top = 147
+        Top = 267
         Width = 240
         Height = 25
         DataSource = dsParams
@@ -84,7 +86,7 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
       end
       object dbgrdhInputParams: TDBGridEh
         Left = 142
-        Top = 172
+        Top = 292
         Width = 469
         Height = 105
         DataSource = dsParams
@@ -153,28 +155,28 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
       end
       object edtMasterSourceName: TEdit
         Left = 142
-        Top = 363
+        Top = 107
         Width = 305
         Height = 25
         TabOrder = 6
       end
       object edtMasterFields: TEdit
         Left = 142
-        Top = 403
+        Top = 147
         Width = 305
         Height = 25
         TabOrder = 7
       end
       object edtIndexFieldNames: TEdit
         Left = 142
-        Top = 323
+        Top = 187
         Width = 305
         Height = 25
         TabOrder = 8
       end
       object chkCreateDataSource: TCheckBox
         Left = 142
-        Top = 291
+        Top = 411
         Width = 379
         Height = 17
         Caption = #21019#24314#25968#25454#28304'(DataSource)'

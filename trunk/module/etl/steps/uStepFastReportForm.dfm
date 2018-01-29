@@ -1,7 +1,7 @@
 inherited StepFastReportForm: TStepFastReportForm
   Caption = 'FastReport'#25253#34920#25171#21360#35774#32622
   ClientHeight = 463
-  ExplicitHeight = 491
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
@@ -10,8 +10,6 @@ inherited StepFastReportForm: TStepFastReportForm
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 406
-    ActivePage = rztbshtData
-    TabIndex = 1
     ExplicitHeight = 406
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
@@ -312,7 +310,7 @@ inherited StepFastReportForm: TStepFastReportForm
     Top = 134
   end
   object frxrprt1: TfrxReport
-    Version = '5.3.16'
+    Version = '5.4.6'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

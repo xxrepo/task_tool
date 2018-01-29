@@ -27,6 +27,8 @@ inherited StepHttpRequestForm: TStepHttpRequestForm
     ExplicitHeight = 472
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitWidth = 719
       ExplicitHeight = 445
       object lbl2: TLabel [1]
@@ -160,10 +162,6 @@ inherited StepHttpRequestForm: TStepHttpRequestForm
     end
     object rztbshtResponse: TRzTabSheet
       Caption = #36755#20986#35774#32622
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 471
       object lbl4: TLabel
         Left = 42
         Top = 32

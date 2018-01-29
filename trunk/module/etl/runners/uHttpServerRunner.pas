@@ -310,11 +310,11 @@ begin
     begin
       if ARequestInfo.PostStream <> nil then
       begin
-        LStringStream := TStringStream.Create;
+        LStringStream := TStringStream.Create('', TEncoding.UTF8);
         try
           ARequestInfo.PostStream.Seek(0, 0);
           LStringStream.LoadFromStream(ARequestInfo.PostStream);
-          LParams.AddPair(TJSONPair.Create('_POST', UTF8ToString(LStringStream.DataString)));
+          LParams.AddPair(TJSONPair.Create('_POST', (LStringStream.DataString)));
         finally
           LStringStream.Free;
         end;

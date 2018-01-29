@@ -32,6 +32,8 @@ type
     RunToStep: TMenuItem;
     ViewStepConfigSource: TMenuItem;
     btnStart: TBitBtn;
+    AddParentNode: TMenuItem;
+    N5: TMenuItem;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -51,6 +53,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure ViewStepConfigSourceClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
+    procedure AddParentNodeClick(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
     TaskBlock: TTaskBlock; //标记当前的任务块
@@ -64,6 +67,7 @@ type
       AChildrenJson: TJsonArray); overload;
     procedure AddTreeChildNode(AParentNode: TTreeNode;
       ANodeJson: TJSONObject); overload;
+    function AddStepTo(LParentNode: TTreeNode): TTreeNode;
     { Private declarations }
   public
     { Public declarations }
@@ -123,11 +127,7 @@ end;
 
 procedure TTaskEditForm.StepAddClick(Sender: TObject);
 var
-  LStep: TStepBasic;
-  LStepDefine: TStepDefine;
   LNode: TTreeNode;
-  LStepData: TStepConfig;
-  LStepConfigJson: TJSONObject;
 begin
   inherited;
   //获取鼠标点击时的节点，作为父节点或者作为编辑的节点
@@ -135,6 +135,18 @@ begin
   if (LNode = nil) and (chktrTaskSteps.Items.Count > 0) then
     LNode := chktrTaskSteps.Items[0];
 
+  AddStepTo(LNode);
+end;
+
+
+function TTaskEditForm.AddStepTo(LParentNode: TTreeNode): TTreeNode;
+var
+  LStep: TStepBasic;
+  LStepDefine: TStepDefine;
+  LStepData: TStepConfig;
+  LStepConfigJson: TJSONObject;
+begin
+  Result := nil;
   //创建节点Step，允许选择类型
   with TStepTypeSelectForm.Create(nil) do
   try
@@ -158,7 +170,8 @@ begin
           LStep.MakeStepConfigJson(LStepConfigJson);
           LStepData.ConfigJsonStr := LStepConfigJson.ToJSON;
 
-          chktrTaskSteps.Items.AddChildObject(LNode, LStep.StepConfig.StepTitle, LStepData).StateIndex := 2;
+          Result := chktrTaskSteps.Items.AddChildObject(LParentNode, LStep.StepConfig.StepTitle, LStepData);
+          Result.StateIndex := 2;
           chktrTaskSteps.FullExpand;
         finally
           LStepConfigJson.Free;
@@ -170,6 +183,7 @@ begin
     Free;
   end;
 end;
+
 
 procedure TTaskEditForm.StepDelClick(Sender: TObject);
 begin
@@ -527,6 +541,19 @@ begin
   chktrTaskSteps.Refresh;
 end;
 
+
+procedure TTaskEditForm.AddParentNodeClick(Sender: TObject);
+var
+  LNode: TTreeNode;
+begin
+  inherited;
+  //获取当前选中项的父节点，给当前选中项的父节点插入子节点，把选中项作为子节点插入新创建的节点
+  if chktrTaskSteps.Selected = nil then Exit;
+
+  LNode := AddStepTo(chktrTaskSteps.Selected.Parent);
+  if LNode <> nil then
+    chktrTaskSteps.Selected.MoveTo(LNode, naAddChild);
+end;
 
 procedure TTaskEditForm.AddTreeChildNode(AParentNode: TTreeNode; ANodeJson: TJSONObject);
 var

@@ -63,7 +63,7 @@ begin
   AToConfig.AddPair(TJSONPair.Create('indexed_field_names', FIndexedFieldNames));
   AToConfig.AddPair(TJSONPair.Create('create_data_source', BoolToStr(FCreateDataSource)));
   AToConfig.AddPair(TJSONPair.Create('master_source_name', FMasterSourceName));
-  AToConfig.AddPair(TJSONPair.Create('master_fields', FIndexedFieldNames));
+  AToConfig.AddPair(TJSONPair.Create('master_fields', FMasterFields));
 end;
 
 
@@ -128,13 +128,11 @@ procedure TStepJsonDataSet.StartSelfDesign;
 begin
   if not CreateDataSet then
   begin
-    StopExceptionRaise('打开DataSet数据集失败');
+    Exit;
   end;
 
   //设置ClientDataSet的各种属性
-  FClientDataSet.MasterFields := FMasterFields;
-  FClientDataSet.IndexFieldNames := FIndexedFieldNames;
-  FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName));
+  FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName + '_DATASOURCE'));
 
   if TaskVar.RegObject(StepConfig.StepTitle, FClientDataSet) = -1 then
       StopExceptionRaise('注册数据集失败');
@@ -143,7 +141,7 @@ begin
   begin
     FDataSource := TDataSource.Create(nil);
     FDataSource.DataSet := FClientDataSet;
-    TaskVar.RegObject(StepConfig.StepTitle + '_ds', FDataSource);
+    TaskVar.RegObject(StepConfig.StepTitle + '_DATASOURCE', FDataSource);
   end;
 end;
 
@@ -164,7 +162,7 @@ begin
     //设置ClientDataSet的各种属性
     FClientDataSet.MasterFields := FMasterFields;
     FClientDataSet.IndexFieldNames := FIndexedFieldNames;
-    FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName));
+    FClientDataSet.MasterSource := TDataSource(TaskVar.GetObject(FMasterSourceName + '_DATASOURCE'));
 
     //赋值数据
     LDataSetStr := GetParamValue(FDataRef, 'string', '');
@@ -179,7 +177,7 @@ begin
     begin
       FDataSource := TDataSource.Create(nil);
       FDataSource.DataSet := FClientDataSet;
-      TaskVar.RegObject(StepConfig.StepTitle + '_ds', FDataSource);
+      TaskVar.RegObject(StepConfig.StepTitle + '_DATASOURCE', FDataSource);
     end;
   finally
 
