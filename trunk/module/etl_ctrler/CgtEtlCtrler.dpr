@@ -34,7 +34,6 @@ uses
   uStepDatasetSpliter in '..\etl\steps\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
-  uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
   uStepFileDelete in '..\etl\steps\uStepFileDelete.pas',
   uStepHttpRequest in '..\etl\steps\uStepHttpRequest.pas',
@@ -53,7 +52,9 @@ uses
   Vcl.Styles,
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
-  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas';
+  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
+  uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
+  uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas';
 
 {$R *.res}
 

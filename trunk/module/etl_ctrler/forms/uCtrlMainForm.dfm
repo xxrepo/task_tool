@@ -9,7 +9,7 @@ inherited CtrlMainForm: TCtrlMainForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 343
-  ExplicitHeight = 181
+  ExplicitHeight = 182
   PixelsPerInch = 96
   TextHeight = 17
   object lbl1: TLabel

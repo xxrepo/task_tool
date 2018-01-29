@@ -32,7 +32,8 @@ uses
   uStepFileDelete,
   uStepJson2DataSet,
   uStepTaskResult,
-  uStepFastReport;
+  uStepFastReport,
+  uStepReportMachine;
 
 var
   SysSteps: TJSONArray;
@@ -119,6 +120,10 @@ begin
       70010:
       begin
         Result := TStepFastReport.Create(ATaskVar);
+      end;
+      70020:
+      begin
+        Result := TStepReportMachine.Create(ATaskVar);
       end;
     end;
   end;
@@ -327,6 +332,15 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', 'FastReport打印'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFastReport'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFastReportForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '报表打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'PRINT_REPORTMACHINE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '70020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'ReportMachine打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepReportMachine'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepReportMachineForm'));
   SysSteps.AddElement(LRowJson);
 
 

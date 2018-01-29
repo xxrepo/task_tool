@@ -1,15 +1,16 @@
-unit uStepFastReport;
+unit uStepReportMachine;
 
 interface
 
 uses
-  uStepUiBasic, System.JSON, Datasnap.DBClient, Data.DB, frxClass, frxBarcode, frxDBSet, frxRich,
-  System.Classes;
+  uStepUiBasic, System.JSON, Datasnap.DBClient, Data.DB,
+  RM_GridReport, RM_Class, RM_Common, RM_Designer, RM_DsgGridReport, RM_Dataset,
+  System.Classes, uTaskVar;
 
 type
-  TStepFastReport = class (TStepUiBasic)
+  TStepReportMachine = class(TStepUiBasic)
   private
-    FReporter: TfrxReport;
+    FReporter: TRMReport;
     FDBDatasets: TStringList;
     FDBVariables: TJSONObject;
 
@@ -21,14 +22,20 @@ type
     FReportFile: string;
     FAbsoluteReportFile: string;
     procedure OnReporterGetValue(const VarName: string; var Value: Variant);
+    function NewReporteInstance: TRMReport;
+    function GetReporter: TRMReport;
   protected
     procedure StartSelf; override;
     procedure StartSelfDesign; override;
   public
+    constructor Create(ATaskVar: TTaskVar); override;
     destructor Destroy; override;
 
     procedure ParseStepConfig(AConfigJsonStr: string); override;
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); override;
+
+
+    procedure ClearRptDatasets;
 
     property DBDataSetsConfigStr: string read FDBDataSetsConfigStr write FDBDataSetsConfigStr;
     property DBVariablesConfigStr: string read FDBVariablesConfigStr write FDBVariablesConfigStr;
@@ -36,19 +43,25 @@ type
     property PrinterName: string read FPrinterName write FPrinterName;
     property ReportFile: string read FReportFile write FReportFile;
 
-    property Reporter: TfrxReport read FReporter;
+    property Reporter: TRMReport read GetReporter write FReporter;
   end;
 
 implementation
 
 uses
-  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Winapi.Windows, uUserNotify, Vcl.Controls;
+  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Winapi.Windows, uUserNotify,
+  Vcl.Controls, Vcl.Forms;
 
 { TStepQuery }
 
-destructor TStepFastReport.Destroy;
-var
-  i: Integer;
+constructor TStepReportMachine.Create(ATaskVar: TTaskVar);
+begin
+  inherited Create(ATaskVar);
+  FDBDatasets := TStringList.Create;
+end;
+
+destructor TStepReportMachine.Destroy;
+
 begin
   //释放掉所有的dbdataset
   if FReporter <> nil then
@@ -57,11 +70,7 @@ begin
   end;
   if FDBDatasets <> nil then
   begin
-    for i := FDBDatasets.Count - 1 downto 0 do
-    begin
-      if FDBDatasets.Objects[i] <> nil then
-        TfrxDBDataset(FDBDatasets.Objects[i]).Free;
-    end;
+    ClearRptDatasets;
     FreeAndNil(FDBDatasets);
   end;
   if FDBVariables <> nil then
@@ -70,7 +79,25 @@ begin
 end;
 
 
-procedure TStepFastReport.MakeStepConfigJson(var AToConfig: TJSONObject);
+function TStepReportMachine.GetReporter: TRMReport;
+begin
+  Result := FReporter;
+end;
+
+procedure TStepReportMachine.ClearRptDatasets;
+var
+  i: Integer;
+begin
+  for i := FDBDatasets.Count - 1 downto 0 do
+  begin
+    if FDBDatasets.Objects[i] <> nil then
+      TRMDataset(FDBDatasets.Objects[i]).Free;
+  end;
+  FDBDatasets.Clear;
+end;
+
+
+procedure TStepReportMachine.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   inherited MakeStepConfigJson(AToConfig);
   AToConfig.AddPair(TJSONPair.Create('datasets', FDBDataSetsConfigStr));
@@ -81,7 +108,7 @@ begin
 end;
 
 
-procedure TStepFastReport.ParseStepConfig(AConfigJsonStr: string);
+procedure TStepReportMachine.ParseStepConfig(AConfigJsonStr: string);
 begin
   inherited ParseStepConfig(AConfigJsonStr);
   FDBDataSetsConfigStr := GetJsonObjectValue(StepConfig.ConfigJson, 'datasets');
@@ -94,51 +121,52 @@ begin
 end;
 
 
-procedure TStepFastReport.StartSelfDesign;
+procedure TStepReportMachine.StartSelfDesign;
 var
-  LDBDataSet: TfrxDBDataset;
+  LDataSet: TClientDataSet;
+  LRptDataSet: TRMDBDataSet;
   LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
   LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
 begin
   try
-    FReporter := TfrxReport.Create(nil);
+    FReporter := NewReporteInstance;
 
     //创建datasets
-    FReporter.DataSets.Clear;
+    FReporter.Dictionary.Clear;
     LDBDataSetsJsonArray := TJSONObject.ParseJSONValue(FDBDataSetsConfigStr) as TJSONArray;
     if LDBDataSetsJsonArray <> nil then
     begin
-      FDBDatasets := TStringList.Create;
+      ClearRptDatasets;
       for i := 0 to LDBDataSetsJsonArray.Count - 1 do
       begin
         LDBDataSetConfigJson := LDBDataSetsJsonArray.Items[i] as TJSONObject;
 
-        LDBDataSet := TfrxDBDataset.Create(nil);
-        LDBDataSet.UserName := GetJsonObjectValue(LDBDataSetConfigJson, 'frx_dataset_name');
-        LDBDataSet.DataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
+        LDataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
+        if LDataSet <> nil then
+        begin
+          LRptDataSet := TRMDBDataSet.Create(Application.MainForm);
+          LRptDataSet.DataSet := LDataSet;
+          LRptDataSet.AliasName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
+          FDBDatasets.AddObject(LRptDataSet.AliasName, LRptDataSet);
 
-        FReporter.DataSets.Add(LDBDataSet);
-        FDBDatasets.AddObject(LDBDataSet.UserName, LDBDataSet);
+          //FReporter.Dictionary.AddDataSet(LDataSet, LRptDataSet.AliasName);
+        end;
       end;
     end;
 
     LDBVarJsonArray := TJSONObject.ParseJSONValue(FDBVariablesConfigStr) as TJSONArray;
     if LDBVarJsonArray <> nil then
     begin
+      FReporter.Dictionary.Variables.AddCategory('自定义变量');
       for i := 0 to LDBVarJsonArray.Count - 1 do
       begin
         LDBVarJsonObj := LDBVarJsonArray.Items[i] as TJSONObject;
         if LDBVarJsonObj = nil then Continue;
 
-        with FReporter.Variables.Add do
-        begin
-          Name := GetJsonObjectValue(LDBVarJsonObj, 'param_name');
-          //Value := QuotedStr(GetParamValue(LDBVarJsonObj));
-        end;
+        FReporter.Dictionary.Variables[GetJsonObjectValue(LDBVarJsonObj, 'param_name')] := GetParamValue(LDBVarJsonObj);
       end;
     end;
-
 
     //创建加载各个variables  (TaskVar.ToStepId = StepConfig.StepId) and
     if FileExists(FAbsoluteReportFile) then
@@ -151,9 +179,10 @@ begin
   end;
 end;
 
-procedure TStepFastReport.StartSelf;
+procedure TStepReportMachine.StartSelf;
 var
-  LDBDataSet: TfrxDBDataset;
+  LDataSet: TClientDataset;
+  LRptDataSet: TRMDBDataSet;
   LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
   LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
@@ -161,33 +190,27 @@ begin
   try
     CheckTaskStatus;
 
-    FReporter := TfrxReport.Create(nil);
+    FReporter := NewReporteInstance;
     FReporter.OnGetValue := OnReporterGetValue;
 
     //创建datasets
-    FReporter.DataSets.Clear;
+    //FReporter.Dictionary.Clear;
     LDBDataSetsJsonArray := TJSONObject.ParseJSONValue(FDBDataSetsConfigStr) as TJSONArray;
     if LDBDataSetsJsonArray <> nil then
     begin
-      FDBDatasets := TStringList.Create;
+      ClearRptDatasets;
       for i := 0 to LDBDataSetsJsonArray.Count - 1 do
       begin
         LDBDataSetConfigJson := LDBDataSetsJsonArray.Items[i] as TJSONObject;
-
-        LDBDataSet := TfrxDBDataset.Create(nil);
-        LDBDataSet.UserName := GetJsonObjectValue(LDBDataSetConfigJson, 'frx_dataset_name');
-        LDBDataSet.DataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
-
-
-        if LDBDataSet.DataSet <> nil then
+        LDataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
+        if LDataSet <> nil then
         begin
-          FReporter.DataSets.Add(LDBDataSet);
-          FDBDatasets.AddObject(LDBDataSet.UserName, LDBDataSet);
-          TaskVar.Logger.Debug('数据集记录：' + LDBDataSet.UserName + '；' + IntToStr(LDBDataSet.DataSet.RecordCount));
-        end
-        else
-        begin
-          LDBDataSet.Free;
+          LRptDataSet := TRMDBDataSet.Create(Application.MainForm);
+          LRptDataSet.DataSet := LDataSet;
+          LRptDataSet.AliasName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
+          FDBDatasets.AddObject(LRptDataSet.AliasName, LRptDataSet);
+
+          //FReporter.Dictionary.AddDataSet(LDataSet, LRptDataSet.AliasName);
         end;
       end;
     end;
@@ -196,13 +219,14 @@ begin
     if LDBVarJsonArray <> nil then
     begin
       FDBVariables := TJSONObject.Create;
+      //FReporter.Dictionary.Variables.AddCategory('自定义变量');
       for i := 0 to LDBVarJsonArray.Count - 1 do
       begin
         LDBVarJsonObj := LDBVarJsonArray.Items[i] as TJSONObject;
         if LDBVarJsonObj = nil then Continue;
-
         FDBVariables.AddPair(TJSONPair.Create(GetJsonObjectValue(LDBVarJsonObj, 'param_name'),
                                   LDBVarJsonObj.Clone as TJSONObject));
+        //FReporter.Dictionary.Variables.Add(GetJsonObjectValue(LDBVarJsonObj, 'param_name'), GetParamValue(LDBVarJsonObj));
       end;
     end;
 
@@ -211,9 +235,6 @@ begin
 
     //根据预览进行打印输出，运行在service的情况下不能提供预览功能，只能直接输出到指定的文件夹
     FReporter.PrepareReport;
-
-    //通知Application主窗口已经需要展示ReportPreview，通常由web通知即可
-    //TUserNotify.BlockUiNotify('正在为您准备报表 ' + StepConfig.Description);
 
     FReporter.ShowReport;
   finally
@@ -225,13 +246,20 @@ begin
 end;
 
 
-procedure TStepFastReport.OnReporterGetValue(const VarName: string;
+function TStepReportMachine.NewReporteInstance: TRMReport;
+begin
+  Result := TRMReport.Create(nil);
+  Result.ReportInfo.Title := '测试报表sdfa';
+end;
+
+
+procedure TStepReportMachine.OnReporterGetValue(const VarName: string;
   var Value: Variant);
 var
   LVarJsonDefine: TJSONObject;
 begin
   if FDBVariables = nil then Exit;
-  
+
   LVarJsonDefine := FDBVariables.GetValue(VarName) as TJSONObject;
   if LVarJsonDefine <> nil then
   begin

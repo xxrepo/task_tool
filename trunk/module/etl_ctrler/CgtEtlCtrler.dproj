@@ -143,7 +143,6 @@
         <DCCReference Include="..\etl\steps\uStepDatasetSpliter.pas"/>
         <DCCReference Include="..\etl\steps\uStepDefines.pas"/>
         <DCCReference Include="..\etl\steps\uStepFactory.pas"/>
-        <DCCReference Include="..\etl\steps\uStepFastReport.pas"/>
         <DCCReference Include="..\etl\steps\uStepFieldsOper.pas"/>
         <DCCReference Include="..\etl\steps\uStepFileDelete.pas"/>
         <DCCReference Include="..\etl\steps\uStepHttpRequest.pas"/>
@@ -164,6 +163,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
+        <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
+        <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -579,12 +580,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>

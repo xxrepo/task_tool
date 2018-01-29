@@ -1,5 +1,5 @@
-inherited StepFastReportForm: TStepFastReportForm
-  Caption = 'FastReport'#25253#34920#25171#21360#35774#32622
+inherited StepReportMachineForm: TStepReportMachineForm
+  Caption = 'ReportMachine'#25253#34920#25171#21360#35774#32622
   ClientHeight = 463
   ExplicitHeight = 492
   PixelsPerInch = 96
@@ -13,9 +13,6 @@ inherited StepFastReportForm: TStepFastReportForm
     ExplicitHeight = 406
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitLeft = 1
-      ExplicitTop = 24
-      ExplicitWidth = 673
       ExplicitHeight = 379
       object lbl2: TLabel [1]
         Left = 52
@@ -113,7 +110,7 @@ inherited StepFastReportForm: TStepFastReportForm
             CellButtons = <>
             DynProps = <>
             EditButtons = <>
-            FieldName = 'frx_dataset_name'
+            FieldName = 'rpt_dataset_name'
             Footers = <>
             Title.Caption = #25253#34920#25968#25454#38598
             Width = 105
@@ -226,7 +223,7 @@ inherited StepFastReportForm: TStepFastReportForm
   end
   object cdsDatasetParams: TClientDataSet
     PersistDataPacket.Data = {
-      860000009619E0BD010000001800000003000000000003000000860010667278
+      860000009619E0BD010000001800000003000000000003000000860010727074
       5F646174617365745F6E616D6501004900000001000557494454480200020040
       0012646174617365745F6F626A6563745F726566010049000000010005574944
       54480200020040000B6465736372697074696F6E010049000000010005574944
@@ -235,7 +232,7 @@ inherited StepFastReportForm: TStepFastReportForm
     Aggregates = <>
     FieldDefs = <
       item
-        Name = 'frx_dataset_name'
+        Name = 'rpt_dataset_name'
         DataType = ftString
         Size = 64
       end
@@ -261,10 +258,10 @@ inherited StepFastReportForm: TStepFastReportForm
     Top = 232
   end
   object dlgOpenFileName: TOpenDialog
-    DefaultExt = 'fr3'
-    Filter = 'FR3'#25253#34920#25991#20214#65288'*.fr3'#65289'|*.fr3'
+    DefaultExt = 'rmf'
+    Filter = 'RMF'#25253#34920#25991#20214#65288'*.rmf'#65289'|*.rmf'
     Options = [ofReadOnly, ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-    Left = 37
+    Left = 45
     Top = 352
   end
   object dsVarParams: TDataSource
@@ -308,26 +305,5 @@ inherited StepFastReportForm: TStepFastReportForm
     StoreDefs = True
     Left = 632
     Top = 134
-  end
-  object frxrprt1: TfrxReport
-    Version = '5.4.6'
-    DotMatrixReport = False
-    IniFile = '\Software\Fast Reports'
-    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
-    PreviewOptions.Zoom = 1.000000000000000000
-    PrintOptions.Printer = #39044#35774
-    PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 43124.798967847220000000
-    ReportOptions.LastChange = 43124.798967847220000000
-    ScriptLanguage = 'PascalScript'
-    ScriptText.Strings = (
-      'begin'
-      ''
-      'end.')
-    Left = 33
-    Top = 272
-    Datasets = <>
-    Variables = <>
-    Style = <>
   end
 end

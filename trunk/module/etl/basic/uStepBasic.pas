@@ -64,7 +64,7 @@ type
 
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); virtual;
 
-    constructor Create(ATaskVar: TTaskVar);
+    constructor Create(ATaskVar: TTaskVar); virtual;
     destructor Destroy; override;
 
 

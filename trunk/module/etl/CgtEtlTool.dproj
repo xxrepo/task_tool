@@ -223,9 +223,9 @@
             <Form>StepFieldsOperForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\uStepFastReport.pas"/>
-        <DCCReference Include="steps\uStepFastReportForm.pas">
-            <Form>StepFastReportForm</Form>
+        <DCCReference Include="steps\report\uStepReportMachine.pas"/>
+        <DCCReference Include="steps\report\uStepReportMachineForm.pas">
+            <Form>StepReportMachineForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\uStepFormSettings.pas"/>
@@ -271,6 +271,11 @@
         </DCCReference>
         <DCCReference Include="comm\uJobStarter.pas"/>
         <DCCReference Include="basic\uStepUiBasic.pas"/>
+        <DCCReference Include="steps\report\uStepFastReport.pas"/>
+        <DCCReference Include="steps\report\uStepFastReportForm.pas">
+            <Form>StepFastReportForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -692,12 +697,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>

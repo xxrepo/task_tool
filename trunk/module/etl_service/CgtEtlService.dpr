@@ -32,7 +32,6 @@ uses
   uGlobalVar in '..\etl\comm\uGlobalVar.pas',
   uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
   uStepFormSettings in '..\etl\steps\uStepFormSettings.pas',
-  uStepFastReport in '..\etl\steps\uStepFastReport.pas',
   uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
   uTaskDefine in '..\etl\comm\uTaskDefine.pas',
   uHttpServerConfig in '..\etl\runners\uHttpServerConfig.pas',
@@ -47,7 +46,9 @@ uses
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm},
-  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas';
+  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
+  uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
+  uStepFastReport in '..\etl\steps\report\uStepFastReport.pas';
 
 {$R *.RES}
 

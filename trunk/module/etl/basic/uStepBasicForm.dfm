@@ -2,7 +2,6 @@ inherited StepBasicForm: TStepBasicForm
   Caption = 'Step'#21442#25968#35774#32622
   ClientHeight = 420
   ClientWidth = 677
-  Font.Height = -14
   OnDestroy = FormDestroy
   ExplicitWidth = 683
   ExplicitHeight = 449

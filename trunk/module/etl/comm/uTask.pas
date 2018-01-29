@@ -58,6 +58,7 @@ begin
   try
     Result.Auth := GetJsonObjectValue(LTaskConfigJson, 'auth', 'Dony.ZHANG');
     Result.StepsStr := GetJsonObjectValue(LTaskConfigJson, 'steps');
+    Result.Interactive := GetJsonObjectValue(LTaskConfigJson, 'interactive', '0', 'int');
   finally
     LTaskConfigJson.Free;
   end;
@@ -72,6 +73,7 @@ begin
   LTaskConfigJson := TJSONObject.Create;
   try
     LTaskConfigJson.AddPair(TJSONPair.Create('task_name', ATaskConfigRec.TaskName));
+    LTaskConfigJson.AddPair(TJSONPair.Create('interactive', IntToStr(ATaskConfigRec.Interactive)));
     LTaskConfigJson.AddPair(TJSONPair.Create('version', VER));
     LTaskConfigJson.AddPair(TJSONPair.Create('auth', 'Dony.ZHANG'));
     LTaskConfigJson.AddPair(TJSONPair.Create('steps', ATaskConfigRec.StepsStr));

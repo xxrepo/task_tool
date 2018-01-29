@@ -3,7 +3,7 @@ unit uStepJson2DataSet;
 interface
 
 uses
-  uStepBasic, System.JSON, Datasnap.DBClient, Data.DB;
+  uStepBasic, System.JSON, Datasnap.DBClient, Data.DB, System.Classes;
 
 type
   TStepJsonDataSet = class (TStepBasic)
@@ -42,7 +42,7 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, System.Classes, System.SysUtils, uExceptions, uStepDefines;
+  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines;
 
 { TStepQuery }
 

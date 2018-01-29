@@ -8,6 +8,7 @@ type
   TTaskConfigRec = record
     FileName: string;
     TaskName: string;
+    Interactive: integer;
     Description: string;
     Version: string;
     Auth: string;

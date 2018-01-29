@@ -34,6 +34,7 @@ type
     btnStart: TBitBtn;
     AddParentNode: TMenuItem;
     N5: TMenuItem;
+    chkInteractive: TCheckBox;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -54,6 +55,7 @@ type
     procedure ViewStepConfigSourceClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure AddParentNodeClick(Sender: TObject);
+    procedure chkInteractiveClick(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
     TaskBlock: TTaskBlock; //标记当前的任务块
@@ -285,6 +287,15 @@ begin
 end;
 
 
+procedure TTaskEditForm.chkInteractiveClick(Sender: TObject);
+begin
+  inherited;
+  if chkInteractive.Checked then
+    EditingTaskConfigRec.Interactive := 1
+  else
+    EditingTaskConfigRec.Interactive := 0;
+end;
+
 procedure TTaskEditForm.chktrTaskStepsCollapsing(Sender: TObject;
   Node: TTreeNode; var AllowCollapse: Boolean);
 begin
@@ -429,6 +440,11 @@ begin
 
   MakeTaskTree(EditingTaskConfigRec.StepsStr);
   Self.Caption := '任务设计：' + TaskBlock.BlockName + '/' + EditingTaskConfigRec.TaskName;
+
+  if EditingTaskConfigRec.Interactive = 1 then
+  begin
+    chkInteractive.Checked := True;
+  end
 end;
 
 

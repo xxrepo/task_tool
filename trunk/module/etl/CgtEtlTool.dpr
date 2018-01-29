@@ -69,8 +69,8 @@ uses
   uGlobalVarSettingForm in 'forms\uGlobalVarSettingForm.pas' {GlobalVarSettingForm},
   uStepFieldsOper in 'steps\uStepFieldsOper.pas',
   uStepFieldsOperForm in 'steps\uStepFieldsOperForm.pas' {StepFieldsOperForm},
-  uStepFastReport in 'steps\uStepFastReport.pas',
-  uStepFastReportForm in 'steps\uStepFastReportForm.pas' {StepFastReportForm},
+  uStepReportMachine in 'steps\report\uStepReportMachine.pas',
+  uStepReportMachineForm in 'steps\report\uStepReportMachineForm.pas' {StepReportMachineForm},
   uStepFormSettings in 'steps\uStepFormSettings.pas',
   uStepJson2DataSet in 'steps\uStepJson2DataSet.pas',
   uStepJson2DataSetForm in 'steps\uStepJson2DataSetForm.pas' {StepJsonDataSetForm},
@@ -89,7 +89,9 @@ uses
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uJobStarter in 'comm\uJobStarter.pas',
-  uStepUiBasic in 'basic\uStepUiBasic.pas';
+  uStepUiBasic in 'basic\uStepUiBasic.pas',
+  uStepFastReport in 'steps\report\uStepFastReport.pas',
+  uStepFastReportForm in 'steps\report\uStepFastReportForm.pas' {StepFastReportForm};
 
 {$R *.res}
 
@@ -105,6 +107,7 @@ begin
 
   Application.CreateForm(TProjectForm, ProjectForm);
   Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
+  Application.CreateForm(TStepFastReportForm, StepFastReportForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

@@ -40,8 +40,8 @@ inherited TaskEditForm: TTaskEditForm
         858
         57)
       object rzbtbtnSave: TRzBitBtn
-        Left = 13
-        Top = 12
+        Left = 12
+        Top = 11
         Width = 81
         Height = 33
         Caption = #20445#23384
@@ -56,7 +56,7 @@ inherited TaskEditForm: TTaskEditForm
       end
       object rzbtbtnRunSchedual: TRzBitBtn
         Left = 741
-        Top = 12
+        Top = 11
         Width = 86
         Height = 33
         Anchors = [akTop, akRight]
@@ -72,7 +72,7 @@ inherited TaskEditForm: TTaskEditForm
       end
       object btnStart: TBitBtn
         Left = 114
-        Top = 12
+        Top = 11
         Width = 89
         Height = 33
         Caption = #36816#34892
@@ -84,6 +84,16 @@ inherited TaskEditForm: TTaskEditForm
         ParentFont = False
         TabOrder = 2
         OnClick = btnStartClick
+      end
+      object chkInteractive: TCheckBox
+        Left = 232
+        Top = 20
+        Width = 177
+        Height = 17
+        Caption = 'Interactive'#29992#25143#20132#20114
+        TabOrder = 3
+        Visible = False
+        OnClick = chkInteractiveClick
       end
     end
     object chktrTaskSteps: TRzCheckTree [1]

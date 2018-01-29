@@ -128,6 +128,12 @@ begin
     if LForm <> nil then
       SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
   end;
+
+  for i := Screen.CustomFormCount - 1 downto 0 do begin
+    LForm := Screen.CustomForms[i] as TForm;
+    if LForm <> nil then
+      SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
+  end;
 end;
 
 procedure TCtrlMainForm.N9Click(Sender: TObject);
@@ -162,17 +168,34 @@ var
 begin
   CloseAppForms;
 
+  if FInteractiveJobDispatcher = nil then
+    FInteractiveJobDispatcher := TJobDispatcher.Create;
+
   //如果已经在运行Interactive任务，则继续发送一条重复的消息给app，等待下次消息循环开始时进行调用
   if FInteractiveJobDispatcher.UnHandledCount > 0 then
   begin
     AMsg.LParam := AMsg.LParam + 1;
-    if AMsg.LParam = 5 then Exit;
-    if AMsg.LParam = 3 then
-    begin
-      FInteractiveJobDispatcher.ClearTaskStacks;
+    try
+      if AMsg.LParam = 4 then
+      begin
+        FInteractiveJobDispatcher.ClearTaskStacks;
+      end
+      else if AMsg.LParam = 6 then
+      begin
+        FInteractiveJobDispatcher.Stop;
+      end
+      else if AMsg.LParam = 8 then
+      begin
+        //FInteractiveJobDispatcher.Free;
+      end;
+    finally
+
     end;
 
-    PostMessage(Handle, VVMSG_INTERACTIVE_JOB_REQUEST, AMsg.WParam, AMsg.LParam);
+    if AMsg.LParam < 10 then
+    begin
+      PostMessage(Handle, VVMSG_INTERACTIVE_JOB_REQUEST, AMsg.WParam, AMsg.LParam);
+    end;
     Exit;
   end;
 
@@ -185,7 +208,7 @@ begin
   LJobDispatcherRec := PJobDispatcherRec(AMsg.WParam);
   if LJobDispatcherRec = nil then Exit;
 
-  FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec);
+  FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
 end;
 
 end.

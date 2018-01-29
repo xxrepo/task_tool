@@ -108,7 +108,7 @@ begin
     LJob.LastStartTime := Now;
     LJob.RunThread := nil;
     LJob.JobRequest := nil;
-    LJob.Task.TaskVar.Interactive := LJob.Interactive;
+    LJob.Task.TaskVar.Interactive := 0;     //强制不能进行交互任务的调用
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
