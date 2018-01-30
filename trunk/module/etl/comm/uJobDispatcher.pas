@@ -36,7 +36,7 @@ type
   protected
     function GetTaskInitParams: PStepData; override;
   public
-    constructor Create(const ALogLevel: TLogLevel = llAll);
+    constructor Create(const ALogLevel: TLogLevel = llAll); overload;
 
     procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
 

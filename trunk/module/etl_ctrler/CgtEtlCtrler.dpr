@@ -54,7 +54,8 @@ uses
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
-  uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas';
+  uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
+  uExeUtil in '..\..\core\lib\uExeUtil.pas';
 
 {$R *.res}
 

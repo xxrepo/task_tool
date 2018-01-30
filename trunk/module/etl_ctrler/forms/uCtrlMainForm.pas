@@ -5,40 +5,46 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uBasicForm, RzTray, Vcl.Menus,
-  Vcl.StdCtrls, uDefines, Vcl.ExtCtrls, uJobDispatcher;
+  Vcl.StdCtrls, uDefines, Vcl.ExtCtrls, uJobDispatcher, System.ImageList,
+  Vcl.ImgList;
 
 type
   TCtrlMainForm = class(TBasicForm)
     pmTray: TPopupMenu;
-    N1: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
+    pmiLocalServer: TMenuItem;
+    pmiSetting: TMenuItem;
+    pmiAutoStart: TMenuItem;
     N4: TMenuItem;
-    N5: TMenuItem;
-    N6: TMenuItem;
-    N7: TMenuItem;
+    pmiLocalServerStart: TMenuItem;
+    pmiLocalServerStop: TMenuItem;
+    pmiLocalServerSetting: TMenuItem;
     N8: TMenuItem;
-    N9: TMenuItem;
+    pmiExit: TMenuItem;
     lbl1: TLabel;
-    N10: TMenuItem;
+    pmiAbout: TMenuItem;
     N11: TMenuItem;
     rztrycnTool: TRzTrayIcon;
-    tmrMsg: TTimer;
-    procedure N9Click(Sender: TObject);
+    imglistTray: TImageList;
+    pmiExePath: TMenuItem;
+    procedure pmiExitClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure N7Click(Sender: TObject);
-    procedure N5Click(Sender: TObject);
-    procedure N6Click(Sender: TObject);
+    procedure pmiLocalServerSettingClick(Sender: TObject);
+    procedure pmiLocalServerStartClick(Sender: TObject);
+    procedure pmiLocalServerStopClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure N10Click(Sender: TObject);
+    procedure pmiAboutClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure rztrycnToolRestoreApp(Sender: TObject);
+    procedure pmiExePathClick(Sender: TObject);
+    procedure pmiAutoStartClick(Sender: TObject);
   private
     FInteractiveJobDispatcher: TJobDispatcher;
     FMsgThread: TThread;
 
     procedure HideForm;
     procedure CloseAppForms;
+    procedure UpdateLocalServerIcon(AStarted: Boolean);
+    procedure UpdateAutoRunIcon;
     { Private declarations }
   public
     { Public declarations }
@@ -52,7 +58,10 @@ var
 
 implementation
 
-uses uHttpServerControlForm, uDesignTimeDefines, uFunctions;
+uses uHttpServerControlForm, uDesignTimeDefines, uFunctions, Winapi.ShellAPI, uExeUtil;
+
+const
+  AppAutoStartName: string = 'CGTLocalCtrlTool';
 
 {$R *.dfm}
 
@@ -69,7 +78,9 @@ begin
   //Application.ShowMainForm := False;
   FInteractiveJobDispatcher := TJobDispatcher.Create;
   rztrycnTool.Hint := Caption;
-  N5Click(Sender);
+  pmiLocalServerStart.Click;
+
+  UpdateAutoRunIcon;
 end;
 
 
@@ -79,16 +90,30 @@ begin
   FInteractiveJobDispatcher.Free;
 end;
 
-procedure TCtrlMainForm.N10Click(Sender: TObject);
+procedure TCtrlMainForm.pmiAboutClick(Sender: TObject);
 begin
   inherited;
   rztrycnTool.RestoreApp;
   ShowTopMost;
 end;
 
-procedure TCtrlMainForm.N5Click(Sender: TObject);
+procedure TCtrlMainForm.pmiAutoStartClick(Sender: TObject);
 begin
   inherited;
+  if pmiAutoStart.ImageIndex = -1 then
+  begin
+    TExeUtil.AddAutoRun(AppAutoStartName, Application.ExeName);
+  end
+  else
+    TExeUtil.DelAutoRun(AppAutoStartName, Application.ExeName);
+
+  UpdateAutoRunIcon;
+end;
+
+procedure TCtrlMainForm.pmiLocalServerStartClick(Sender: TObject);
+begin
+  inherited;
+  UpdateLocalServerIcon(True);
   if HttpServerRunner <> nil then Exit;
 
   with THttpServerControlForm.Create(nil) do
@@ -99,16 +124,42 @@ begin
   end;
 end;
 
-procedure TCtrlMainForm.N6Click(Sender: TObject);
+procedure TCtrlMainForm.pmiLocalServerStopClick(Sender: TObject);
 begin
   inherited;
   if HttpServerRunner <> nil then
   begin
     FreeAndNil(HttpServerRunner);
   end;
+  UpdateLocalServerIcon(False);
 end;
 
-procedure TCtrlMainForm.N7Click(Sender: TObject);
+
+procedure TCtrlMainForm.UpdateAutoRunIcon;
+begin
+  if TExeUtil.IsAutoRun(AppAutoStartName, Application.ExeName) then
+    pmiAutoStart.ImageIndex := 0
+  else
+    pmiAutoStart.ImageIndex := -1;
+end;
+
+procedure TCtrlMainForm.UpdateLocalServerIcon(AStarted: Boolean);
+begin
+  if AStarted then
+  begin
+    pmiLocalServer.ImageIndex := 0;
+    pmiLocalServerStart.ImageIndex := 0;
+    pmiLocalServerStop.ImageIndex := -1;
+  end
+  else
+  begin
+    pmiLocalServer.ImageIndex := 1;
+    pmiLocalServerStop.ImageIndex := 1;
+    pmiLocalServerStart.ImageIndex := -1;
+  end;
+end;
+
+procedure TCtrlMainForm.pmiLocalServerSettingClick(Sender: TObject);
 begin
   inherited;
   with THttpServerControlForm.Create(nil) do
@@ -138,7 +189,13 @@ begin
   end;
 end;
 
-procedure TCtrlMainForm.N9Click(Sender: TObject);
+procedure TCtrlMainForm.pmiExePathClick(Sender: TObject);
+begin
+  inherited;
+  ShellExecute(Handle, 'open', 'Explorer.exe', PChar(ExePath), nil, 1);
+end;
+
+procedure TCtrlMainForm.pmiExitClick(Sender: TObject);
 begin
   CloseAppForms;
   Application.Terminate;
@@ -166,7 +223,6 @@ end;
 procedure TCtrlMainForm.MsgInteractiveJobRequestHandler(var AMsg: TMessage);
 var
   LJobDispatcherRec: PJobDispatcherRec;
-  i: Integer;
   LFormHandle: THandle;
   LMsg: TMessage;
 begin

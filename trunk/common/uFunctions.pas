@@ -38,7 +38,10 @@ implementation
 
 uses
   Winapi.TlHelp32, System.SysUtils, Winapi.ShellAPI, Vcl.Controls, Winapi.Messages,
-    System.Classes, IdHash, IdHashMessageDigest, System.Variants, Winapi.CommCtrl;
+    System.Classes, IdHash, IdHashMessageDigest, System.Variants, Winapi.CommCtrl, System.Win.Registry;
+
+
+
 
 
 function VariantValueByDataType(AVar: Variant; ADataType: string = 'string'): Variant;
@@ -322,7 +325,6 @@ begin
     LMd5.Free;
   end;
 end;
-
 
 
 
