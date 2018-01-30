@@ -2,6 +2,7 @@ program CgtEtlService;
 
 uses
   Vcl.SvcMgr,
+  MidasLib,
   uETlService in 'uETlService.pas' {CGTEtlSrv: TService},
   uFunctions in '..\..\common\uFunctions.pas',
   uFileLogger in '..\..\core\lib\uFileLogger.pas',

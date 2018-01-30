@@ -2,6 +2,7 @@ program CgtEtlCtrler;
 
 uses
   Vcl.Forms,
+  MidasLib,
   System.SyncObjs,
   System.SysUtils,
   uFunctions in '..\..\common\uFunctions.pas',
