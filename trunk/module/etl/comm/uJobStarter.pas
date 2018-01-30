@@ -45,6 +45,7 @@ type
     function LoadConfigFrom(AJobsFileName: string; AJobName: string = ''): Boolean;
 
     procedure ClearTaskStacks;
+    procedure ClearTasks;
 
     property DbsConfigFile: string read GetDbsConfigFile;
     property UnHandledCount: Integer read GetUnHandledCount;
@@ -55,6 +56,20 @@ implementation
 uses System.JSON, uThreadSafeFile, uFunctions, uDefines, uTaskDefine, uFileUtil, uTask, Winapi.Windows;
 
 { TJobMgr }
+
+procedure TJobStarter.ClearTasks;
+var
+  i: Integer;
+begin
+  Stop;
+
+  //循环遍历释放task中的配置类
+  for i := 0 to FJobs.Count - 1 do
+  begin
+    if FJobs.Objects[i] <> nil then
+      TJobConfig(FJobs.Objects[i]).FreeTask;
+  end;
+end;
 
 procedure TJobStarter.ClearTaskStacks;
 var

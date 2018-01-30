@@ -12,7 +12,7 @@ type
     FServer: TIdHttpServer;
     FServerConfigRec: THttpServerConfigRec;
     FStatus: TRunnerStatus;
-    //FBlockUIJobDispatcher: TJobDispatcher;
+    FLastInteractiveRequestTime: TDateTime;
 
     FJobDispatchers: TJobDispatcherList;
 
@@ -40,7 +40,8 @@ type
 
 implementation
 
-uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes, Winapi.Windows, System.Math, Vcl.Forms;
+uses uFunctions, uDefines, System.SysUtils, uFileUtil, System.Classes,
+System.DateUtils, Winapi.Windows, System.Math, Vcl.Forms;
 
 type
   DisParamException = class(Exception);
@@ -233,9 +234,19 @@ begin
       begin
         LOutResult.Code := 1;
         LOutResult.Msg := 'No Response In Interactive Request';
-
-        //激活application
-        PostMessage(Application.MainFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
+        //加入处理的频率间隔，如果间隔太短，直接丢弃
+        if MilliSecondsBetween(Now, FLastInteractiveRequestTime) > 1200 then
+        begin
+          FLastInteractiveRequestTime := Now;
+          //激活application
+          PostMessage(Application.MainFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
+        end
+        else
+        begin
+          LOutResult.Code := -1;
+          LOutResult.Msg := '操作太频繁，稍后处理';
+          Dispose(LJobDispatcherRec);
+        end;
       end
       else
       begin

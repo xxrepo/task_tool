@@ -23,6 +23,7 @@ type
     N10: TMenuItem;
     N11: TMenuItem;
     rztrycnTool: TRzTrayIcon;
+    tmrMsg: TTimer;
     procedure N9Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure N7Click(Sender: TObject);
@@ -34,6 +35,7 @@ type
     procedure rztrycnToolRestoreApp(Sender: TObject);
   private
     FInteractiveJobDispatcher: TJobDispatcher;
+    FMsgThread: TThread;
 
     procedure HideForm;
     procedure CloseAppForms;
@@ -120,17 +122,17 @@ end;
 procedure TCtrlMainForm.CloseAppForms;
 var
   i: Integer;
-  LForm: TForm;
+  LForm: TCustomForm;
 begin
   inherited;
   for i := Screen.FormCount - 1 downto 0 do begin
-    LForm := Screen.Forms[i];
+    LForm := Screen.Forms[i] as TForm;
     if LForm <> nil then
       SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
   end;
 
   for i := Screen.CustomFormCount - 1 downto 0 do begin
-    LForm := Screen.CustomForms[i] as TForm;
+    LForm := Screen.CustomForms[i];
     if LForm <> nil then
       SendMessage(LForm.Handle, WM_CLOSE, 0, 0);
   end;
@@ -165,39 +167,42 @@ procedure TCtrlMainForm.MsgInteractiveJobRequestHandler(var AMsg: TMessage);
 var
   LJobDispatcherRec: PJobDispatcherRec;
   i: Integer;
+  LFormHandle: THandle;
+  LMsg: TMessage;
 begin
-  CloseAppForms;
-
-  if FInteractiveJobDispatcher = nil then
-    FInteractiveJobDispatcher := TJobDispatcher.Create;
-
   //如果已经在运行Interactive任务，则继续发送一条重复的消息给app，等待下次消息循环开始时进行调用
   if FInteractiveJobDispatcher.UnHandledCount > 0 then
   begin
-    AMsg.LParam := AMsg.LParam + 1;
-    try
-      if AMsg.LParam = 4 then
-      begin
-        FInteractiveJobDispatcher.ClearTaskStacks;
-      end
-      else if AMsg.LParam = 6 then
-      begin
-        FInteractiveJobDispatcher.Stop;
-      end
-      else if AMsg.LParam = 8 then
-      begin
-        //FInteractiveJobDispatcher.Free;
-      end;
-    finally
+    CloseAppForms;
 
-    end;
-
-    if AMsg.LParam < 10 then
+    //启用匿名函数
+    if AMsg.LParam < 4 then
     begin
-      PostMessage(Handle, VVMSG_INTERACTIVE_JOB_REQUEST, AMsg.WParam, AMsg.LParam);
+      LFormHandle := Handle;
+      LMsg := AMsg;
+      LMsg.LParam := LMsg.LParam + 1;
+      try
+        if LMsg.LParam = 2 then
+        begin
+          FInteractiveJobDispatcher.Stop;
+        end
+        else if LMsg.LParam = 3 then
+        begin
+          FInteractiveJobDispatcher.ClearTaskStacks;
+        end;
+      finally
+
+      end;
+      TThread.CreateAnonymousThread(procedure
+      begin
+        Sleep(200);
+        PostMessage(LFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, LMsg.WParam, LMsg.LParam);
+      end).Start;
     end;
+
     Exit;
   end;
+
 
   FormStyle := fsStayOnTop;
   Application.Restore;

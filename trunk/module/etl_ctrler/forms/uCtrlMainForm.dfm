@@ -74,4 +74,10 @@ inherited CtrlMainForm: TCtrlMainForm
     Left = 280
     Top = 88
   end
+  object tmrMsg: TTimer
+    Enabled = False
+    Interval = 200
+    Left = 24
+    Top = 104
+  end
 end
