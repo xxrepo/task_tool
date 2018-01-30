@@ -114,6 +114,7 @@ end;
 procedure TStepFastReport.StartSelfDesign;
 var
   LDBDataSet: TfrxDBDataset;
+  LDBDataSetUserName: string;
   LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
   LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
@@ -130,9 +131,10 @@ begin
       for i := 0 to LDBDataSetsJsonArray.Count - 1 do
       begin
         LDBDataSetConfigJson := LDBDataSetsJsonArray.Items[i] as TJSONObject;
-
+        LDBDataSetUserName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
         LDBDataSet := TfrxDBDataset.Create(nil);
-        LDBDataSet.UserName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
+        if LDBDataSetUserName <> '' then
+          LDBDataSet.UserName := LDBDataSetUserName;
         LDBDataSet.DataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
 
         FReporter.DataSets.Add(LDBDataSet);
@@ -171,6 +173,7 @@ end;
 procedure TStepFastReport.StartSelf;
 var
   LDBDataSet: TfrxDBDataset;
+  LDBDataSetUserName: string;
   LDBDataSetsJsonArray, LDBVarJsonArray: TJSONArray;
   LDBDataSetConfigJson, LDBVarJsonObj: TJSONObject;
   i: Integer;
@@ -191,8 +194,10 @@ begin
       begin
         LDBDataSetConfigJson := LDBDataSetsJsonArray.Items[i] as TJSONObject;
 
+        LDBDataSetUserName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
         LDBDataSet := TfrxDBDataset.Create(nil);
-        LDBDataSet.UserName := GetJsonObjectValue(LDBDataSetConfigJson, 'rpt_dataset_name');
+        if LDBDataSetUserName <> '' then
+          LDBDataSet.UserName := LDBDataSetUserName;
         LDBDataSet.DataSet := TClientDataSet(TaskVar.GetObject(GetJsonObjectValue(LDBDataSetConfigJson, 'dataset_object_ref')));
 
 
