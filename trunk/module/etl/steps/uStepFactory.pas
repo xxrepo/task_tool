@@ -33,7 +33,9 @@ uses
   uStepJson2DataSet,
   uStepTaskResult,
   uStepFastReport,
-  uStepReportMachine;
+  uStepReportMachine,
+  uStepDownloadFile,
+  uStepUnzip;
 
 var
   SysSteps: TJSONArray;
@@ -101,9 +103,17 @@ begin
       begin
         Result := TStepFileDelete.Create(ATaskVar);
       end;
+      40040:
+      begin
+        Result := TStepUnzip.Create(ATaskVar);
+      end;
       50010:
       begin
         Result := TStepHttpRequest.Create(ATaskVar);
+      end;
+      50020:
+      begin
+        Result := TStepDownloadFile.Create(ATaskVar);
       end;
       60010:
       begin
@@ -316,12 +326,31 @@ begin
 
 
   LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'FILE_UNZIP'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40040'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'ZIP文件解压'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepUnzip'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepUnzipForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
   LRowJson.AddPair(TJSONPair.Create('step_group', '网络'));
   LRowJson.AddPair(TJSONPair.Create('step_type', 'NET_HTTP_REQUEST'));
   LRowJson.AddPair(TJSONPair.Create('step_type_id', '50010'));
   LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Http_Request_请求'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepHttpRequest'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepHttpRequestForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '网络'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'NET_HTTP_DOWNLOAD_FILE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '50020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Http文件下载'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepDownloadFile'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepDownloadFileForm'));
   SysSteps.AddElement(LRowJson);
 
 

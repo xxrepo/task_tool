@@ -24,10 +24,9 @@ uses
   uStepHttpRequest in '..\etl\steps\uStepHttpRequest.pas',
   uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
   uStepQuery in '..\etl\steps\uStepQuery.pas',
-  uStepSubTask in '..\etl\steps\uStepSubTask.pas',
   uStepIniRead in '..\etl\steps\uStepIniRead.pas',
   uStepFileDelete in '..\etl\steps\uStepFileDelete.pas',
-  uStepWriteTxtFile in '..\etl\steps\uStepWriteTxtFile.pas',
+  uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
   uGlobalVar in '..\etl\comm\uGlobalVar.pas',
@@ -49,7 +48,10 @@ uses
   uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm},
   uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
   uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
-  uStepFastReport in '..\etl\steps\report\uStepFastReport.pas';
+  uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
+  uStepSubTask in '..\etl\steps\uStepSubTask.pas',
+  uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
+  uStepUnzip in '..\etl\steps\util\uStepUnzip.pas';
 
 {$R *.RES}
 

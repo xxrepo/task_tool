@@ -42,10 +42,9 @@ uses
   uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
   uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
   uStepQuery in '..\etl\steps\uStepQuery.pas',
-  uStepSubTask in '..\etl\steps\uStepSubTask.pas',
   uStepTaskResult in '..\etl\steps\uStepTaskResult.pas',
   uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
-  uStepWriteTxtFile in '..\etl\steps\uStepWriteTxtFile.pas',
+  uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uDesignTimeDefines in '..\etl\comm\uDesignTimeDefines.pas',
   uProject in '..\etl\comm\uProject.pas',
@@ -56,7 +55,10 @@ uses
   uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
   uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
-  uExeUtil in '..\..\core\lib\uExeUtil.pas';
+  uExeUtil in '..\..\core\lib\uExeUtil.pas',
+  uStepSubTask in '..\etl\steps\uStepSubTask.pas',
+  uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
+  uStepUnzip in '..\etl\steps\util\uStepUnzip.pas';
 
 {$R *.res}
 

@@ -45,8 +45,8 @@ uses
   uStepNullForm in 'steps\uStepNullForm.pas' {StepNullForm},
   uStepQuery in 'steps\uStepQuery.pas',
   uStepQueryForm in 'steps\uStepQueryForm.pas' {StepQueryForm},
-  uStepSubTask in 'steps\uStepSubTask.pas',
-  uStepSubTaskForm in 'steps\uStepSubTaskForm.pas' {StepSubTaskForm},
+  uStepUnzip in 'steps\util\uStepUnzip.pas',
+  uStepUnzipForm in 'steps\util\uStepUnzipForm.pas' {StepUnzipForm},
   uStepFileDelete in 'steps\uStepFileDelete.pas',
   uStepFileDeleteForm in 'steps\uStepFileDeleteForm.pas' {StepFileDeleteForm},
   uServiceUtil in '..\..\core\lib\uServiceUtil.pas',
@@ -60,8 +60,8 @@ uses
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uFileCleaner in '..\..\core\lib\uFileCleaner.pas',
   uStepDatasetSpliterForm in 'steps\uStepDatasetSpliterForm.pas' {StepDatasetSpliterForm},
-  uStepWriteTxtFile in 'steps\uStepWriteTxtFile.pas',
-  uStepWriteTxtFileForm in 'steps\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm},
+  uStepExeCtrl in 'steps\util\uStepExeCtrl.pas',
+  uStepExeCtrlForm in 'steps\util\uStepExeCtrlForm.pas' {StepExeCtrlForm},
   uThreadSafeFile in 'comm\uThreadSafeFile.pas',
   uScheduleConfig in 'runners\uScheduleConfig.pas',
   uScheduleRunner in 'runners\uScheduleRunner.pas',
@@ -91,7 +91,15 @@ uses
   uJobStarter in 'comm\uJobStarter.pas',
   uStepUiBasic in 'basic\uStepUiBasic.pas',
   uStepFastReport in 'steps\report\uStepFastReport.pas',
-  uStepFastReportForm in 'steps\report\uStepFastReportForm.pas' {StepFastReportForm};
+  uStepFastReportForm in 'steps\report\uStepFastReportForm.pas' {StepFastReportForm},
+  uStepSubTask in 'steps\uStepSubTask.pas',
+  uStepSubTaskForm in 'steps\uStepSubTaskForm.pas' {StepSubTaskForm},
+  uStepDownloadFile in 'steps\network\uStepDownloadFile.pas',
+  uStepDownloadFileForm in 'steps\network\uStepDownloadFileForm.pas' {StepDownloadFileForm},
+  uStepWriteTxtFile in 'steps\uStepWriteTxtFile.pas',
+  uStepWriteTxtFileForm in 'steps\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm},
+  uStepServiceCtrl in 'steps\util\uStepServiceCtrl.pas',
+  uStepServiceCtrlForm in 'steps\util\uStepServiceCtrlForm.pas' {StepServiceCtrlForm};
 
 {$R *.res}
 
@@ -108,6 +116,10 @@ begin
   Application.CreateForm(TProjectForm, ProjectForm);
   Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
   Application.CreateForm(TStepFastReportForm, StepFastReportForm);
+  Application.CreateForm(TStepSubTaskForm, StepSubTaskForm);
+  Application.CreateForm(TStepDownloadFileForm, StepDownloadFileForm);
+  Application.CreateForm(TStepWriteTxtFileForm, StepWriteTxtFileForm);
+  Application.CreateForm(TStepServiceCtrlForm, StepServiceCtrlForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

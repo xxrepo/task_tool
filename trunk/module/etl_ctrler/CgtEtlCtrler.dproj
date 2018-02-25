@@ -150,10 +150,9 @@
         <DCCReference Include="..\etl\steps\uStepIniWrite.pas"/>
         <DCCReference Include="..\etl\steps\uStepJson2DataSet.pas"/>
         <DCCReference Include="..\etl\steps\uStepQuery.pas"/>
-        <DCCReference Include="..\etl\steps\uStepSubTask.pas"/>
         <DCCReference Include="..\etl\steps\uStepTaskResult.pas"/>
         <DCCReference Include="..\etl\steps\uStepVarDefine.pas"/>
-        <DCCReference Include="..\etl\steps\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
         <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
         <DCCReference Include="..\etl\comm\uDesignTimeDefines.pas"/>
         <DCCReference Include="..\etl\comm\uProject.pas"/>
@@ -165,6 +164,9 @@
         <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
         <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
         <DCCReference Include="..\..\core\lib\uExeUtil.pas"/>
+        <DCCReference Include="..\etl\steps\uStepSubTask.pas"/>
+        <DCCReference Include="..\etl\steps\network\uStepDownloadFile.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepUnzip.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -586,12 +588,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
