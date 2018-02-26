@@ -35,7 +35,10 @@ uses
   uStepFastReport,
   uStepReportMachine,
   uStepDownloadFile,
-  uStepUnzip;
+  uStepUnzip,
+  uStepServiceCtrl,
+  uStepExeCtrl,
+  uStepFolderCtrl;
 
 var
   SysSteps: TJSONArray;
@@ -107,6 +110,10 @@ begin
       begin
         Result := TStepUnzip.Create(ATaskVar);
       end;
+      40050:
+      begin
+        Result := TStepFolderCtrl.Create(ATaskVar);
+      end;
       50010:
       begin
         Result := TStepHttpRequest.Create(ATaskVar);
@@ -134,6 +141,14 @@ begin
       70020:
       begin
         Result := TStepReportMachine.Create(ATaskVar);
+      end;
+      80010:
+      begin
+        Result := TStepServiceCtrl.Create(ATaskVar);
+      end;
+      80020:
+      begin
+        Result := TStepExeCtrl.Create(ATaskVar);
       end;
     end;
   end;
@@ -336,6 +351,16 @@ begin
 
 
   LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'FILE_FOLDER_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40050'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '文件夹控制'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFolderCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFolderCtrlForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
   LRowJson.AddPair(TJSONPair.Create('step_group', '网络'));
   LRowJson.AddPair(TJSONPair.Create('step_type', 'NET_HTTP_REQUEST'));
   LRowJson.AddPair(TJSONPair.Create('step_type_id', '50010'));
@@ -372,6 +397,25 @@ begin
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepReportMachineForm'));
   SysSteps.AddElement(LRowJson);
 
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'UTIL_SERVICE_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Service服务程序'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepServiceCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepServiceCtrlForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'UTIL_EXE_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Exe应用程序'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepExeCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepExeCtrlForm'));
+  SysSteps.AddElement(LRowJson);
 
   Result := SysSteps.ToJSON;
 end;

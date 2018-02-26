@@ -1,22 +1,22 @@
-inherited StepExeCtrlForm: TStepExeCtrlForm
-  Caption = 'EXE'#24212#29992#31243#24207#25511#21046
-  ClientHeight = 350
-  ExplicitHeight = 379
+inherited StepFolderCtrlForm: TStepFolderCtrlForm
+  Caption = #25991#20214#22841#25511#21046
+  ClientHeight = 344
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 293
-    ExplicitTop = 277
+    Top = 287
+    ExplicitTop = 287
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 293
-    ExplicitHeight = 277
+    Height = 287
+    ExplicitHeight = 287
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 16
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitWidth = 673
-      ExplicitHeight = 328
+      ExplicitHeight = 260
       inherited lblDescription: TLabel
         Left = 52
         ExplicitLeft = 52
@@ -29,11 +29,11 @@ inherited StepExeCtrlForm: TStepExeCtrlForm
         Caption = #25511#21046#25351#20196
       end
       object lbl2: TLabel [3]
-        Left = 28
+        Left = 66
         Top = 160
-        Width = 80
+        Width = 42
         Height = 17
-        Caption = 'EXE'#31243#24207#25991#20214
+        Caption = #25991#20214#22841
       end
       inherited chkRegDataToTask: TCheckBox
         Visible = False
@@ -41,60 +41,61 @@ inherited StepExeCtrlForm: TStepExeCtrlForm
       object rzrdgrpCtrlType: TRzRadioGroup
         Left = 142
         Top = 112
-        Width = 197
+        Width = 335
         Height = 30
         BorderSides = []
         Caption = ''
-        Columns = 2
+        Columns = 5
         GroupStyle = gsCustom
         ItemIndex = 0
         Items.Strings = (
-          #21551#21160
-          #20572#27490)
+          #21019#24314
+          #21024#38500
+          #28165#31354
+          #31227#21160
+          #22797#21046)
         SpaceEvenly = True
         TabOrder = 3
         OnClick = rzrdgrpCtrlTypeClick
       end
-      object btnExeFile: TRzButtonEdit
+      object btnFolder: TRzButtonEdit
         Left = 142
         Top = 157
-        Width = 305
+        Width = 307
         Height = 25
         Text = ''
         TabOrder = 4
         AltBtnWidth = 15
         ButtonWidth = 15
-        OnButtonClick = btnExeFileButtonClick
+        OnButtonClick = btnFolderButtonClick
       end
       object pnlServiceExe: TRzPanel
-        Left = 5
+        Left = 0
         Top = 188
         Width = 658
-        Height = 66
+        Height = 57
         BorderOuter = fsNone
         TabOrder = 5
         Visible = False
         object lbl3: TLabel
-          Left = 46
-          Top = 23
-          Width = 56
-          Height = 17
-          Caption = #21551#21160#21442#25968
-        end
-        object edtStartArgs: TEdit
-          Left = 136
+          Left = 38
           Top = 15
-          Width = 305
+          Width = 70
+          Height = 17
+          Caption = #30446#26631#25991#20214#22841
+        end
+        object btnToFolder: TRzButtonEdit
+          Left = 142
+          Top = 13
+          Width = 307
           Height = 25
+          Text = ''
           TabOrder = 0
+          AltBtnWidth = 15
+          ButtonWidth = 15
+          OnButtonClick = btnFolderButtonClick
         end
       end
     end
-  end
-  object dlgOpenToFileName: TOpenDialog
-    DefaultExt = 'exe'
-    Filter = 'EXE'#25991#20214#65288'*.exe'#65289'|*.exe'
-    Left = 557
-    Top = 122
   end
 end

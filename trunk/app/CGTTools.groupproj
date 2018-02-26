@@ -12,6 +12,9 @@
         <Projects Include="..\module\etl_ctrler\CgtEtlCtrler.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\etl_once\CgtEtlOnce.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="..\module\http\CgtTest.dproj">
             <Dependencies/>
         </Projects>
@@ -50,6 +53,15 @@
     <Target Name="CgtEtlCtrler:Make">
         <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CgtEtlOnce">
+        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj"/>
+    </Target>
+    <Target Name="CgtEtlOnce:Clean">
+        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlOnce:Make">
+        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj" Targets="Make"/>
+    </Target>
     <Target Name="CgtTest">
         <MSBuild Projects="..\module\http\CgtTest.dproj"/>
     </Target>
@@ -60,13 +72,13 @@
         <MSBuild Projects="..\module\http\CgtTest.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtTest"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtTest"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtTest:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtTest:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtTest:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtTest:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

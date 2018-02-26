@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Winapi.Windows, uUserNotify, Vcl.Controls;
+  uDefines, uFunctions, System.SysUtils, uExceptions, uStepDefines, Winapi.Windows, Vcl.Controls;
 
 { TStepQuery }
 

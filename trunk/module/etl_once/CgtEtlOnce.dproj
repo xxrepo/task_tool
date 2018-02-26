@@ -1,11 +1,11 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{B2E83D70-46CA-4345-9D8F-EB1D470ABADB}</ProjectGuid>
-        <ProjectVersion>18.0</ProjectVersion>
+        <ProjectGuid>{8CEC07A6-DC9A-4EC0-98DE-F57CF6BE4211}</ProjectGuid>
+        <ProjectVersion>17.2</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>CgtEtlCtrler.dpr</MainSource>
+        <MainSource>CgtEtlOnce.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -46,9 +46,9 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <SanitizedProjectName>CgtEtlCtrler</SanitizedProjectName>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+        <SanitizedProjectName>CgtEtlOnce</SanitizedProjectName>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -58,15 +58,15 @@
         <DCC_K>false</DCC_K>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;frxe23;vclFireDAC;PkgSpcomm;emsclientfiredac;DataSnapFireDAC;svnui;tethering;FireDACADSDriver;fsTee23;RaizeComponentsVclDb230;EhLibDBXDataDrivers230;DBXMSSQLDriver;EhLib230;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;inetdb;CEF4Delphi;dac230;FmxTeeUI;crcontrols230;FireDACIBDriver;fmx;fmxdae;vclib;fsDB23;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;bdertl;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;frxTee23;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;unidacfmx230;FireDACCommonDriver;DataSnapClient;inet;fsADO23;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;dacfmx230;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;dacvcl230;RaizeComponentsVcl230;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;VVComponents;DBXOdbcDriver;FireDACTDataDriver;FMXTee;fs23;soaprtl;DbxCommonDriver;unidac230;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;EhLibBDEDataDrivers230;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;fsIBX23;unidacvcl230;bindcompvcl;frxDB23;PKIECtRL23;vcldbx;TeeUI;EhLibADODataDrivers230;vclribbon;dbxcds;VclSmp;PKIEDB23;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;frx23;EhLibIBXDataDrivers230;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_UsePackage>CEF4Delphi;FireDACTDataDriver;unidac220;FireDACSqliteDriver;FireDACDSDriver;frxTee22;DBXSqliteDriver;PKIECtRL22;dacvcl220;FireDACPgDriver;fmx;RaizeComponentsVcl;IndySystem;TeeDB;tethering;PKIEDB22;vclib;DBXInterBaseDriver;DataSnapClient;DataSnapServer;DataSnapCommon;DataSnapProviderClient;AutoUpgraderProXE8;DBXSybaseASEDriver;DbxCommonDriver;vclimg;SpComm;dbxcds;DatasnapConnectorsFreePascal;appanalytics;vcldb;crcontrols220;vcldsnap;fmxFireDAC;DBXDb2Driver;QR506RunDXE8;DBXOracleDriver;CustomIPTransport;vclribbon;dsnap;IndyIPServer;EhLibADODataDrivers220;dacfmx220;fmxase;vcl;IndyCore;EhLibIBXDataDrivers220;DBXMSSQLDriver;IndyIPCommon;CloudService;FmxTeeUI;FireDACIBDriver;CodeSiteExpressPkg;DataSnapFireDAC;FireDACDBXDriver;soapserver;inetdbxpress;dsnapxml;EhLibBDEDataDrivers220;FireDACInfxDriver;FireDACDb2Driver;EhLibDBXDataDrivers220;adortl;FireDACASADriver;nrcommd22;frx22;bindcompfmx;vcldbx;RaizeComponentsVclDb;FireDACODBCDriver;RESTBackendComponents;emsclientfiredac;rtl;dbrtl;DbxClientDriver;FireDACCommon;bindcomp;inetdb;Tee;DBXOdbcDriver;ibmonitor;vclFireDAC;xmlrtl;DataSnapNativeClient;svnui;ibxpress;dac220;unidacvcl220;IndyProtocols;DBXMySQLDriver;FireDACCommonDriver;bindcompdbx;soaprtl;bindengine;vclactnband;FMXTee;TeeUI;bindcompvcl;EhLib220;vclie;frxDB22;FireDACADSDriver;vcltouch;emsclient;VclSmp;FireDAC;DBXInformixDriver;FireDACMSSQLDriver;Intraweb;VCLRESTComponents;DataSnapConnectors;dsnapcon;DBXFirebirdDriver;inet;unidacfmx220;fmxobj;FireDACMySQLDriver;soapmidas;vclx;svn;DBXSybaseASADriver;FireDACOracleDriver;fmxdae;RESTComponents;bdertl;FireDACMSAccDriver;dbexpress;DataSnapIndy10ServerTransport;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
-        <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;vclFireDAC;emsclientfiredac;DataSnapFireDAC;tethering;FireDACADSDriver;DBXMSSQLDriver;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;vcldb;bindcompfmx;Intraweb;DBXOracleDriver;inetdb;dac230;FmxTeeUI;FireDACIBDriver;fmx;fmxdae;vclib;FireDACDBXDriver;dbexpress;IndyCore;vclx;dsnap;DataSnapCommon;emsclient;FireDACCommon;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;vclie;bindengine;DBXMySQLDriver;FireDACOracleDriver;CloudService;FireDACMySQLDriver;DBXFirebirdDriver;unidacfmx230;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;vcl;DBXSybaseASEDriver;IndyIPServer;IndySystem;FireDACDb2Driver;dsnapcon;dacfmx230;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;FireDAC;dacvcl230;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;soaprtl;DbxCommonDriver;unidac230;ibxpress;Tee;DataSnapServer;xmlrtl;soapmidas;DataSnapNativeClient;fmxobj;vclwinx;ibxbindings;rtl;FireDACDSDriver;DbxClientDriver;EhLibBDEDataDrivers230;DBXSybaseASADriver;CustomIPTransport;vcldsnap;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;unidacvcl230;bindcompvcl;PKIECtRL23;TeeUI;vclribbon;dbxcds;VclSmp;PKIEDB23;adortl;FireDACODBCDriver;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;inetdbxpress;FireDACMongoDBDriver;IndyProtocols;fmxase;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>FireDACTDataDriver;FireDACSqliteDriver;FireDACDSDriver;DBXSqliteDriver;PKIECtRL22;FireDACPgDriver;fmx;RaizeComponentsVcl;IndySystem;TeeDB;tethering;PKIEDB22;vclib;DBXInterBaseDriver;DataSnapClient;DataSnapServer;DataSnapCommon;DataSnapProviderClient;DBXSybaseASEDriver;DbxCommonDriver;vclimg;dbxcds;DatasnapConnectorsFreePascal;appanalytics;vcldb;vcldsnap;fmxFireDAC;DBXDb2Driver;QR506RunDXE8;DBXOracleDriver;CustomIPTransport;vclribbon;dsnap;IndyIPServer;fmxase;vcl;IndyCore;DBXMSSQLDriver;IndyIPCommon;CloudService;FmxTeeUI;FireDACIBDriver;DataSnapFireDAC;FireDACDBXDriver;soapserver;inetdbxpress;dsnapxml;EhLibBDEDataDrivers220;FireDACInfxDriver;FireDACDb2Driver;adortl;FireDACASADriver;nrcommd22;bindcompfmx;RaizeComponentsVclDb;FireDACODBCDriver;RESTBackendComponents;emsclientfiredac;rtl;dbrtl;DbxClientDriver;FireDACCommon;bindcomp;inetdb;Tee;DBXOdbcDriver;ibmonitor;vclFireDAC;xmlrtl;DataSnapNativeClient;ibxpress;IndyProtocols;DBXMySQLDriver;FireDACCommonDriver;bindcompdbx;soaprtl;bindengine;vclactnband;FMXTee;TeeUI;bindcompvcl;vclie;FireDACADSDriver;vcltouch;emsclient;VclSmp;FireDAC;DBXInformixDriver;FireDACMSSQLDriver;Intraweb;VCLRESTComponents;DataSnapConnectors;dsnapcon;DBXFirebirdDriver;inet;fmxobj;FireDACMySQLDriver;soapmidas;vclx;DBXSybaseASADriver;FireDACOracleDriver;fmxdae;RESTComponents;FireDACMSAccDriver;dbexpress;DataSnapIndy10ServerTransport;IndyIPClient;$(DCC_UsePackage)</DCC_UsePackage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -77,11 +77,9 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <AppEnableHighDPI>true</AppEnableHighDPI>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -91,86 +89,58 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DCC_ExeOutput>D:\dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <AppEnableHighDPI>true</AppEnableHighDPI>
-        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="..\..\common\uFunctions.pas"/>
-        <DCCReference Include="..\..\common\uSelectFolderForm.pas">
-            <Form>SelectFolderForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\basic\uBasicForm.pas">
-            <Form>BasicForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\basic\uBasicDlgForm.pas">
-            <Form>BasicDlgForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\..\core\basic\uBasicLogForm.pas">
-            <Form>BasicLogForm</Form>
-        </DCCReference>
+        <DCCReference Include="..\etl\basic\uStepBasic.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepCondition.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepSubTask.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepTaskResult.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepVarDefine.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepDatasetSpliter.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepFieldsOper.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepJson2DataSet.pas"/>
+        <DCCReference Include="..\etl\steps\database\uStepQuery.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepFileDelete.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepFolderCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepIniRead.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepIniWrite.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepUnzip.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="..\etl\steps\network\uStepDownloadFile.pas"/>
+        <DCCReference Include="..\etl\steps\network\uStepHttpRequest.pas"/>
+        <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
+        <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepServiceCtrl.pas"/>
+        <DCCReference Include="..\..\core\lib\uExeUtil.pas"/>
         <DCCReference Include="..\..\core\lib\uFileLogger.pas"/>
         <DCCReference Include="..\..\core\lib\uFileUtil.pas"/>
         <DCCReference Include="..\..\core\lib\uNetUtil.pas"/>
+        <DCCReference Include="..\..\core\lib\uServiceUtil.pas"/>
         <DCCReference Include="..\..\core\lib\uThreadQueueUtil.pas"/>
-        <DCCReference Include="forms\uCtrlMainForm.pas">
-            <Form>CtrlMainForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\etl\basic\uStepBasic.pas"/>
-        <DCCReference Include="..\etl\runners\uHttpServerConfig.pas"/>
-        <DCCReference Include="..\etl\runners\uHttpServerRunner.pas"/>
-        <DCCReference Include="..\etl\ctrl_forms\uHttpServerControlForm.pas">
-            <Form>HttpServerControlForm</Form>
-        </DCCReference>
+        <DCCReference Include="..\..\common\uFunctions.pas"/>
+        <DCCReference Include="..\etl\steps\uStepDefines.pas"/>
+        <DCCReference Include="..\etl\steps\uStepFactory.pas"/>
+        <DCCReference Include="..\etl\comm\uTaskVar.pas"/>
         <DCCReference Include="..\etl\comm\uDbConMgr.pas"/>
+        <DCCReference Include="..\etl\comm\uThreadSafeFile.pas"/>
         <DCCReference Include="..\etl\comm\uDefines.pas"/>
-        <DCCReference Include="..\etl\comm\uExceptions.pas"/>
+        <DCCReference Include="..\etl\comm\uTaskDefine.pas"/>
         <DCCReference Include="..\etl\comm\uGlobalVar.pas"/>
+        <DCCReference Include="..\etl\comm\uTaskResult.pas"/>
+        <DCCReference Include="..\etl\comm\uExceptions.pas"/>
+        <DCCReference Include="..\etl\comm\uTask.pas"/>
+        <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
+        <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
         <DCCReference Include="..\etl\comm\uJob.pas"/>
         <DCCReference Include="..\etl\comm\uJobDispatcher.pas"/>
         <DCCReference Include="..\etl\comm\uJobStarter.pas"/>
-        <DCCReference Include="..\etl\comm\uTask.pas"/>
-        <DCCReference Include="..\etl\comm\uTaskDefine.pas"/>
-        <DCCReference Include="..\etl\comm\uTaskResult.pas"/>
-        <DCCReference Include="..\etl\comm\uTaskVar.pas"/>
-        <DCCReference Include="..\etl\comm\uThreadSafeFile.pas"/>
-        <DCCReference Include="..\etl\steps\common\uStepCondition.pas"/>
-        <DCCReference Include="..\etl\steps\data\uStepDatasetSpliter.pas"/>
-        <DCCReference Include="..\etl\steps\uStepDefines.pas"/>
-        <DCCReference Include="..\etl\steps\uStepFactory.pas"/>
-        <DCCReference Include="..\etl\steps\data\uStepFieldsOper.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepFileDelete.pas"/>
-        <DCCReference Include="..\etl\steps\network\uStepHttpRequest.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepIniRead.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepIniWrite.pas"/>
-        <DCCReference Include="..\etl\steps\data\uStepJson2DataSet.pas"/>
-        <DCCReference Include="..\etl\steps\database\uStepQuery.pas"/>
-        <DCCReference Include="..\etl\steps\common\uStepTaskResult.pas"/>
-        <DCCReference Include="..\etl\steps\common\uStepVarDefine.pas"/>
-        <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
-        <DCCReference Include="..\etl\comm\uDesignTimeDefines.pas"/>
-        <DCCReference Include="..\etl\comm\uProject.pas"/>
-        <DCCReference Include="..\..\common\uUserNotify.pas"/>
-        <DCCReference Include="..\..\common\uUserNotifyMsgForm.pas">
-            <Form>UserNotifyMsgForm</Form>
-        </DCCReference>
-        <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
-        <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
-        <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
-        <DCCReference Include="..\..\core\lib\uExeUtil.pas"/>
-        <DCCReference Include="..\etl\steps\common\uStepSubTask.pas"/>
-        <DCCReference Include="..\etl\steps\network\uStepDownloadFile.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepUnzip.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
-        <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
-        <DCCReference Include="..\etl\steps\util\uStepServiceCtrl.pas"/>
-        <DCCReference Include="..\..\core\lib\uServiceUtil.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepFolderCtrl.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -189,60 +159,21 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">CgtEtlCtrler.dpr</Source>
+                    <Source Name="MainSource">CgtEtlOnce.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt230.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapNativeServer220.bpl">Embarcadero DBExpress DataSnap Native Server Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k220.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="1">
-                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlCtrler.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\CgtEtlOnce.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>CgtEtlCtrler.exe</RemoteName>
+                        <RemoteName>CgtEtlOnce.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlCtrler.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>CgtEtlCtrler.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployClass Name="Android_SplashImage470">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-normal</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectOSXInfoPList">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch2048">
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceDebug">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Required="true" Name="DependencyPackage">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
@@ -266,27 +197,65 @@
                         <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidLibnativeMipsFile">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch2048">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXInfoPList">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceDebug">
+                    <Platform Name="iOSDevice64">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage470">
                     <Platform Name="Android">
-                        <RemoteDir>library\lib\mips</RemoteDir>
+                        <RemoteDir>res\drawable-normal</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidLibnativeX86File">
                     <Platform Name="Android">
                         <RemoteDir>library\lib\x86</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidGDBServer">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectOSXEntitlements">
-                    <Platform Name="OSX32">
-                        <RemoteDir>../</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -298,6 +267,18 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXEntitlements">
+                    <Platform Name="OSX32">
+                        <RemoteDir>../</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidGDBServer">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -324,12 +305,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="Android_LauncherIcon144">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="iPhone_Launch320">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
@@ -341,43 +316,22 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="iOSDevice64">
+                <DeployClass Name="Android_LauncherIcon144">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
+                </DeployClass>
+                <DeployClass Name="AndroidLibnativeMipsFile">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\mips</RemoteDir>
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidSplashImageDef">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
                         <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="DependencyFramework">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.framework</Extensions>
-                    </Platform>
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="DebugSymbols">
@@ -387,6 +341,16 @@
                     </Platform>
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DependencyFramework">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
                     </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
@@ -449,15 +413,15 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidServiceOutput">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="Android_DefaultAppIcon">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXResource">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -466,12 +430,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectOSXResource">
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -520,17 +478,6 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="iPhone_Launch640x1136">
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="File">
                     <Platform Name="Android">
                         <Operation>0</Operation>
@@ -552,15 +499,26 @@
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidSplashStyles">
-                    <Platform Name="Android">
-                        <RemoteDir>res\values</RemoteDir>
+                <DeployClass Name="iPhone_Launch640x1136">
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="Android_LauncherIcon36">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable-ldpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStyles">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -575,15 +533,15 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="Android_LauncherIcon72">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-hdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
                 <DeployClass Name="Android_LauncherIcon48">
                     <Platform Name="Android">
                         <RemoteDir>res\drawable-mdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon72">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-hdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -592,13 +550,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

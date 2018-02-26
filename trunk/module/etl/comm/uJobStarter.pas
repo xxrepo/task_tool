@@ -4,7 +4,7 @@ interface
 
 uses
   uJob, System.SysUtils, System.SyncObjs, uThreadQueueUtil, System.Classes, uFileLogger,
-  uGlobalVar, uStepDefines, uUserNotify;
+  uGlobalVar, uStepDefines;
 
 type
   //本类用于实际运行时对任务的处理和管理

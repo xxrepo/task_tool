@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>CgtEtlTool.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -149,38 +149,38 @@
         <DCCReference Include="comm\uProject.pas"/>
         <DCCReference Include="comm\uDesignTimeDefines.pas"/>
         <DCCReference Include="..\..\core\lib\uNetUtil.pas"/>
-        <DCCReference Include="steps\uStepCondition.pas"/>
-        <DCCReference Include="steps\uStepConditionForm.pas">
+        <DCCReference Include="steps\common\uStepCondition.pas"/>
+        <DCCReference Include="steps\common\uStepConditionForm.pas">
             <Form>StepConditionForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepDatasetSpliter.pas"/>
+        <DCCReference Include="steps\data\uStepDatasetSpliter.pas"/>
         <DCCReference Include="steps\uStepDefines.pas"/>
         <DCCReference Include="steps\uStepFormFactory.pas"/>
-        <DCCReference Include="steps\uStepHttpRequest.pas"/>
-        <DCCReference Include="steps\uStepHttpRequestForm.pas">
-            <Form>StepHttpRequestForm</Form>
+        <DCCReference Include="steps\network\uStepHttpRequest.pas"/>
+        <DCCReference Include="steps\network\uStepDownloadFileForm.pas">
+            <Form>StepDownloadFileForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepTaskResult.pas"/>
-        <DCCReference Include="steps\uStepTaskResultForm.pas">
+        <DCCReference Include="steps\common\uStepTaskResult.pas"/>
+        <DCCReference Include="steps\common\uStepTaskResultForm.pas">
             <Form>StepTaskResultForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepIniWrite.pas"/>
-        <DCCReference Include="steps\uStepIniWriteForm.pas">
+        <DCCReference Include="steps\file\uStepIniWrite.pas"/>
+        <DCCReference Include="steps\file\uStepIniWriteForm.pas">
             <Form>StepIniWriteForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepNullForm.pas">
+        <DCCReference Include="steps\common\uStepNullForm.pas">
             <Form>StepNullForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepQuery.pas"/>
-        <DCCReference Include="steps\uStepQueryForm.pas">
+        <DCCReference Include="steps\database\uStepQuery.pas"/>
+        <DCCReference Include="steps\database\uStepQueryForm.pas">
             <Form>StepQueryForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\util\uStepUnzip.pas"/>
-        <DCCReference Include="steps\util\uStepUnzipForm.pas">
+        <DCCReference Include="steps\file\uStepUnzip.pas"/>
+        <DCCReference Include="steps\file\uStepUnzipForm.pas">
             <Form>StepUnzipForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepFileDelete.pas"/>
-        <DCCReference Include="steps\uStepFileDeleteForm.pas">
+        <DCCReference Include="steps\file\uStepFileDelete.pas"/>
+        <DCCReference Include="steps\file\uStepFileDeleteForm.pas">
             <Form>StepFileDeleteForm</Form>
         </DCCReference>
         <DCCReference Include="..\..\core\lib\uServiceUtil.pas"/>
@@ -194,8 +194,8 @@
         <DCCReference Include="ctrl_forms\uServiceControlForm.pas">
             <Form>ServiceControlForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepIniRead.pas"/>
-        <DCCReference Include="steps\uStepIniReadForm.pas">
+        <DCCReference Include="steps\file\uStepIniRead.pas"/>
+        <DCCReference Include="steps\file\uStepIniReadForm.pas">
             <Form>StepIniReadForm</Form>
         </DCCReference>
         <DCCReference Include="forms\uMakeDirForm.pas">
@@ -203,12 +203,8 @@
         </DCCReference>
         <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
         <DCCReference Include="..\..\core\lib\uFileCleaner.pas"/>
-        <DCCReference Include="steps\uStepDatasetSpliterForm.pas">
+        <DCCReference Include="steps\data\uStepDatasetSpliterForm.pas">
             <Form>StepDatasetSpliterForm</Form>
-        </DCCReference>
-        <DCCReference Include="steps\util\uStepExeCtrl.pas"/>
-        <DCCReference Include="steps\util\uStepExeCtrlForm.pas">
-            <Form>StepExeCtrlForm</Form>
         </DCCReference>
         <DCCReference Include="comm\uThreadSafeFile.pas"/>
         <DCCReference Include="runners\uScheduleConfig.pas"/>
@@ -218,8 +214,8 @@
             <Form>GlobalVarSettingForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\uStepFieldsOper.pas"/>
-        <DCCReference Include="steps\uStepFieldsOperForm.pas">
+        <DCCReference Include="steps\data\uStepFieldsOper.pas"/>
+        <DCCReference Include="steps\data\uStepFieldsOperForm.pas">
             <Form>StepFieldsOperForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -229,8 +225,8 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\uStepFormSettings.pas"/>
-        <DCCReference Include="steps\uStepJson2DataSet.pas"/>
-        <DCCReference Include="steps\uStepJson2DataSetForm.pas">
+        <DCCReference Include="steps\data\uStepJson2DataSet.pas"/>
+        <DCCReference Include="steps\data\uStepJson2DataSetForm.pas">
             <Form>StepJsonDataSetForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -259,8 +255,8 @@
         </DCCReference>
         <DCCReference Include="comm\uJobDispatcher.pas"/>
         <DCCReference Include="comm\uTaskResult.pas"/>
-        <DCCReference Include="steps\uStepVarDefine.pas"/>
-        <DCCReference Include="steps\uStepVarDefineForm.pas">
+        <DCCReference Include="steps\common\uStepVarDefine.pas"/>
+        <DCCReference Include="steps\common\uStepVarDefineForm.pas">
             <Form>StepVarDefineForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -276,24 +272,34 @@
             <Form>StepFastReportForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\uStepSubTask.pas"/>
-        <DCCReference Include="steps\uStepSubTaskForm.pas">
+        <DCCReference Include="steps\common\uStepSubTask.pas"/>
+        <DCCReference Include="steps\common\uStepSubTaskForm.pas">
             <Form>StepSubTaskForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\network\uStepDownloadFile.pas"/>
-        <DCCReference Include="steps\network\uStepDownloadFileForm.pas">
-            <Form>StepDownloadFileForm</Form>
+        <DCCReference Include="steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="steps\file\uStepWriteTxtFileForm.pas">
+            <Form>StepWriteTxtFileForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\uStepWriteTxtFile.pas"/>
-        <DCCReference Include="steps\uStepWriteTxtFileForm.pas">
-            <Form>StepWriteTxtFileForm</Form>
+        <DCCReference Include="steps\file\uStepFolderCtrl.pas"/>
+        <DCCReference Include="steps\file\uStepFolderCtrlForm.pas">
+            <Form>StepFolderCtrlForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\util\uStepServiceCtrl.pas"/>
         <DCCReference Include="steps\util\uStepServiceCtrlForm.pas">
             <Form>StepServiceCtrlForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\util\uStepExeCtrl.pas"/>
+        <DCCReference Include="steps\util\uStepExeCtrlForm.pas">
+            <Form>StepExeCtrlForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\network\uStepHttpRequestForm.pas">
+            <Form>StepHttpRequestForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -717,11 +723,11 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>

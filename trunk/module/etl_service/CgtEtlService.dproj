@@ -118,22 +118,17 @@
         <DCCReference Include="..\etl\comm\uJob.pas"/>
         <DCCReference Include="..\etl\comm\uTask.pas"/>
         <DCCReference Include="..\etl\comm\uTaskVar.pas"/>
-        <DCCReference Include="..\etl\steps\uStepCondition.pas"/>
-        <DCCReference Include="..\etl\steps\uStepDatasetSpliter.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepDatasetSpliter.pas"/>
         <DCCReference Include="..\etl\steps\uStepDefines.pas"/>
         <DCCReference Include="..\etl\steps\uStepFactory.pas"/>
-        <DCCReference Include="..\etl\steps\uStepHttpRequest.pas"/>
-        <DCCReference Include="..\etl\steps\uStepIniWrite.pas"/>
-        <DCCReference Include="..\etl\steps\uStepQuery.pas"/>
-        <DCCReference Include="..\etl\steps\uStepIniRead.pas"/>
-        <DCCReference Include="..\etl\steps\uStepFileDelete.pas"/>
-        <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\network\uStepHttpRequest.pas"/>
+        <DCCReference Include="..\etl\steps\database\uStepQuery.pas"/>
         <DCCReference Include="..\..\core\lib\uFileFinder.pas"/>
         <DCCReference Include="..\etl\comm\uThreadSafeFile.pas"/>
         <DCCReference Include="..\etl\comm\uGlobalVar.pas"/>
-        <DCCReference Include="..\etl\steps\uStepFieldsOper.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepFieldsOper.pas"/>
         <DCCReference Include="..\etl\steps\uStepFormSettings.pas"/>
-        <DCCReference Include="..\etl\steps\uStepJson2DataSet.pas"/>
+        <DCCReference Include="..\etl\steps\data\uStepJson2DataSet.pas"/>
         <DCCReference Include="..\etl\comm\uTaskDefine.pas"/>
         <DCCReference Include="..\etl\runners\uHttpServerConfig.pas"/>
         <DCCReference Include="..\etl\runners\uHttpServerRunner.pas"/>
@@ -141,9 +136,7 @@
         <DCCReference Include="..\etl\comm\uJobDispatcher.pas"/>
         <DCCReference Include="..\etl\runners\uScheduleConfig.pas"/>
         <DCCReference Include="..\etl\runners\uScheduleRunner.pas"/>
-        <DCCReference Include="..\etl\steps\uStepTaskResult.pas"/>
         <DCCReference Include="..\etl\comm\uTaskResult.pas"/>
-        <DCCReference Include="..\etl\steps\uStepVarDefine.pas"/>
         <DCCReference Include="..\..\common\uUserNotify.pas"/>
         <DCCReference Include="..\..\common\uUserNotifyMsgForm.pas">
             <Form>UserNotifyMsgForm</Form>
@@ -154,9 +147,19 @@
         <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
         <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
         <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
-        <DCCReference Include="..\etl\steps\uStepSubTask.pas"/>
         <DCCReference Include="..\etl\steps\network\uStepDownloadFile.pas"/>
-        <DCCReference Include="..\etl\steps\util\uStepUnzip.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepCondition.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepSubTask.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepTaskResult.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepVarDefine.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepFileDelete.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepFolderCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepIniRead.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepIniWrite.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepUnzip.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepServiceCtrl.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -577,13 +580,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

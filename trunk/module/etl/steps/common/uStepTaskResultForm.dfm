@@ -16,7 +16,7 @@ inherited StepTaskResultForm: TStepTaskResultForm
   inherited pnlOper: TPanel
     Top = 450
     Width = 710
-    ExplicitTop = 430
+    ExplicitTop = 450
     ExplicitWidth = 710
     inherited btnOK: TBitBtn
       Left = 493
@@ -31,13 +31,13 @@ inherited StepTaskResultForm: TStepTaskResultForm
     Width = 710
     Height = 450
     ExplicitWidth = 710
-    ExplicitHeight = 430
+    ExplicitHeight = 450
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
       ExplicitWidth = 706
-      ExplicitHeight = 403
+      ExplicitHeight = 423
       object lblParams: TLabel [1]
         Left = 51
         Top = 208

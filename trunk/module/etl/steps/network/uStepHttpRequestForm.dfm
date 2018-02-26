@@ -161,6 +161,7 @@ inherited StepHttpRequestForm: TStepHttpRequestForm
       end
     end
     object rztbshtResponse: TRzTabSheet
+      TabVisible = False
       Caption = #36755#20986#35774#32622
       object lbl4: TLabel
         Left = 42

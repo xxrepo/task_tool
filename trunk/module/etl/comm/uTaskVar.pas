@@ -4,7 +4,7 @@ interface
 
 uses
   uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
-  System.SysUtils, System.JSON, uTaskResult, uUserNotify;
+  System.SysUtils, System.JSON, uTaskResult;
 
 type
   TTaskVarRec = record

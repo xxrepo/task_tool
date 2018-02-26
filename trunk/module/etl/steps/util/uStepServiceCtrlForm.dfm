@@ -6,112 +6,104 @@ inherited StepServiceCtrlForm: TStepServiceCtrlForm
   TextHeight = 17
   inherited pnlOper: TPanel
     Top = 329
-    ExplicitTop = 284
+    ExplicitTop = 329
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 329
-    ExplicitHeight = 284
+    ExplicitHeight = 329
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 2
       ExplicitTop = 25
       ExplicitWidth = 673
-      ExplicitHeight = 257
-      object lbl2: TLabel [1]
-        Left = 24
-        Top = 201
-        Width = 84
-        Height = 17
-        Caption = #26381#21153#31243#24207#25991#20214
-      end
+      ExplicitHeight = 302
       inherited lblDescription: TLabel
         Left = 52
         ExplicitLeft = 52
       end
-      object lbl3: TLabel [3]
+      object lbl3: TLabel [2]
         Left = 66
         Top = 114
         Width = 42
         Height = 17
         Caption = #26381#21153#21517
       end
-      object lbl4: TLabel [4]
+      object lbl4: TLabel [3]
         Left = 52
         Top = 158
         Width = 56
         Height = 17
         Caption = #25511#21046#25351#20196
       end
-      object lbl5: TLabel [5]
-        Left = 24
-        Top = 240
-        Width = 84
-        Height = 17
-        Caption = #26381#21153#26174#31034#21517#31216
-      end
-      inherited edtDescription: TEdit
-        TabOrder = 2
-      end
       inherited chkRegDataToTask: TCheckBox
-        TabOrder = 3
         Visible = False
       end
-      object btnToFileName: TRzButtonEdit
-        Left = 142
-        Top = 198
-        Width = 307
-        Height = 25
-        Text = ''
-        TabOrder = 1
-        AltBtnWidth = 15
-        ButtonWidth = 15
-        OnButtonClick = btnToFileNameButtonClick
-      end
-      object edt1: TEdit
+      object edtServiceName: TEdit
         Left = 142
         Top = 111
         Width = 305
         Height = 25
+        TabOrder = 3
+      end
+      object rzrdgrpCtrlType: TRzRadioGroup
+        Left = 142
+        Top = 152
+        Width = 327
+        Height = 30
+        BorderSides = []
+        Caption = ''
+        Columns = 4
+        GroupStyle = gsCustom
+        ItemIndex = 0
+        Items.Strings = (
+          #23433#35013
+          #21551#21160
+          #20572#27490
+          #21368#36733)
+        SpaceEvenly = True
         TabOrder = 4
+        OnClick = rzrdgrpCtrlTypeClick
       end
-      object edtDisplayName: TEdit
-        Left = 142
-        Top = 237
-        Width = 307
-        Height = 25
+      object pnlServiceExe: TRzPanel
+        Left = 0
+        Top = 188
+        Width = 658
+        Height = 105
+        BorderOuter = fsNone
         TabOrder = 5
-      end
-      object rbInstall: TRadioButton
-        Left = 142
-        Top = 159
-        Width = 113
-        Height = 17
-        Caption = #23433#35013
-        TabOrder = 6
-      end
-      object rbUnInstall: TRadioButton
-        Left = 381
-        Top = 159
-        Width = 89
-        Height = 17
-        Caption = #21368#36733
-        TabOrder = 7
-      end
-      object rbStart: TRadioButton
-        Left = 222
-        Top = 159
-        Width = 89
-        Height = 17
-        Caption = #21551#21160
-        TabOrder = 8
-      end
-      object rbStop: TRadioButton
-        Left = 298
-        Top = 159
-        Width = 69
-        Height = 17
-        Caption = #20572#27490
-        TabOrder = 9
+        Visible = False
+        object lbl2: TLabel
+          Left = 24
+          Top = 17
+          Width = 84
+          Height = 17
+          Caption = #26381#21153#31243#24207#25991#20214
+        end
+        object lbl5: TLabel
+          Left = 24
+          Top = 59
+          Width = 84
+          Height = 17
+          Caption = #26381#21153#26174#31034#21517#31216
+        end
+        object btnServiceExeFile: TRzButtonEdit
+          Left = 142
+          Top = 13
+          Width = 307
+          Height = 25
+          Text = ''
+          TabOrder = 0
+          AltBtnWidth = 15
+          ButtonWidth = 15
+          OnButtonClick = btnServiceExeFileButtonClick
+        end
+        object edtDisplayName: TEdit
+          Left = 142
+          Top = 55
+          Width = 307
+          Height = 25
+          TabOrder = 1
+        end
       end
     end
   end

@@ -127,6 +127,10 @@ begin
   try
     // 调用log4delphi中的方法
     case Request.LogLevel of
+      llAll:
+      begin
+        LogTitle := 'ALL';
+      end;
       llDebug:
         begin
           LogTitle := 'DEBUG';

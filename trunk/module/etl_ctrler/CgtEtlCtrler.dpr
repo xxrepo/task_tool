@@ -31,20 +31,19 @@ uses
   uTaskResult in '..\etl\comm\uTaskResult.pas',
   uTaskVar in '..\etl\comm\uTaskVar.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
-  uStepCondition in '..\etl\steps\uStepCondition.pas',
-  uStepDatasetSpliter in '..\etl\steps\uStepDatasetSpliter.pas',
+  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
+  uStepDatasetSpliter in '..\etl\steps\data\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
-  uStepFieldsOper in '..\etl\steps\uStepFieldsOper.pas',
-  uStepFileDelete in '..\etl\steps\uStepFileDelete.pas',
-  uStepHttpRequest in '..\etl\steps\uStepHttpRequest.pas',
-  uStepIniRead in '..\etl\steps\uStepIniRead.pas',
-  uStepIniWrite in '..\etl\steps\uStepIniWrite.pas',
-  uStepJson2DataSet in '..\etl\steps\uStepJson2DataSet.pas',
-  uStepQuery in '..\etl\steps\uStepQuery.pas',
-  uStepTaskResult in '..\etl\steps\uStepTaskResult.pas',
-  uStepVarDefine in '..\etl\steps\uStepVarDefine.pas',
-  uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
+  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
+  uStepFileDelete in '..\etl\steps\file\uStepFileDelete.pas',
+  uStepHttpRequest in '..\etl\steps\network\uStepHttpRequest.pas',
+  uStepIniRead in '..\etl\steps\file\uStepIniRead.pas',
+  uStepIniWrite in '..\etl\steps\file\uStepIniWrite.pas',
+  uStepJson2DataSet in '..\etl\steps\data\uStepJson2DataSet.pas',
+  uStepQuery in '..\etl\steps\database\uStepQuery.pas',
+  uStepTaskResult in '..\etl\steps\common\uStepTaskResult.pas',
+  uStepVarDefine in '..\etl\steps\common\uStepVarDefine.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uDesignTimeDefines in '..\etl\comm\uDesignTimeDefines.pas',
   uProject in '..\etl\comm\uProject.pas',
@@ -56,9 +55,14 @@ uses
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
   uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
   uExeUtil in '..\..\core\lib\uExeUtil.pas',
-  uStepSubTask in '..\etl\steps\uStepSubTask.pas',
+  uStepSubTask in '..\etl\steps\common\uStepSubTask.pas',
   uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
-  uStepUnzip in '..\etl\steps\util\uStepUnzip.pas';
+  uStepUnzip in '..\etl\steps\file\uStepUnzip.pas',
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
+  uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
+  uServiceUtil in '..\..\core\lib\uServiceUtil.pas',
+  uStepFolderCtrl in '..\etl\steps\file\uStepFolderCtrl.pas';
 
 {$R *.res}
 
@@ -77,8 +81,6 @@ begin
 
   Application.Title := '采购通智能助手1.0';
   Application.CreateForm(TCtrlMainForm, CtrlMainForm);
-  Application.CreateForm(THttpServerControlForm, HttpServerControlForm);
-  Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
   CtrlMainForm.Close;
   Application.Run;
 

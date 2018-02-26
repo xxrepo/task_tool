@@ -32,7 +32,10 @@ uses
    , uStepVarDefineForm
    , uStepReportMachineForm
    , uStepDownloadFileForm
-   , uStepUnzipForm;
+   , uStepUnzipForm
+   , uStepServiceCtrlForm
+   , uStepExeCtrlForm
+   , uStepFolderCtrlForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;
 var

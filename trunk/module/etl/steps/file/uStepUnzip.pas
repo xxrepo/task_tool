@@ -24,7 +24,7 @@ implementation
 
 uses
   uDefines, uFunctions, System.Classes, System.SysUtils, uExceptions, uTask,
-  uStepDefines, System.Zip;
+  uStepDefines, System.Zip, uFileUtil;
 
 { TStepQuery }
 
@@ -55,6 +55,7 @@ begin
     LTarget := GetRealAbsolutePath(FToPath);
 
     //加载任务文件
+    TFileUtil.CreateDir(FToPath);
     TZipFile.ExtractZipFile(LSrcFile, LTarget);
   finally
 

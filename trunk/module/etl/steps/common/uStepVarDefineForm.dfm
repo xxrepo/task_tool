@@ -1,73 +1,60 @@
-inherited StepFieldsOperForm: TStepFieldsOperForm
-  Caption = 'Fields'#23383#27573#22788#29702
-  ClientHeight = 504
-  OnDestroy = FormDestroy
-  ExplicitWidth = 320
-  ExplicitHeight = 533
+inherited StepVarDefineForm: TStepVarDefineForm
+  Caption = #21464#37327#21442#25968#23450#20041
+  ClientHeight = 447
+  ClientWidth = 710
+  ExplicitWidth = 716
+  ExplicitHeight = 476
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 447
-    ExplicitTop = 447
+    Top = 390
+    Width = 710
+    ExplicitTop = 390
+    ExplicitWidth = 710
+    inherited btnOK: TBitBtn
+      Left = 493
+      ExplicitLeft = 493
+    end
+    inherited btnCancel: TBitBtn
+      Left = 603
+      ExplicitLeft = 603
+    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 447
-    ExplicitHeight = 447
+    Width = 710
+    Height = 390
+    ExplicitWidth = 710
+    ExplicitHeight = 390
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitHeight = 420
-      object lbl2: TLabel [1]
+      ExplicitWidth = 706
+      ExplicitHeight = 363
+      object lblParams: TLabel [1]
         Left = 52
-        Top = 120
+        Top = 116
         Width = 56
         Height = 17
-        Caption = #23383#27573#21517#31216
+        Caption = #21464#37327#21442#25968
       end
-      object lblParams: TLabel [2]
+      inherited lblDescription: TLabel
         Left = 52
-        Top = 210
-        Width = 56
-        Height = 17
-        Caption = #36755#20986#21442#25968
-      end
-      object lblDb: TRzLabel [3]
-        Left = 50
-        Top = 164
-        Width = 56
-        Height = 17
-        Alignment = taRightJustify
-        Caption = #23383#27573#31867#22411
+        ExplicitLeft = 52
       end
       inherited edtDescription: TEdit
-        TabOrder = 5
+        TabOrder = 3
       end
       inherited chkRegDataToTask: TCheckBox
-        TabOrder = 6
-      end
-      object edtFieldName: TEdit
-        Left = 142
-        Top = 117
-        Width = 305
-        Height = 25
-        TabOrder = 1
-      end
-      object dbnvgrParams: TDBNavigator
-        Left = 142
-        Top = 206
-        Width = 240
-        Height = 25
-        DataSource = dsParams
-        TabOrder = 2
+        TabOrder = 4
       end
       object dbgrdhInputParams: TDBGridEh
         Left = 142
-        Top = 232
+        Top = 138
         Width = 469
-        Height = 159
+        Height = 199
         DataSource = dsParams
         DynProps = <>
         HorzScrollBar.Height = 10
-        TabOrder = 3
+        TabOrder = 1
         VertScrollBar.Width = 10
         Columns = <
           item
@@ -89,12 +76,7 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
             Footers = <>
             PickList.Strings = (
               'parent.'
-              'self.MAX'
-              'self.MIN'
-              'self.SUM'
-              'self.COUNT'
-              'self.CONCAT'
-              'self.MD5'
+              'self.'
               'task.'
               'system.time'
               'system.timestamp')
@@ -110,9 +92,7 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
             PickList.Strings = (
               'int'
               'string'
-              'float'
-              'currency'
-              'datetime')
+              'float')
             Title.Caption = #21442#25968#31867#22411
             Width = 90
           end
@@ -133,23 +113,20 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
         object RowDetailData: TRowDetailPanelControlEh
         end
       end
-      object cbbFieldDataType: TComboBox
+      object dbnvgrParams: TDBNavigator
         Left = 142
-        Top = 161
-        Width = 305
+        Top = 112
+        Width = 240
         Height = 25
-        Style = csDropDownList
-        ItemIndex = 0
-        TabOrder = 4
-        Text = 'string'
-        Items.Strings = (
-          'string'
-          'int'
-          'float'
-          'currency'
-          'datetime')
+        DataSource = dsParams
+        TabOrder = 2
       end
     end
+  end
+  object dsParams: TDataSource
+    DataSet = cdsParams
+    Left = 640
+    Top = 186
   end
   object cdsParams: TClientDataSet
     PersistDataPacket.Data = {
@@ -185,12 +162,7 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 634
-    Top = 242
-  end
-  object dsParams: TDataSource
-    DataSet = cdsParams
-    Left = 632
-    Top = 184
+    Left = 640
+    Top = 246
   end
 end

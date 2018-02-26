@@ -1,7 +1,6 @@
 inherited StepFileDeleteForm: TStepFileDeleteForm
   Caption = #25991#20214#21024#38500
   ClientHeight = 348
-  ExplicitWidth = 320
   ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 17
