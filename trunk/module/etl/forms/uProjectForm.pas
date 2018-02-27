@@ -209,7 +209,7 @@ procedure TProjectForm.FormCreate(Sender: TObject);
 begin
   inherited;
   CurrentProject := TProject.Create;
-  rzshltrProject.BaseFolder.PathName := ExePath + 'projects';
+  rzshltrProject.BaseFolder.PathName := ExePath;
   RefreshProjectFiles;
 end;
 

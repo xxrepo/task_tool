@@ -38,7 +38,8 @@ uses
   uStepUnzip,
   uStepServiceCtrl,
   uStepExeCtrl,
-  uStepFolderCtrl;
+  uStepFolderCtrl,
+  uStepWaitTime;
 
 var
   SysSteps: TJSONArray;
@@ -149,6 +150,10 @@ begin
       80020:
       begin
         Result := TStepExeCtrl.Create(ATaskVar);
+      end;
+      80030:
+      begin
+        Result := TStepWaitTime.Create(ATaskVar);
       end;
     end;
   end;
@@ -415,6 +420,15 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Exe应用程序'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepExeCtrl'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepExeCtrlForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'UTIL_WAIT_TIME'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '等待时间'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepWaitTime'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepWaitTimeForm'));
   SysSteps.AddElement(LRowJson);
 
   Result := SysSteps.ToJSON;

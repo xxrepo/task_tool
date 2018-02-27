@@ -52,9 +52,10 @@ uses
   uStepIniRead in '..\etl\steps\file\uStepIniRead.pas',
   uStepIniWrite in '..\etl\steps\file\uStepIniWrite.pas',
   uStepUnzip in '..\etl\steps\file\uStepUnzip.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepWaitTime in '..\etl\steps\util\uStepWaitTime.pas',
   uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
-  uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas';
+  uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
 
 {$R *.RES}
 
@@ -76,7 +77,5 @@ begin
   if not Application.DelayInitialize or Application.Installing then
     Application.Initialize;
   Application.CreateForm(TCGTEtlSrv, CGTEtlSrv);
-  Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
-  Application.CreateForm(TBasicForm, BasicForm);
   Application.Run;
 end.

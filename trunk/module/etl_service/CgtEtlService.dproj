@@ -157,9 +157,10 @@
         <DCCReference Include="..\etl\steps\file\uStepIniRead.pas"/>
         <DCCReference Include="..\etl\steps\file\uStepIniWrite.pas"/>
         <DCCReference Include="..\etl\steps\file\uStepUnzip.pas"/>
-        <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="..\etl\steps\util\uStepWaitTime.pas"/>
         <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
         <DCCReference Include="..\etl\steps\util\uStepServiceCtrl.pas"/>
+        <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -580,13 +581,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

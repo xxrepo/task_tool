@@ -4,6 +4,8 @@ uses
   Vcl.Forms,
   System.SysUtils,
   System.Classes,
+  System.SyncObjs,
+  Vcl.Dialogs,
   uStepBasic in '..\etl\basic\uStepBasic.pas',
   uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepSubTask in '..\etl\steps\common\uStepSubTask.pas',
@@ -18,7 +20,7 @@ uses
   uStepIniRead in '..\etl\steps\file\uStepIniRead.pas',
   uStepIniWrite in '..\etl\steps\file\uStepIniWrite.pas',
   uStepUnzip in '..\etl\steps\file\uStepUnzip.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepWaitTime in '..\etl\steps\util\uStepWaitTime.pas',
   uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
   uStepHttpRequest in '..\etl\steps\network\uStepHttpRequest.pas',
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
@@ -47,7 +49,8 @@ uses
   uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
   uJob in '..\etl\comm\uJob.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
-  uJobStarter in '..\etl\comm\uJobStarter.pas';
+  uJobStarter in '..\etl\comm\uJobStarter.pas',
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
 
 {$R *.res}
 
@@ -64,14 +67,17 @@ begin
 
   //运行程序启动对应的task
   ExePath := ExtractFilePath(ParamStr(0));
+  AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\once\', 'yyyymmdd\hh');
+  FileCritical := TCriticalSection.Create;
+
   LDisStrings := TStringList.Create;
-  LJobStarter := TJobStarter.Create(1);
+  LJobStarter := TJobStarter.Create(0, llDebug);
   try
     LDisStrings.Delimiter := '/';
     LDisStrings.DelimitedText := ParamStr(1);
     if LDisStrings.Count = 2 then
     begin
-      LJobStarter.LoadConfigFrom(ExePath + 'projects/' + LDisStrings.Strings[0] + '/project.json', LDisStrings.Strings[1]);
+      LJobStarter.LoadConfigFrom(ExePath + 'projects\' + LDisStrings.Strings[0] + '\project.jobs', LDisStrings.Strings[1]);
       LJobStarter.StartJob(LDisStrings.Strings[1]);
     end;
   finally
@@ -80,4 +86,7 @@ begin
   end;
 
   Application.Run;
+
+  FileCritical.Free;
+  AppLogger.Free;
 end.

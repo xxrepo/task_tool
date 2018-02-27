@@ -58,11 +58,12 @@ uses
   uStepSubTask in '..\etl\steps\common\uStepSubTask.pas',
   uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
   uStepUnzip in '..\etl\steps\file\uStepUnzip.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepWaitTime in '..\etl\steps\util\uStepWaitTime.pas',
   uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
   uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
   uServiceUtil in '..\..\core\lib\uServiceUtil.pas',
-  uStepFolderCtrl in '..\etl\steps\file\uStepFolderCtrl.pas';
+  uStepFolderCtrl in '..\etl\steps\file\uStepFolderCtrl.pas',
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
 
 {$R *.res}
 

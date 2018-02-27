@@ -62,12 +62,7 @@ begin
           FOnFolderFound(aDir + aRes.Name, ARecursive);
         end;
 
-        if not ARecursive then
-        begin
-          Continue;
-        end;
-
-        if FRecursive then
+        if ARecursive and FRecursive then
         begin
           doFind(aDir+aRes.Name);
         end;

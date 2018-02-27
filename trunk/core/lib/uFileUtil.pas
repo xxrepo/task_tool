@@ -7,10 +7,14 @@ type
   private
 
   public
-    class procedure DeleteDir(ADirName: string; ARecursive: Boolean = True); static;
     class function CreateFile(AFileName: string; AThenClose: Boolean = True): THandle; static;
+    class procedure DeleteFile(AFileName: string); static;
+    class function CopyFile(AFileName: string; AToFileName: string; AOverWirte: Boolean = True): Boolean; static;
+
     class function CreateDir(ADirName: string): Boolean; static;
+    class procedure DeleteDir(ADirName: string; ARecursive: Boolean = True); static;
     class function CopyDir(ADirName: string; AToDir: string; nLx: Integer = 1): Boolean; static;
+
     class function GetRelativePath(ABasePath, AFile: string): string; static;
     class function GetAbsolutePathEx(ABasePath, ARelativePath: string): string; static;
   end;
@@ -59,6 +63,11 @@ begin
   end;
 end;
 
+class function TFileUtil.CopyFile(AFileName, AToFileName: string; AOverWirte: Boolean = True): Boolean;
+begin
+  Winapi.Windows.CopyFile(PChar(AFileName), PChar(AToFileName), not AOverWirte);
+end;
+
 class function TFileUtil.CreateDir(ADirName: string): Boolean;
 begin
   Result := True;
@@ -72,6 +81,12 @@ class procedure TFileUtil.DeleteDir(ADirName: string; ARecursive: Boolean = True
 begin
   if DirectoryExists(ADirName) then
     TDirectory.Delete(ADirName, ARecursive);
+end;
+
+class procedure TFileUtil.DeleteFile(AFileName: string);
+begin
+  if FileExists(AFileName) then
+    Winapi.Windows.DeleteFile(PChar(AFileName));
 end;
 
 class function TFileUtil.CreateFile(AFileName: string; AThenClose: Boolean): THandle;

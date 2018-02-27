@@ -88,7 +88,7 @@ begin
     end;
 
     //加载任务文件
-    LogMsg('开始下载文件：' + LSrcFileUrl);
+    DebugMsg('开始下载文件：' + LSrcFileUrl);
     LFileName := TNetUtil.DownloadFile(LSrcFileUrl, LRequestParamData, LTargetFile);
     if not FileExists(LFileName) then
     begin

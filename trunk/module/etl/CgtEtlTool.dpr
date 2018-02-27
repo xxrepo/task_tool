@@ -93,15 +93,17 @@ uses
   uStepSubTask in 'steps\common\uStepSubTask.pas',
   uStepSubTaskForm in 'steps\common\uStepSubTaskForm.pas' {StepSubTaskForm},
   uStepDownloadFile in 'steps\network\uStepDownloadFile.pas',
-  uStepWriteTxtFile in 'steps\file\uStepWriteTxtFile.pas',
-  uStepWriteTxtFileForm in 'steps\file\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm},
+  uStepWaitTime in 'steps\util\uStepWaitTime.pas',
+  uStepWaitTimeForm in 'steps\util\uStepWaitTimeForm.pas' {StepWaitTimeForm},
   uStepFolderCtrl in 'steps\file\uStepFolderCtrl.pas',
   uStepFolderCtrlForm in 'steps\file\uStepFolderCtrlForm.pas' {StepFolderCtrlForm},
   uStepServiceCtrl in 'steps\util\uStepServiceCtrl.pas',
   uStepServiceCtrlForm in 'steps\util\uStepServiceCtrlForm.pas' {StepServiceCtrlForm},
   uStepExeCtrl in 'steps\util\uStepExeCtrl.pas',
   uStepExeCtrlForm in 'steps\util\uStepExeCtrlForm.pas' {StepExeCtrlForm},
-  uStepHttpRequestForm in 'steps\network\uStepHttpRequestForm.pas' {StepHttpRequestForm};
+  uStepHttpRequestForm in 'steps\network\uStepHttpRequestForm.pas' {StepHttpRequestForm},
+  uStepWriteTxtFile in 'steps\file\uStepWriteTxtFile.pas',
+  uStepWriteTxtFileForm in 'steps\file\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm};
 
 {$R *.res}
 
@@ -116,14 +118,7 @@ begin
   FileCritical := TCriticalSection.Create;
 
   Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TUserNotifyMsgForm, UserNotifyMsgForm);
-  Application.CreateForm(TStepFastReportForm, StepFastReportForm);
-  Application.CreateForm(TStepSubTaskForm, StepSubTaskForm);
   Application.CreateForm(TStepWriteTxtFileForm, StepWriteTxtFileForm);
-  Application.CreateForm(TStepFolderCtrlForm, StepFolderCtrlForm);
-  Application.CreateForm(TStepServiceCtrlForm, StepServiceCtrlForm);
-  Application.CreateForm(TStepExeCtrlForm, StepExeCtrlForm);
-  Application.CreateForm(TStepHttpRequestForm, StepHttpRequestForm);
   ProjectForm.WindowState := wsMaximized;
   Application.Run;
 

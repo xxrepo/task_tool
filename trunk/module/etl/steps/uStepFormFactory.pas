@@ -35,7 +35,8 @@ uses
    , uStepUnzipForm
    , uStepServiceCtrlForm
    , uStepExeCtrlForm
-   , uStepFolderCtrlForm;
+   , uStepFolderCtrlForm
+   , uStepWaitTimeForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;
 var

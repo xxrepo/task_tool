@@ -5,7 +5,7 @@ inherited ProjectForm: TProjectForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 775
-  ExplicitHeight = 558
+  ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 17
   object rzpnl1: TRzPanel
@@ -95,6 +95,7 @@ inherited ProjectForm: TProjectForm
       Height = 457
       Align = alClient
       IconOptions.AutoArrange = True
+      MultiSelect = True
       PopupMenu = pmProjectFile
       TabOrder = 0
       ViewStyle = vsList

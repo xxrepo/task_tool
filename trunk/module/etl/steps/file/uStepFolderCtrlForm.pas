@@ -16,6 +16,7 @@ type
     pnlServiceExe: TRzPanel;
     lbl3: TLabel;
     btnToFolder: TRzButtonEdit;
+    chkChildrenOnly: TCheckBox;
     procedure btnOKClick(Sender: TObject);
     procedure btnFolderButtonClick(Sender: TObject);
     procedure rzrdgrpCtrlTypeClick(Sender: TObject);
@@ -47,6 +48,7 @@ begin
     CtrlType := rzrdgrpCtrlType.ItemIndex;
     Folder := btnFolder.Text;
     ToFolder := btnToFolder.Text;
+    ChildrenOnly := chkChildrenOnly.Checked;
   end;
 end;
 
@@ -77,6 +79,7 @@ begin
   LStep := TStepFolderCtrl(Step);
   btnFolder.Text := LStep.Folder;
   btnToFolder.Text := LStep.ToFolder;
+  chkChildrenOnly.Checked := LStep.ChildrenOnly;
   rzrdgrpCtrlType.ItemIndex := LStep.CtrlType;
 
   CheckCtrlType;

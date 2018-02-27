@@ -80,7 +80,7 @@
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -278,9 +278,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\network\uStepDownloadFile.pas"/>
-        <DCCReference Include="steps\file\uStepWriteTxtFile.pas"/>
-        <DCCReference Include="steps\file\uStepWriteTxtFileForm.pas">
-            <Form>StepWriteTxtFileForm</Form>
+        <DCCReference Include="steps\util\uStepWaitTime.pas"/>
+        <DCCReference Include="steps\util\uStepWaitTimeForm.pas">
+            <Form>StepWaitTimeForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepFolderCtrl.pas"/>
@@ -300,6 +300,11 @@
         </DCCReference>
         <DCCReference Include="steps\network\uStepHttpRequestForm.pas">
             <Form>StepHttpRequestForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="steps\file\uStepWriteTxtFileForm.pas">
+            <Form>StepWriteTxtFileForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -323,9 +328,9 @@
                     <Source Name="MainSource">CgtEtlTool.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapNativeServer220.bpl">Embarcadero DBExpress DataSnap Native Server Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k220.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="1">
@@ -723,11 +728,11 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>

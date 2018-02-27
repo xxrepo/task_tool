@@ -6,7 +6,7 @@ inherited JobsForm: TJobsForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   ExplicitWidth = 1184
-  ExplicitHeight = 731
+  ExplicitHeight = 732
   PixelsPerInch = 96
   TextHeight = 17
   inherited rzspltrLogForm: TRzSplitter
@@ -169,6 +169,7 @@ inherited JobsForm: TJobsForm
           BorderStyle = bsNone
           FileFilter = '*.log'
           IconOptions.AutoArrange = True
+          MultiSelect = True
           TabOrder = 1
           ViewStyle = vsList
         end

@@ -594,7 +594,12 @@ begin
 
   try
     CurrentTask.TaskVar.Logger.Force('运行任务：' + EditingTaskConfigRec.FileName + '；主任务文件：' + EntryTaskConfigRec.FileName);
-    CurrentTask.Start;
+    //debug到最后一步
+    if chktrTaskSteps.Items.Count > 0 then
+    begin
+      CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Items.Count - 1, TaskBlock);
+      CurrentTask.Start;
+    end;
     CurrentTask.TaskVar.Logger.Force('运行结束');
   except
     on E: Exception do

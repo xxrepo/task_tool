@@ -69,6 +69,8 @@ type
 
 
     function GetRealAbsolutePath(APath: string): string;
+
+    procedure DebugMsg(AMsg: string);
     procedure LogMsg(AMsg: string; ALogLevel: TLogLevel = llAll);
   end;
 
@@ -375,6 +377,11 @@ begin
   Result := FTaskVar;
 end;
 
+
+procedure TStepBasic.DebugMsg(AMsg: string);
+begin
+  TaskVar.Logger.Log(FormatLogMsg(AMsg), llDebug);
+end;
 
 procedure TStepBasic.LogMsg(AMsg: string; ALogLevel: TLogLevel);
 begin

@@ -1,15 +1,15 @@
 inherited StepFolderCtrlForm: TStepFolderCtrlForm
   Caption = #25991#20214#22841#25511#21046
-  ClientHeight = 344
-  ExplicitHeight = 373
+  ClientHeight = 371
+  ExplicitHeight = 400
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 287
+    Top = 314
     ExplicitTop = 287
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 287
+    Height = 314
     ExplicitHeight = 287
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
@@ -73,7 +73,7 @@ inherited StepFolderCtrlForm: TStepFolderCtrlForm
         Left = 0
         Top = 188
         Width = 658
-        Height = 57
+        Height = 96
         BorderOuter = fsNone
         TabOrder = 5
         Visible = False
@@ -94,6 +94,14 @@ inherited StepFolderCtrlForm: TStepFolderCtrlForm
           AltBtnWidth = 15
           ButtonWidth = 15
           OnButtonClick = btnFolderButtonClick
+        end
+        object chkChildrenOnly: TCheckBox
+          Left = 142
+          Top = 62
+          Width = 247
+          Height = 17
+          Caption = #20165#38480#23376#25991#20214#21644#23376#25991#20214#22841
+          TabOrder = 1
         end
       end
     end

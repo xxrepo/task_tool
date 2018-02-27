@@ -66,11 +66,13 @@ begin
     case LCtrlType of
       sctStart:
       begin
+        DebugMsg('启动应用程序：' + LAbsExeFile + '; 参数：' + FStartArgs);
         if ShellExecute(GetDesktopWindow, 'open', PChar(LAbsExeFile), PChar(FStartArgs), nil, SW_SHOWNORMAL) >= 32 then
           LResult := True;
       end;
       sctStop:
       begin
+        DebugMsg('终止应用程序：' + LAbsExeFile);
         KillProcess(LAbsExeFile);
         LResult := True;
       end;

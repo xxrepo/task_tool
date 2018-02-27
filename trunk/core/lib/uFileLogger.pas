@@ -83,7 +83,7 @@ begin
     else
       Append(F);
 
-    LMsg := FormatDateTime('[yyyy.mm.dd hh:nn:ss]', Now) + ': ' + LogString;
+    LMsg := FormatDateTime('[yyyy.mm.dd hh:nn:ss.zzz]', Now) + ': ' + LogString;
     Writeln(F, LMsg);
 
     CloseFile(F);
