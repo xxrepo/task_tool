@@ -26,6 +26,7 @@ type
     rztrycnTool: TRzTrayIcon;
     imglistTray: TImageList;
     pmiExePath: TMenuItem;
+    N1: TMenuItem;
     procedure pmiExitClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure pmiLocalServerSettingClick(Sender: TObject);
@@ -37,6 +38,7 @@ type
     procedure rztrycnToolRestoreApp(Sender: TObject);
     procedure pmiExePathClick(Sender: TObject);
     procedure pmiAutoStartClick(Sender: TObject);
+    procedure N1Click(Sender: TObject);
   private
     FInteractiveJobDispatcher: TJobDispatcher;
     FMsgThread: TThread;
@@ -270,6 +272,13 @@ begin
   if LJobDispatcherRec = nil then Exit;
 
   FInteractiveJobDispatcher.StartProjectJob(LJobDispatcherRec, False);
+end;
+
+procedure TCtrlMainForm.N1Click(Sender: TObject);
+begin
+  inherited;
+  //仅仅只是运行一个任务
+
 end;
 
 end.

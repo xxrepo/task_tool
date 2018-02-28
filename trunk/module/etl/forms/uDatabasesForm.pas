@@ -67,6 +67,7 @@ begin
   end;
 end;
 
+
 procedure TDatabasesForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var
   LStringList: TStringList;
