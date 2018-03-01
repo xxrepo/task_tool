@@ -19,10 +19,10 @@ type
     FAbsToFolder: string;
 
     procedure ProcessChildrenOnly(AAbsPath, AAbsToPath: string; ACtrlType: TCtrlType);
-    procedure OnFileCopy(AFileName: string);
-    procedure OnFolderCopy(AFolderName: string; var ARecursive: Boolean);
-    procedure OnFileMove(AFileName: string);
-    procedure OnFolderMove(AFolderName: string; var ARecursive: Boolean);
+    procedure OnFileCopy(AFileName: string; AFinder: TObject);
+    procedure OnFolderCopy(AFolderName: string; var ARecursive: Boolean; AFinder: TObject);
+    procedure OnFileMove(AFileName: string; AFinder: TObject);
+    procedure OnFolderMove(AFolderName: string; var ARecursive: Boolean; AFinder: TObject);
   protected
     procedure StartSelf; override;
   public
@@ -148,7 +148,7 @@ begin
   end;
 end;
 
-procedure TStepFolderCtrl.OnFileCopy(AFileName: string);
+procedure TStepFolderCtrl.OnFileCopy(AFileName: string; AFinder: TObject);
 var
   LFileName: string;
 begin
@@ -157,7 +157,7 @@ begin
   TFileUtil.CopyFile(AFileName, FAbsToFolder + LFileName);
 end;
 
-procedure TStepFolderCtrl.OnFolderCopy(AFolderName: string; var ARecursive: Boolean);
+procedure TStepFolderCtrl.OnFolderCopy(AFolderName: string; var ARecursive: Boolean; AFinder: TObject);
 begin
   ARecursive := False;
   DebugMsg('复制文件夹：' + AFolderName + ' => ' + FAbsToFolder);
@@ -165,7 +165,7 @@ begin
 end;
 
 
-procedure TStepFolderCtrl.OnFileMove(AFileName: string);
+procedure TStepFolderCtrl.OnFileMove(AFileName: string; AFinder: TObject);
 var
   LFileName: string;
 begin
@@ -175,7 +175,7 @@ begin
   TFileUtil.DeleteFile(AFileName);
 end;
 
-procedure TStepFolderCtrl.OnFolderMove(AFolderName: string; var ARecursive: Boolean);
+procedure TStepFolderCtrl.OnFolderMove(AFolderName: string; var ARecursive: Boolean; AFinder: TObject);
 begin
   ARecursive := False;
   DebugMsg('移动文件夹：' + AFolderName + ' => ' + FAbsToFolder);

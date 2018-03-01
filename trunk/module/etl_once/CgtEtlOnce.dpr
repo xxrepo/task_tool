@@ -7,7 +7,6 @@ uses
   System.SyncObjs,
   Vcl.Dialogs,
   uStepBasic in '..\etl\basic\uStepBasic.pas',
-  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepSubTask in '..\etl\steps\common\uStepSubTask.pas',
   uStepTaskResult in '..\etl\steps\common\uStepTaskResult.pas',
   uStepVarDefine in '..\etl\steps\common\uStepVarDefine.pas',
@@ -46,11 +45,13 @@ uses
   uExceptions in '..\etl\comm\uExceptions.pas',
   uTask in '..\etl\comm\uTask.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
-  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
+  uStepUiBasicExt in '..\etl\basic\uStepUiBasicExt.pas',
   uJob in '..\etl\comm\uJob.pas',
   uJobDispatcher in '..\etl\comm\uJobDispatcher.pas',
   uJobStarter in '..\etl\comm\uJobStarter.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
+  uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas';
 
 {$R *.res}
 

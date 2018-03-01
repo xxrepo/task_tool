@@ -39,7 +39,8 @@ uses
   uStepServiceCtrl,
   uStepExeCtrl,
   uStepFolderCtrl,
-  uStepWaitTime;
+  uStepWaitTime,
+  uStepExceptionCatch;
 
 var
   SysSteps: TJSONArray;
@@ -134,6 +135,10 @@ begin
       60030:
       begin
         Result := TStepTaskResult.Create(ATaskVar);
+      end;
+      60040:
+      begin
+        Result := TStepExceptionCatch.Create(ATaskVar);
       end;
       70010:
       begin
@@ -262,6 +267,16 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', 'TaskResult任务结果'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTaskResult'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTaskResultForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'CONTROL_EXCEPTION_CATCH'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60040'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '异常捕捉'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepExceptionCatch'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepExceptionCatchForm'));
   SysSteps.AddElement(LRowJson);
 
 

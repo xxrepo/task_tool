@@ -10,6 +10,7 @@ type
     class function CreateFile(AFileName: string; AThenClose: Boolean = True): THandle; static;
     class procedure DeleteFile(AFileName: string); static;
     class function CopyFile(AFileName: string; AToFileName: string; AOverWirte: Boolean = True): Boolean; static;
+    class function RenameFile(AFileName: string; AToFileName: string): Boolean; static;
 
     class function CreateDir(ADirName: string): Boolean; static;
     class procedure DeleteDir(ADirName: string; ARecursive: Boolean = True); static;
@@ -117,6 +118,11 @@ var
 begin
   PathRelativePathTo(p, PChar(ABasePath), GetAttr(False), PChar(AFile), GetAttr(True));
   Result := StrPas(p);
+end;
+
+class function TFileUtil.RenameFile(AFileName, AToFileName: string): Boolean;
+begin
+  Result := MoveFile(PChar(AFileName), PChar(AToFileName));
 end;
 
 class function TFileUtil.GetAbsolutePathEx(ABasePath, ARelativePath: string): string;

@@ -77,10 +77,11 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_ExeOutput>D:\dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\delphi\task_tool\bin\dev\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -96,7 +97,7 @@
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\delphi\task_tool\bin\dev\</DCC_ExeOutput>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
@@ -149,9 +150,9 @@
         <DCCReference Include="comm\uProject.pas"/>
         <DCCReference Include="comm\uDesignTimeDefines.pas"/>
         <DCCReference Include="..\..\core\lib\uNetUtil.pas"/>
-        <DCCReference Include="steps\common\uStepCondition.pas"/>
-        <DCCReference Include="steps\common\uStepConditionForm.pas">
-            <Form>StepConditionForm</Form>
+        <DCCReference Include="steps\control\uStepExceptionCatch.pas"/>
+        <DCCReference Include="steps\control\uStepExceptionCatchForm.pas">
+            <Form>StepExceptionCatchForm</Form>
         </DCCReference>
         <DCCReference Include="steps\data\uStepDatasetSpliter.pas"/>
         <DCCReference Include="steps\uStepDefines.pas"/>
@@ -266,7 +267,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="comm\uJobStarter.pas"/>
-        <DCCReference Include="basic\uStepUiBasic.pas"/>
         <DCCReference Include="steps\report\uStepFastReport.pas"/>
         <DCCReference Include="steps\report\uStepFastReportForm.pas">
             <Form>StepFastReportForm</Form>
@@ -307,6 +307,15 @@
             <Form>StepWriteTxtFileForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="steps\common\uStepCondition.pas"/>
+        <DCCReference Include="steps\common\uStepConditionForm.pas">
+            <Form>StepConditionForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="forms\uPackageHelperForm.pas">
+            <Form>PackageHelperForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -328,13 +337,13 @@
                     <Source Name="MainSource">CgtEtlTool.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclDataSnapNativeServer220.bpl">Embarcadero DBExpress DataSnap Native Server Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k220.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="1">
-                <DeployFile LocalName="..\..\..\..\..\huarui\trunk\0---华瑞\etl\CgtEtlTool.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\..\..\bin\dev\CgtEtlTool.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>CgtEtlTool.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -728,11 +737,11 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>

@@ -34,6 +34,7 @@ type
     GlobalVarSetting: TMenuItem;
     N6: TMenuItem;
     btnHttpServerCtrl: TBitBtn;
+    btnPackageHelper: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure lstFilesDblClickOpen(Sender: TObject; var Handled: Boolean);
     procedure DBMgrEditClick(Sender: TObject);
@@ -50,6 +51,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure btnHttpServerCtrlClick(Sender: TObject);
+    procedure btnPackageHelperClick(Sender: TObject);
   private
     procedure RefreshProjectFiles;
     function CheckCurrentProject: Boolean;
@@ -67,7 +69,8 @@ implementation
 
 uses uProject, uFileUtil, uDesignTimeDefines, uDefines, uDatabasesForm, uJobsMgrForm,
 uTaskEditForm, uFunctions, uMakeDirForm, System.IOUtils, System.JSON, System.Win.Registry,
-uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar, uHttpServerControlForm;
+uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar, uHttpServerControlForm,
+uPackageHelperForm;
 
 {$R *.dfm}
 
@@ -134,6 +137,18 @@ procedure TProjectForm.btnHttpServerCtrlClick(Sender: TObject);
 begin
   inherited;
   with THttpServerControlForm.Create(nil) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+end;
+
+procedure TProjectForm.btnPackageHelperClick(Sender: TObject);
+begin
+  inherited;
+  //清理exepath下的所有日志.log结尾的文件，重命名dbs和globals为.init
+  with TPackageHelperForm.Create(nil) do
   try
     ShowModal;
   finally

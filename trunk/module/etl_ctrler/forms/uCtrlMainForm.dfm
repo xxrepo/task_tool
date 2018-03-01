@@ -15,9 +15,9 @@ inherited CtrlMainForm: TCtrlMainForm
   object lbl1: TLabel
     Left = 72
     Top = 56
-    Width = 175
+    Width = 192
     Height = 25
-    Caption = #37319#36141#36890#26234#33021#21161#25163'1.0'
+    Caption = #37319#36141#36890#26234#33021#21161#25163'1.1.0'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -21
@@ -54,6 +54,7 @@ inherited CtrlMainForm: TCtrlMainForm
     end
     object pmiExePath: TMenuItem
       Caption = #25171#24320#25991#20214#22320#22336
+      Visible = False
       OnClick = pmiExePathClick
     end
     object pmiSetting: TMenuItem
@@ -65,6 +66,7 @@ inherited CtrlMainForm: TCtrlMainForm
     end
     object N1: TMenuItem
       Caption = #21319#32423
+      Visible = False
       OnClick = N1Click
     end
     object pmiAbout: TMenuItem
@@ -96,7 +98,7 @@ inherited CtrlMainForm: TCtrlMainForm
     Left = 24
     Top = 16
     Bitmap = {
-      494C01010500240040000C000C00FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C0101050024004C000C000C00FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000300000001800000001002000000000000012
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

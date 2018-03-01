@@ -1,24 +1,25 @@
 inherited ProjectForm: TProjectForm
   Caption = #39033#30446#31649#29702
   ClientHeight = 520
-  ClientWidth = 759
+  ClientWidth = 862
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  ExplicitWidth = 775
+  ExplicitWidth = 878
   ExplicitHeight = 559
   PixelsPerInch = 96
   TextHeight = 17
   object rzpnl1: TRzPanel
     Left = 0
     Top = 0
-    Width = 759
+    Width = 862
     Height = 44
     Align = alTop
     BorderOuter = fsFlat
     BorderSides = [sdLeft, sdTop, sdRight]
     TabOrder = 0
+    ExplicitWidth = 759
     DesignSize = (
-      759
+      862
       44)
     object lblProjectName: TLabel
       Left = 12
@@ -28,7 +29,7 @@ inherited ProjectForm: TProjectForm
       Caption = #39033#30446#21517#31216#65306#26080#25171#24320#39033#30446
     end
     object btnClearOld: TBitBtn
-      Left = 657
+      Left = 760
       Top = 4
       Width = 87
       Height = 37
@@ -36,9 +37,10 @@ inherited ProjectForm: TProjectForm
       Caption = #28165#29702#26087#29256
       TabOrder = 0
       OnClick = btnClearOldClick
+      ExplicitLeft = 657
     end
     object btnServiceControl: TBitBtn
-      Left = 550
+      Left = 653
       Top = 4
       Width = 95
       Height = 37
@@ -46,9 +48,10 @@ inherited ProjectForm: TProjectForm
       Caption = #26381#21153#31649#29702
       TabOrder = 1
       OnClick = btnServiceControlClick
+      ExplicitLeft = 550
     end
     object btnHttpServerCtrl: TBitBtn
-      Left = 398
+      Left = 508
       Top = 4
       Width = 139
       Height = 37
@@ -57,16 +60,27 @@ inherited ProjectForm: TProjectForm
       TabOrder = 2
       OnClick = btnHttpServerCtrlClick
     end
+    object btnPackageHelper: TBitBtn
+      Left = 408
+      Top = 4
+      Width = 94
+      Height = 37
+      Anchors = [akTop, akRight]
+      Caption = #25171#21253#21161#25163
+      TabOrder = 3
+      OnClick = btnPackageHelperClick
+    end
   end
   object rzspltrFiles: TRzSplitter
     Left = 0
     Top = 44
-    Width = 759
+    Width = 862
     Height = 457
     Position = 245
-    Percent = 32
+    Percent = 28
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 759
     BarSize = (
       245
       0
@@ -91,7 +105,7 @@ inherited ProjectForm: TProjectForm
     object lstFiles: TRzShellList
       Left = 0
       Top = 0
-      Width = 510
+      Width = 613
       Height = 457
       Align = alClient
       IconOptions.AutoArrange = True
@@ -101,14 +115,16 @@ inherited ProjectForm: TProjectForm
       ViewStyle = vsList
       OnDblClickOpen = lstFilesDblClickOpen
       OnFolderChanged = lstFilesFolderChanged
+      ExplicitWidth = 510
     end
   end
   object stat1: TStatusBar
     Left = 0
     Top = 501
-    Width = 759
+    Width = 862
     Height = 19
     Panels = <>
+    ExplicitWidth = 759
   end
   object dlgOpenProject: TOpenDialog
     DefaultExt = 'project'

@@ -31,7 +31,6 @@ uses
   uTaskResult in '..\etl\comm\uTaskResult.pas',
   uTaskVar in '..\etl\comm\uTaskVar.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
-  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepDatasetSpliter in '..\etl\steps\data\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
@@ -51,7 +50,7 @@ uses
   Vcl.Styles,
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
-  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
+  uStepUiBasicExt in '..\etl\basic\uStepUiBasicExt.pas',
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
   uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
   uExeUtil in '..\..\core\lib\uExeUtil.pas',
@@ -63,7 +62,9 @@ uses
   uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
   uServiceUtil in '..\..\core\lib\uServiceUtil.pas',
   uStepFolderCtrl in '..\etl\steps\file\uStepFolderCtrl.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
+  uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas';
 
 {$R *.res}
 

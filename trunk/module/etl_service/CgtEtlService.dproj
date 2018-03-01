@@ -80,6 +80,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -91,7 +92,7 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DCC_ExeOutput>D:\Dev\huarui\trunk\0---华瑞\etl\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\Dev\delphi\task_tool\bin\dev\</DCC_ExeOutput>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -144,11 +145,10 @@
         <DCCReference Include="..\..\core\basic\uBasicForm.pas">
             <Form>BasicForm</Form>
         </DCCReference>
-        <DCCReference Include="..\etl\basic\uStepUiBasic.pas"/>
+        <DCCReference Include="..\etl\basic\uStepUiBasicExt.pas"/>
         <DCCReference Include="..\etl\steps\report\uStepReportMachine.pas"/>
         <DCCReference Include="..\etl\steps\report\uStepFastReport.pas"/>
         <DCCReference Include="..\etl\steps\network\uStepDownloadFile.pas"/>
-        <DCCReference Include="..\etl\steps\common\uStepCondition.pas"/>
         <DCCReference Include="..\etl\steps\common\uStepSubTask.pas"/>
         <DCCReference Include="..\etl\steps\common\uStepTaskResult.pas"/>
         <DCCReference Include="..\etl\steps\common\uStepVarDefine.pas"/>
@@ -161,6 +161,8 @@
         <DCCReference Include="..\etl\steps\util\uStepExeCtrl.pas"/>
         <DCCReference Include="..\etl\steps\util\uStepServiceCtrl.pas"/>
         <DCCReference Include="..\etl\steps\file\uStepWriteTxtFile.pas"/>
+        <DCCReference Include="..\etl\steps\common\uStepCondition.pas"/>
+        <DCCReference Include="..\etl\steps\control\uStepExceptionCatch.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -182,6 +184,7 @@
                     <Source Name="MainSource">CgtEtlService.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclstd220.bpl">Embarcadero Standard Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
@@ -581,13 +584,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

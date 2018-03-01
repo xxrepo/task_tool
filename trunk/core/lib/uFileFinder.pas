@@ -6,8 +6,8 @@ uses
   SysUtils;
 
 type
-  TVVFileFoundEvent = procedure (aFileName: string) of object;
-  TVVFolderFoundEvent = procedure (aFolderName: string; var ARecursive: Boolean) of object;
+  TVVFileFoundEvent = procedure (aFileName: string; AFinder: TObject) of object;
+  TVVFolderFoundEvent = procedure (aFolderName: string; var ARecursive: Boolean; AFinder: TObject) of object;
 
   TVVFileFinder = class
   private
@@ -59,7 +59,7 @@ begin
         ARecursive := True;
         if Assigned(FOnFolderFound) then
         begin
-          FOnFolderFound(aDir + aRes.Name, ARecursive);
+          FOnFolderFound(aDir + aRes.Name, ARecursive, Self);
         end;
 
         if ARecursive and FRecursive then
@@ -72,7 +72,7 @@ begin
     begin
       aFileName := aDir+aRes.Name;
       if Assigned(FOnFileFound) then
-        FOnFileFound(aFileName);
+        FOnFileFound(aFileName, Self);
     end;
     fr:=FindNext(aRes);
   end;

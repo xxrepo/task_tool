@@ -39,11 +39,10 @@ uses
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uBasicForm in '..\..\core\basic\uBasicForm.pas' {BasicForm},
-  uStepUiBasic in '..\etl\basic\uStepUiBasic.pas',
+  uStepUiBasicExt in '..\etl\basic\uStepUiBasicExt.pas',
   uStepReportMachine in '..\etl\steps\report\uStepReportMachine.pas',
   uStepFastReport in '..\etl\steps\report\uStepFastReport.pas',
   uStepDownloadFile in '..\etl\steps\network\uStepDownloadFile.pas',
-  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepSubTask in '..\etl\steps\common\uStepSubTask.pas',
   uStepTaskResult in '..\etl\steps\common\uStepTaskResult.pas',
   uStepVarDefine in '..\etl\steps\common\uStepVarDefine.pas',
@@ -55,7 +54,9 @@ uses
   uStepWaitTime in '..\etl\steps\util\uStepWaitTime.pas',
   uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
   uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas';
+  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
+  uStepCondition in '..\etl\steps\common\uStepCondition.pas',
+  uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas';
 
 {$R *.RES}
 

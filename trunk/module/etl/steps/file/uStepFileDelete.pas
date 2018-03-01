@@ -16,7 +16,7 @@ type
     FDeleteBeforeTime: Integer;
 
     FRealAbsPath: string;
-    procedure OnFileFound(AFileName: string);
+    procedure OnFileFound(AFileName: string; AFinder: TObject);
   protected
     procedure StartSelf; override;
   public
@@ -81,7 +81,7 @@ begin
 end;
 
 
-procedure TStepFileDelete.OnFileFound(AFileName: string);
+procedure TStepFileDelete.OnFileFound(AFileName: string; AFinder: TObject);
 var
   LExt: string;
 begin

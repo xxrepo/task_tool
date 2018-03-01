@@ -3,12 +3,12 @@ unit uStepReportMachine;
 interface
 
 uses
-  uStepUiBasic, System.JSON, Datasnap.DBClient, Data.DB,
+  uStepBasic, System.JSON, Datasnap.DBClient, Data.DB,
   RM_GridReport, RM_Class, RM_Common, RM_Designer, RM_DsgGridReport, RM_Dataset,
   System.Classes, uTaskVar;
 
 type
-  TStepReportMachine = class(TStepUiBasic)
+  TStepReportMachine = class(TStepBasic)
   private
     FReporter: TRMReport;
     FDBDatasets: TStringList;

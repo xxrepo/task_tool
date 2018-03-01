@@ -31,8 +31,8 @@ uses
   uProject in 'comm\uProject.pas',
   uDesignTimeDefines in 'comm\uDesignTimeDefines.pas',
   uNetUtil in '..\..\core\lib\uNetUtil.pas',
-  uStepCondition in 'steps\common\uStepCondition.pas',
-  uStepConditionForm in 'steps\common\uStepConditionForm.pas' {StepConditionForm},
+  uStepExceptionCatch in 'steps\control\uStepExceptionCatch.pas',
+  uStepExceptionCatchForm in 'steps\control\uStepExceptionCatchForm.pas' {StepExceptionCatchForm},
   uStepDatasetSpliter in 'steps\data\uStepDatasetSpliter.pas',
   uStepDefines in 'steps\uStepDefines.pas',
   uStepFormFactory in 'steps\uStepFormFactory.pas',
@@ -87,7 +87,6 @@ uses
   uUserNotify in '..\..\common\uUserNotify.pas',
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uJobStarter in 'comm\uJobStarter.pas',
-  uStepUiBasic in 'basic\uStepUiBasic.pas',
   uStepFastReport in 'steps\report\uStepFastReport.pas',
   uStepFastReportForm in 'steps\report\uStepFastReportForm.pas' {StepFastReportForm},
   uStepSubTask in 'steps\common\uStepSubTask.pas',
@@ -103,7 +102,10 @@ uses
   uStepExeCtrlForm in 'steps\util\uStepExeCtrlForm.pas' {StepExeCtrlForm},
   uStepHttpRequestForm in 'steps\network\uStepHttpRequestForm.pas' {StepHttpRequestForm},
   uStepWriteTxtFile in 'steps\file\uStepWriteTxtFile.pas',
-  uStepWriteTxtFileForm in 'steps\file\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm};
+  uStepWriteTxtFileForm in 'steps\file\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm},
+  uStepCondition in 'steps\common\uStepCondition.pas',
+  uStepConditionForm in 'steps\common\uStepConditionForm.pas' {StepConditionForm},
+  uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm};
 
 {$R *.res}
 
@@ -117,9 +119,12 @@ begin
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
 
-  Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TStepWriteTxtFileForm, StepWriteTxtFileForm);
+  if (FormatDateTime('yyyymmdd', Now) < '20191231') then
+  begin
+    Application.CreateForm(TProjectForm, ProjectForm);
+  Application.CreateForm(TPackageHelperForm, PackageHelperForm);
   ProjectForm.WindowState := wsMaximized;
+  end;
   Application.Run;
 
   //全局单实例判断释放

@@ -16,7 +16,7 @@ type
     CleanBeforeTime: Integer;
 
     property Filter: string  read GetFilter write SetFilter;
-    procedure OnFileFound(AFileName: string);
+    procedure OnFileFound(AFileName: string; AFinder: TObject);
 
     procedure Clean;
 
@@ -62,7 +62,7 @@ begin
   FFileFinder.Find;
 end;
 
-procedure TFileCleaner.OnFileFound(AFileName: string);
+procedure TFileCleaner.OnFileFound(AFileName: string; AFinder: TObject);
 var
   LExt: string;
 begin

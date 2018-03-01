@@ -321,7 +321,7 @@ begin
   try
     CurrentTask.TaskVar.DesignToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);
     CurrentTask.Start;
-    LForm.GetStepFromStepStack;
+    LForm.GetStepFromStepStack(LStepData.StepType);
 
     if LForm.Step = nil then
     begin

@@ -3,11 +3,11 @@ unit uStepFastReport;
 interface
 
 uses
-  uStepUiBasic, System.JSON, Datasnap.DBClient, Data.DB, frxClass, frxBarcode, frxDBSet, frxRich,
+  uStepBasic, System.JSON, Datasnap.DBClient, Data.DB, frxClass, frxBarcode, frxDBSet, frxRich,
   System.Classes, uTaskVar;
 
 type
-  TStepFastReport = class (TStepUiBasic)
+  TStepFastReport = class (TStepBasic)
   private
     FReporter: TfrxReport;
     FDBDatasets: TStringList;
