@@ -1,13 +1,24 @@
 inherited StepJsonDataSetForm: TStepJsonDataSetForm
   Caption = 'Json'#36716'DataSet'
-  ClientHeight = 530
+  ClientHeight = 583
+  ClientWidth = 719
   OnCreate = FormCreate
-  ExplicitHeight = 559
+  ExplicitWidth = 735
+  ExplicitHeight = 622
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 473
+    Top = 526
+    Width = 719
     ExplicitTop = 473
+    inherited btnOK: TBitBtn
+      Left = 502
+      ExplicitLeft = 450
+    end
+    inherited btnCancel: TBitBtn
+      Left = 612
+      ExplicitLeft = 560
+    end
     object btnTest: TButton
       Left = 12
       Top = 12
@@ -19,13 +30,15 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
     end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 473
+    Width = 719
+    Height = 526
+    ExplicitWidth = 667
     ExplicitHeight = 473
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
-      ExplicitWidth = 673
+      ExplicitWidth = 663
       ExplicitHeight = 446
       object lbl2: TLabel [1]
         Left = 52
@@ -46,14 +59,14 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
         Top = 110
         Width = 84
         Height = 17
-        Caption = #20027#25968#25454#28304#21517#31216
+        Caption = #20027#25968#25454#38598#21517#31216
       end
       object lbl4: TLabel [5]
-        Left = 24
+        Left = 36
         Top = 150
-        Width = 84
+        Width = 70
         Height = 17
-        Caption = #20027#25968#25454#28304#23383#27573
+        Caption = #20027#32034#24341#23383#27573
       end
       object lbl5: TLabel [6]
         Left = 24
@@ -88,7 +101,7 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
         Left = 142
         Top = 292
         Width = 469
-        Height = 105
+        Height = 169
         DataSource = dsParams
         DynProps = <>
         HorzScrollBar.Height = 10
@@ -176,7 +189,7 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
       end
       object chkCreateDataSource: TCheckBox
         Left = 142
-        Top = 411
+        Top = 467
         Width = 379
         Height = 17
         Caption = #21019#24314#25968#25454#28304'(DataSource)'
