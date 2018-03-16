@@ -5,7 +5,7 @@
        b) 对于事件的回调函数，在本context释放时统一进行清除
  本mgr中管理了来自不同的context中的回调，整个render进程通用
 }
-unit uRENDER_JsCallbackMgr;
+unit uRENDER_JsCallbackList;
 
 interface
 

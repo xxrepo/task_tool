@@ -24,19 +24,19 @@ type
     function Execute(const name: ustring; const obj: ICefv8Value; const arguments: TCefv8ValueArray; var retval: ICefv8Value; var exception: ustring): Boolean; override;
   public
     //Register Js to Context
-    class procedure BindJsToContext(const AContext: ICefv8Context);
+    class procedure BindJsToContext(const AContext: ICefv8Context); virtual;
 
     //Js Executed in Browser Progress
     class procedure ExecuteInBrowser(Sender: TObject;
                       const browser: ICefBrowser; sourceProcess: TCefProcessId;
-                      const message: ICefProcessMessage; out Result: Boolean);
+                      const message: ICefProcessMessage; out Result: Boolean); virtual;
   end;
 
 
 implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
-uRENDER_JsCallbackMgr, uCEFValue, uCEFConstants;
+  uRENDER_JsCallbackList, uCEFValue, uCEFConstants;
 
 
 

@@ -14,7 +14,7 @@ uses
   uThreadQueueUtil in '..\..\core\lib\uThreadQueueUtil.pas',
   uFunctions in '..\..\common\uFunctions.pas',
   uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
-  uRENDER_JsCallbackMgr in 'comm\uRENDER_JsCallbackMgr.pas',
+  uRENDER_JsCallbackList in 'comm\uRENDER_JsCallbackList.pas',
   uRENDER_ProcessProxy in 'comm\uRENDER_ProcessProxy.pas',
   uBasicChromeForm in 'basic\uBasicChromeForm.pas' {BasicChromeForm},
   uBasicJsBridge in 'basic\uBasicJsBridge.pas',

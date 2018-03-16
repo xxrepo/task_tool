@@ -17,7 +17,7 @@ unit uRENDER_ProcessProxy;
 interface
 
 uses
-  uRENDER_JsCallbackMgr, uCEFInterfaces, uCEFConstants, uCEFTypes;
+  uRENDER_JsCallbackList, uCEFInterfaces, uCEFConstants, uCEFTypes;
 
 type
   TRENDER_ProcessProxy = class
@@ -44,7 +44,6 @@ uses uBasicJsBridge, uCEFv8Value, uCEFv8Types, uVVCefFunction;
 
 
 { TRenderProcessHelper }
-
 procedure TRENDER_ProcessProxy.OnContextCreated(const browser: ICefBrowser; const frame: ICefFrame; const context: ICefv8Context);
 begin
   TBasicJsBridge.BindJsToContext(context);

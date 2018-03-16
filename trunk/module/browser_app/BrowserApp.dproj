@@ -115,7 +115,7 @@
         <DCCReference Include="..\..\common\uSelectFolderForm.pas">
             <Form>SelectFolderForm</Form>
         </DCCReference>
-        <DCCReference Include="comm\uRENDER_JsCallbackMgr.pas"/>
+        <DCCReference Include="comm\uRENDER_JsCallbackList.pas"/>
         <DCCReference Include="comm\uRENDER_ProcessProxy.pas"/>
         <DCCReference Include="basic\uBasicChromeForm.pas">
             <Form>BasicChromeForm</Form>
