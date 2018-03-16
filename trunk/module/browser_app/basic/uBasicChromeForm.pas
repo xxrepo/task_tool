@@ -28,6 +28,7 @@ type
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
       const message: ICefProcessMessage; out Result: Boolean);
   private
+    procedure OpenForm(AMsg: string);
     { Private declarations }
   protected
     FTargetUrl: string;
@@ -80,6 +81,22 @@ begin
   tmrChromium.Enabled := False;
   if (not chrmMain.CreateBrowser(cfwndwprntMain, '')) and (not chrmMain.Initialized) then
     tmrChromium.Enabled := True
+end;
+
+
+procedure TBasicChromeForm.OpenForm(AMsg: string);
+begin
+  try
+    with TBasicChromeForm.Create(nil, FTargetUrl) do
+    try
+      Caption := AMsg;
+      ShowModal;
+    finally
+      Free;
+    end;
+  finally
+
+  end;
 end;
 
 end.

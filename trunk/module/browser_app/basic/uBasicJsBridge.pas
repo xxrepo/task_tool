@@ -77,10 +77,9 @@ begin
   end
   else if (name = 'test_form') then
   begin
-    LMsg := TCefProcessMessageRef.New('open_form');
+    LMsg := TCefProcessMessageRef.New('test_form');
     LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
     TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
-    retval := TCefv8ValueRef.NewString('After Open Form!');
     Result := True;
   end
   else if (name = 'test_func') then

@@ -20,7 +20,8 @@ uses
   uBasicJsBridge in 'basic\uBasicJsBridge.pas',
   uDefines in 'comm\uDefines.pas',
   uVVCefFunction in 'comm\uVVCefFunction.pas',
-  uAppForm in 'forms\uAppForm.pas' {AppForm};
+  uAppForm in 'forms\uAppForm.pas' {AppForm},
+  uBROWSER_EventListnerList in 'comm\uBROWSER_EventListnerList.pas';
 
 {$R *.res}
 
