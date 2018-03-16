@@ -18,6 +18,9 @@
         <Projects Include="..\module\http\CgtTest.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\browser_app\BrowserApp.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="CgtTest:Make">
         <MSBuild Projects="..\module\http\CgtTest.dproj" Targets="Make"/>
     </Target>
+    <Target Name="BrowserApp">
+        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj"/>
+    </Target>
+    <Target Name="BrowserApp:Clean">
+        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="BrowserApp:Make">
+        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtTest"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtTest;BrowserApp"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtTest:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtTest:Clean;BrowserApp:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtTest:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtTest:Make;BrowserApp:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -122,8 +122,7 @@ begin
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
   begin
     Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TPackageHelperForm, PackageHelperForm);
-  ProjectForm.WindowState := wsMaximized;
+    ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;
 
