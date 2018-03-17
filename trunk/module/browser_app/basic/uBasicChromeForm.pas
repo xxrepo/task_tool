@@ -42,7 +42,7 @@ var
 
 implementation
 
-uses uBasicJsBridge;
+uses uBasicJsObjectBinding;
 
 {$R *.dfm}
 
@@ -56,7 +56,7 @@ procedure TBasicChromeForm.chrmMainProcessMessageReceived(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
   const message: ICefProcessMessage; out Result: Boolean);
 begin
-  TBasicJsBridge.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
 end;
 
 constructor TBasicChromeForm.Create(AOwner: TComponent; ATargetUrl: string);

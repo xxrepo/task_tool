@@ -32,7 +32,7 @@ type
   end;
 
 
-  TRENDER_JsCallbackMgr = class
+  TRENDER_JsCallbackList = class
   private
     FCallbacks: TObjectList<TContextCallback>;
     function AddCallback(ACb: TContextCallback): Integer; overload;
@@ -50,7 +50,7 @@ type
   end;
 
 var
-  PRENDER_JsCallbackMgr: TRENDER_JsCallbackMgr;
+  RENDER_JsCallbackList: TRENDER_JsCallbackList;
 
 implementation
 
@@ -59,7 +59,7 @@ uses System.SysUtils;
 { TRenderJsCallbackMgr }
 
 
-function TRENDER_JsCallbackMgr.AddCallback(ACb: TContextCallbackRec): Integer;
+function TRENDER_JsCallbackList.AddCallback(ACb: TContextCallbackRec): Integer;
 var
   LContextCallback: TContextCallback;
 begin
@@ -87,7 +87,7 @@ begin
 end;
 
 
-function TRENDER_JsCallbackMgr.AddCallback(ACb: TContextCallback): Integer;
+function TRENDER_JsCallbackList.AddCallback(ACb: TContextCallback): Integer;
 var
   i: Integer;
 begin
@@ -99,14 +99,14 @@ begin
 end;
 
 
-constructor TRENDER_JsCallbackMgr.Create;
+constructor TRENDER_JsCallbackList.Create;
 begin
   inherited;
   FCallbacks := TObjectList<TContextCallback>.Create(False);
 end;
 
 
-destructor TRENDER_JsCallbackMgr.Destroy;
+destructor TRENDER_JsCallbackList.Destroy;
 var
   i: Integer;
 begin
@@ -122,7 +122,7 @@ begin
 end;
 
 
-function TRENDER_JsCallbackMgr.GetCallback(ABrowserId: Integer;
+function TRENDER_JsCallbackList.GetCallback(ABrowserId: Integer;
   ACallerName: string): TContextCallback;
 var
   i: Integer;
@@ -143,7 +143,7 @@ begin
 end;
 
 
-function TRENDER_JsCallbackMgr.RemoveCallback(ACb: TContextCallback): Boolean;
+function TRENDER_JsCallbackList.RemoveCallback(ACb: TContextCallback): Boolean;
 begin
   if ACb <> nil then
   begin
@@ -152,7 +152,7 @@ begin
   end;
 end;
 
-function TRENDER_JsCallbackMgr.RemoveCallbackByBrowserId(
+function TRENDER_JsCallbackList.RemoveCallbackByBrowserId(
   ABrowserId: Integer): Boolean;
 var
   i: Integer;
@@ -171,7 +171,7 @@ begin
 end;
 
 
-function TRENDER_JsCallbackMgr.RemoveCallbackByContext(
+function TRENDER_JsCallbackList.RemoveCallbackByContext(
   AContext: ICefV8Context): Boolean;
 var
   i: Integer;

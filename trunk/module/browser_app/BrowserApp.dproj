@@ -120,13 +120,14 @@
         <DCCReference Include="basic\uBasicChromeForm.pas">
             <Form>BasicChromeForm</Form>
         </DCCReference>
-        <DCCReference Include="basic\uBasicJsBridge.pas"/>
+        <DCCReference Include="basic\uBasicJsBinding.pas"/>
         <DCCReference Include="comm\uDefines.pas"/>
         <DCCReference Include="comm\uVVCefFunction.pas"/>
         <DCCReference Include="forms\uAppForm.pas">
             <Form>AppForm</Form>
         </DCCReference>
-        <DCCReference Include="comm\uBROWSER_EventListnerList.pas"/>
+        <DCCReference Include="comm\uBROWSER_EventJsListnerList.pas"/>
+        <DCCReference Include="basic\uBasicJsObjectBinding.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

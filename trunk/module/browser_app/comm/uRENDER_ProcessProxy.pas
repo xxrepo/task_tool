@@ -39,14 +39,14 @@ type
 
 implementation
 
-uses uBasicJsBridge, uCEFv8Value, uCEFv8Types, uVVCefFunction;
+uses uBasicJsObjectBinding, uCEFv8Value, uCEFv8Types, uVVCefFunction;
 
 
 
 { TRenderProcessHelper }
 procedure TRENDER_ProcessProxy.OnContextCreated(const browser: ICefBrowser; const frame: ICefFrame; const context: ICefv8Context);
 begin
-  TBasicJsBridge.BindJsToContext(context);
+  TBasicJsObjectBinding.BindJsTo(context.Global);
 end;
 
 
@@ -54,7 +54,7 @@ end;
 procedure TRENDER_ProcessProxy.OnContextReleased(const browser: ICefBrowser;
   const frame: ICefFrame; const context: ICefv8Context);
 begin
-  PRENDER_JsCallbackMgr.RemoveCallbackByContext(context);
+  RENDER_JsCallbackList.RemoveCallbackByContext(context);
 end;
 
 
@@ -72,7 +72,7 @@ begin
   //具体的回调名称是在参数中传递过来的，不是来自具体的消息名称
   //消息名称仅仅用来作为是否对某个消息进行怎么样的处理，至于具体执行哪个回调函数是不一样的
 
-  LContextCallback := PRENDER_JsCallbackMgr.GetCallback(browser.Identifier, message.Name);
+  LContextCallback := RENDER_JsCallbackList.GetCallback(browser.Identifier, message.Name);
   if LContextCallback <> nil then
   begin
     LContextCallback.Context.Enter;

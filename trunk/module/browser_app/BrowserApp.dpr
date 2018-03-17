@@ -17,11 +17,12 @@ uses
   uRENDER_JsCallbackList in 'comm\uRENDER_JsCallbackList.pas',
   uRENDER_ProcessProxy in 'comm\uRENDER_ProcessProxy.pas',
   uBasicChromeForm in 'basic\uBasicChromeForm.pas' {BasicChromeForm},
-  uBasicJsBridge in 'basic\uBasicJsBridge.pas',
+  uBasicJsBinding in 'basic\uBasicJsBinding.pas',
   uDefines in 'comm\uDefines.pas',
   uVVCefFunction in 'comm\uVVCefFunction.pas',
   uAppForm in 'forms\uAppForm.pas' {AppForm},
-  uBROWSER_EventListnerList in 'comm\uBROWSER_EventListnerList.pas';
+  uBROWSER_EventJsListnerList in 'comm\uBROWSER_EventJsListnerList.pas',
+  uBasicJsObjectBinding in 'basic\uBasicJsObjectBinding.pas';
 
 {$R *.res}
 
@@ -32,7 +33,8 @@ begin
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
 
-  PRENDER_JsCallbackMgr := TRENDER_JsCallbackMgr.Create;
+  BROWSER_EventJsListnerList := TBROWSER_EventJsListnerList.Create;
+  RENDER_JsCallbackList := TRENDER_JsCallbackList.Create;
   PRENDER_RenderHelper := TRENDER_ProcessProxy.Create;
 
   GlobalCEFApp                  := TCefApplication.Create;
@@ -53,7 +55,8 @@ begin
 
   GlobalCEFApp.Free;
   PRENDER_RenderHelper.Free;
-  PRENDER_JsCallbackMgr.Free;
+  RENDER_JsCallbackList.Free;
+  BROWSER_EventJsListnerList.Free;
 
   FileCritical.Free;
   AppLogger.Free;

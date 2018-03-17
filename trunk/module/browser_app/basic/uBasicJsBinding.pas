@@ -8,7 +8,7 @@
 //这个对应的方法函数是应该在browser的进程中存在的
 
 
-unit uBasicJsBridge;
+unit uBasicJsBinding;
 
 {$I cef.inc}
 
@@ -18,13 +18,13 @@ uses
   uCEFTypes, uCEFInterfaces, uCEFv8Value, uCEFv8Handler, uCEFv8Context;
 
 type
-  TBasicJsBridge = class(TCefv8HandlerOwn)
+  TBasicJsBinding = class(TCefv8HandlerOwn)
   protected
     //Js Executed in Render Progress
     function Execute(const name: ustring; const obj: ICefv8Value; const arguments: TCefv8ValueArray; var retval: ICefv8Value; var exception: ustring): Boolean; override;
   public
     //Register Js to Context
-    class procedure BindJsToContext(const AContext: ICefv8Context); virtual;
+    class procedure BindJsTo(const ACefv8Value: ICefv8Value); virtual;
 
     //Js Executed in Browser Progress
     class procedure ExecuteInBrowser(Sender: TObject;
@@ -36,32 +36,32 @@ type
 implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
-  uRENDER_JsCallbackList, uCEFValue, uCEFConstants;
+  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList;
 
 
 
 //在context初始化时绑定js
-class procedure TBasicJsBridge.BindJsToContext(const AContext: ICefv8Context);
+class procedure TBasicJsBinding.BindJsTo(const ACefv8Value: ICefv8Value);
 var
   TempHandler  : ICefv8Handler;
   TempFunction : ICefv8Value;
 begin
-  TempHandler  := TBasicJsBridge.Create;
+  TempHandler  := TBasicJsBinding.Create;
 
   TempFunction := TCefv8ValueRef.NewFunction('test_form', TempHandler);
-  AContext.Global.SetValueByKey('test_form', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('test_form', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
   TempFunction := TCefv8ValueRef.NewFunction('test_on_func', TempHandler);
-  AContext.Global.SetValueByKey('test_on_func', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('test_on_func', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
   TempFunction := TCefv8ValueRef.NewFunction('test_on_event', TempHandler);
-  AContext.Global.SetValueByKey('test_on_event', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('test_on_event', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 end;
 
 
 
 //这个方法在render进程中执行
-function TBasicJsBridge.Execute(const name      : ustring;
+function TBasicJsBinding.Execute(const name      : ustring;
                               const obj       : ICefv8Value;
                               const arguments : TCefv8ValueArray;
                               var   retval    : ICefv8Value;
@@ -70,9 +70,9 @@ var
   LMsg: ICefProcessMessage;
   LContextCallback: TContextCallbackRec;
 begin
-  if (name = 'test_value') then
+  if (name = '__BROWSER_APP_VERSION') then
   begin
-    retval := TCefv8ValueRef.NewString('My Value');
+    retval := TCefv8ValueRef.NewString('1.0.0');
     Result := True;
   end
   else if (name = 'test_form') then
@@ -96,7 +96,7 @@ begin
       LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
       LContextCallback.CallerName := name;
       LContextCallback.CallbackFunc := arguments[1];
-      PRENDER_JsCallbackMgr.AddCallback(LContextCallback);
+      RENDER_JsCallbackList.AddCallback(LContextCallback);
 
       //发送消息到browser进程
       LMsg := TCefProcessMessageRef.New('test_on_func');
@@ -116,7 +116,7 @@ begin
       LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
       LContextCallback.CallerName := name;
       LContextCallback.CallbackFunc := arguments[1];
-      PRENDER_JsCallbackMgr.AddCallback(LContextCallback);
+      RENDER_JsCallbackList.AddCallback(LContextCallback);
 
       //发送消息到browser进程
       LMsg := TCefProcessMessageRef.New('test_on_event');
@@ -134,12 +134,13 @@ end;
 
 
 //下面的代码在browser进程中执行
-class procedure TBasicJsBridge.ExecuteInBrowser(Sender: TObject;
+class procedure TBasicJsBinding.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
   const message: ICefProcessMessage; out Result: Boolean);
 var
   LMsg: ICefProcessMessage;
   LParams: ICefValue;
+  LJsListnerRec: TEventJsListnerRec;
 begin
   if message.Name = 'test_on_func' then
   begin
@@ -152,26 +153,18 @@ begin
     LMsg.ArgumentList.SetValue(0, LParams);
 
     //TODO 可以告诉render，执行完毕后，可以移除这个回调函数
-
     browser.SendProcessMessage(PID_RENDERER, LMsg);
 
     Result := True;
   end
   else if message.Name = 'test_on_event' then
   begin
-    //回复一条回调函数的消息到render中，同时删掉对应的监听回调
-    LMsg := TCefProcessMessageRef.New(message.Name);
-
-    //根据入参处理对应的业务逻辑，添加到BROWSER进程中的事件列表中去，
-    //对应事件发生时，下发消息即可
-    LMsg.ArgumentList.SetValue(0, message.ArgumentList.GetValue(0));
-
-    LParams := TCefValueRef.New;
-    LParams.SetString('hello, 这是测试字符串EVENT');
-    LMsg.ArgumentList.SetValue(0, LParams);
-
-    browser.SendProcessMessage(PID_RENDERER, LMsg);
-
+    //像BROWSER_EventJsListner添加监听者
+    LJsListnerRec.EventName := message.Name;
+    LJsListnerRec.BrowserId := browser.Identifier;
+    LJsListnerRec.Browser := browser;
+    LJsListnerRec.ListnerMsgName := '';
+    BROWSER_EventJsListnerList.AddEventListner(LJsListnerRec);
     Result := True;
   end
   else
