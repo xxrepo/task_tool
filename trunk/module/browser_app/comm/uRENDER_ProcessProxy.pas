@@ -39,7 +39,7 @@ type
 
 implementation
 
-uses uBasicJsObjectBinding, uCEFv8Value, uCEFv8Types, uVVCefFunction;
+uses uBasicJsObjectBinding, uCEFv8Value, uCEFv8Types, uVVCefFunction, uVVConstants;
 
 
 
@@ -67,31 +67,44 @@ var
   LArguments: TCefv8ValueArray;
   i: Integer;
   LFuncResult: ICefv8Value;
+  LCallbackIdxName: string;
 begin
   //在这里根据消息的不同名称，去全局的回调函数管理列表中查找相关的回调函数，然后在这里进行执行，
   //具体的回调名称是在参数中传递过来的，不是来自具体的消息名称
   //消息名称仅仅用来作为是否对某个消息进行怎么样的处理，至于具体执行哪个回调函数是不一样的
-
-  LContextCallback := RENDER_JsCallbackList.GetCallback(browser.Identifier, message.Name);
-  if LContextCallback <> nil then
+  if message.Name = IPC_MSG_EXEC_CALLBACK then
   begin
-    LContextCallback.Context.Enter;
-    try
-      try
-        SetLength(LArguments, message.ArgumentList.GetSize);
-        for i := 0 to message.ArgumentList.GetSize - 1 do
-        begin
-          LArguments[i] := CefValueToCefV8Value(message.ArgumentList.GetValue(i));
-        end;
+    //获取第一个参数，第一个参数表明回调的索引名称
+    if message.ArgumentList.GetSize = 0 then Exit;
 
-        LFuncResult := LContextCallback.CallbackFunc.ExecuteFunction(nil, LArguments);
-        if LFuncResult.IsBool then
-          aHandled := LFuncResult.GetBoolValue;
+    LCallbackIdxName := message.ArgumentList.GetString(0);
+
+    LContextCallback := RENDER_JsCallbackList.GetCallback(browser.Identifier, LCallbackIdxName);
+    if LContextCallback <> nil then
+    begin
+      LContextCallback.Context.Enter;
+      try
+        try
+          SetLength(LArguments, message.ArgumentList.GetSize - 1);
+          for i := 1 to Length(LArguments) do
+          begin
+            LArguments[i - 1] := CefValueToCefV8Value(message.ArgumentList.GetValue(i));
+          end;
+
+          LFuncResult := LContextCallback.CallbackFunc.ExecuteFunction(nil, LArguments);
+          if LFuncResult.IsBool then
+            aHandled := LFuncResult.GetBoolValue;
+        finally
+          SetLength(LArguments, 0);
+        end;
       finally
-        SetLength(LArguments, 0);
+        LContextCallback.Context.Exit;
+
+        if LContextCallback.CallbackFuncType = cftFunction then
+        begin
+          RENDER_JsCallbackList.RemoveCallback(LContextCallback);
+        end;
       end;
-    finally
-      LContextCallback.Context.Exit;
     end;
   end;
 end;

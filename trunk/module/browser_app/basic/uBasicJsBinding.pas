@@ -36,8 +36,11 @@ type
 implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
-  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList;
+  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants;
 
+
+const
+  BINDING_NAMESPACE = 'BASIC/';
 
 
 //在context初始化时绑定js
@@ -48,14 +51,16 @@ var
 begin
   TempHandler  := TBasicJsBinding.Create;
 
-  TempFunction := TCefv8ValueRef.NewFunction('test_form', TempHandler);
-  ACefv8Value.SetValueByKey('test_form', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('__BROWSER_APP_VERSION', TCefv8ValueRef.NewString('1.0.0'), V8_PROPERTY_ATTRIBUTE_NONE);
 
-  TempFunction := TCefv8ValueRef.NewFunction('test_on_func', TempHandler);
-  ACefv8Value.SetValueByKey('test_on_func', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  TempFunction := TCefv8ValueRef.NewFunction('openNativeWindow', TempHandler);
+  ACefv8Value.SetValueByKey('openNativeWindow', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
-  TempFunction := TCefv8ValueRef.NewFunction('test_on_event', TempHandler);
-  ACefv8Value.SetValueByKey('test_on_event', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  TempFunction := TCefv8ValueRef.NewFunction('executeTask', TempHandler);
+  ACefv8Value.SetValueByKey('executeTask', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+
+  TempFunction := TCefv8ValueRef.NewFunction('registerEventListner', TempHandler);
+  ACefv8Value.SetValueByKey('registerEventListner', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 end;
 
 
@@ -69,61 +74,64 @@ function TBasicJsBinding.Execute(const name      : ustring;
 var
   LMsg: ICefProcessMessage;
   LContextCallback: TContextCallbackRec;
+  LMsgName, LCallbackIdxName: string;
 begin
-  if (name = '__BROWSER_APP_VERSION') then
+  LMsgName := BINDING_NAMESPACE + name;
+  if (name = 'openNativeWindow') then
   begin
-    retval := TCefv8ValueRef.NewString('1.0.0');
-    Result := True;
-  end
-  else if (name = 'test_form') then
-  begin
-    LMsg := TCefProcessMessageRef.New('test_form');
+    LMsg := TCefProcessMessageRef.New(LMsgName);
     LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
     TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
     Result := True;
   end
-  else if (name = 'test_func') then
+  else if (name = 'executeTask') then
   begin
-    retval := TCefv8ValueRef.NewString('My Func!');
-    Result := True;
-  end
-  else if (name = 'test_on_func') then
-  begin
-    if (Length(arguments) = 2) and (arguments[0].IsString) and (arguments[1].IsFunction) then
+    if (Length(arguments) = 3) and (arguments[0].IsString) and (arguments[2].IsFunction) then
     begin
       //添加到回调函数列表中去，生成一个随机性的字符串，用来对应本次发起调用的回调函数
       LContextCallback.Context := TCefv8ContextRef.Current;
       LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
-      LContextCallback.CallerName := name;
-      LContextCallback.CallbackFunc := arguments[1];
-      RENDER_JsCallbackList.AddCallback(LContextCallback);
+      LContextCallback.CallbackFunc := arguments[2];
+      LCallbackIdxName := RENDER_JsCallbackList.AddCallback(LContextCallback);
 
-      //发送消息到browser进程
-      LMsg := TCefProcessMessageRef.New('test_on_func');
-      LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+      if LCallbackIdxName <> '' then
+      begin
+        //发送消息到browser进程
+        LMsg := TCefProcessMessageRef.New(LMsgName);
+        LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+        LMsg.ArgumentList.SetString(1, arguments[1].GetStringValue);
+        LMsg.ArgumentList.SetString(2, LCallbackIdxName);
 
-
-      TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+        TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+      end
+      else
+        exception := 'callback function register error on ' + name;
     end;
     Result := True;
   end
-  else if (name = 'test_on_event') then
+  else if (name = 'registerEventListner') then
   begin
     if (Length(arguments) = 2) and (arguments[0].IsString) and (arguments[1].IsFunction) then
     begin
+      //第一个参数为监听的事件的名称，第二个参数为事件发生时的回调函数
       //添加到回调函数列表中去，这里因为是新生成的对象，可能已经存在，则在回调中直接释放，回调列表仅保留一份
       LContextCallback.Context := TCefv8ContextRef.Current;
       LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
-      LContextCallback.CallerName := name;
+      LContextCallback.IdxName := LMsgName + '/' + arguments[0].GetStringValue;
       LContextCallback.CallbackFunc := arguments[1];
-      RENDER_JsCallbackList.AddCallback(LContextCallback);
+      LCallbackIdxName := RENDER_JsCallbackList.AddCallback(LContextCallback);
 
-      //发送消息到browser进程
-      LMsg := TCefProcessMessageRef.New('test_on_event');
-      LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+      if LCallbackIdxName <> '' then
+      begin
+        //发送消息到browser进程
+        LMsg := TCefProcessMessageRef.New(LMsgName);
+        LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue); //事件名称
+        //LMsg.ArgumentList.SetString(1, )  //在回调函数中的索引名称，用来作为消息
 
-
-      TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+        TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+      end
+      else
+        exception := 'callback function register error on ' + LContextCallback.IdxName;
     end;
     Result := True;
   end
@@ -142,8 +150,9 @@ var
   LParams: ICefValue;
   LJsListnerRec: TEventJsListnerRec;
 begin
-  if message.Name = 'test_on_func' then
+  if message.Name = BINDING_NAMESPACE + 'openNativeWindow' then
   begin
+    //发送消息给mainform.handle，在mainform.handle实现openNativeWindow的消息响应
     //回复一条回调函数的消息到render中，同时删掉对应的监听回调
     LMsg := TCefProcessMessageRef.New(message.Name);
     LMsg.ArgumentList.SetValue(0, message.ArgumentList.GetValue(0));
@@ -157,14 +166,31 @@ begin
 
     Result := True;
   end
-  else if message.Name = 'test_on_event' then
+  else if message.Name = BINDING_NAMESPACE + 'executeTask' then
   begin
-    //像BROWSER_EventJsListner添加监听者
-    LJsListnerRec.EventName := message.Name;
+    //执行task，在结果返回时，把对应的执行结果放入lmsg中，作为rsp传入给render的js执行环节
+    //回复一条回调函数的消息到render中，同时删掉对应的监听回调
+    LMsg := TCefProcessMessageRef.New(IPC_MSG_EXEC_CALLBACK);
+    LMsg.ArgumentList.SetValue(0, message.ArgumentList.GetValue(2)); //callback_idxname
+    LMsg.ArgumentList.SetValue(1, message.ArgumentList.GetValue(0));
+    LMsg.ArgumentList.SetValue(2, message.ArgumentList.GetValue(1));
+
+    //TODO 可以告诉render，执行完毕后，可以移除这个回调函数
+    browser.SendProcessMessage(PID_RENDERER, LMsg);
+
+    Result := True;
+  end
+  else if message.Name = BINDING_NAMESPACE + 'registerEventListner' then
+  begin
+    //向BROWSER_EventJsListner添加监听者
+    //第一个参数为事件的名称，第二个参数为对应的回调方法在render进程中的名称
+    LJsListnerRec.EventName := message.ArgumentList.GetString(0);
     LJsListnerRec.BrowserId := browser.Identifier;
     LJsListnerRec.Browser := browser;
     LJsListnerRec.ListnerMsgName := '';
+
     BROWSER_EventJsListnerList.AddEventListner(LJsListnerRec);
+
     Result := True;
   end
   else

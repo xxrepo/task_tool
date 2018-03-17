@@ -17,15 +17,16 @@ type
 
   TContextCallbackRec = record
     BrowserId: Integer;
-    CallerName: string;
-    CallerFuncType: TCallerFuncType;
+
+    IdxName: string;
+    CallbackFuncType: TCallerFuncType;
     CallbackFunc: ICefv8Value;
     Context: ICefv8Context;
   end;
 
   TContextCallback = class
     BrowserId: Integer;
-    CallerName: string;
+    IdxName: string;
     CallbackFuncType: TCallerFuncType;
     CallbackFunc: ICefv8Value;
     Context: ICefV8Context;
@@ -42,11 +43,12 @@ type
     destructor Destroy; override;
 
     //执行找到对应Browser的参数进行执行
-    function AddCallback(ACb: TContextCallbackRec): Integer; overload;
+    function AddCallback(ACb: TContextCallbackRec): string; overload;
     function RemoveCallback(ACb: TContextCallback): Boolean;
     function RemoveCallbackByContext(AContext: ICefV8Context): Boolean;
-    function GetCallback(ABrowserId: Integer; ACallerName: string): TContextCallback;
+    function GetCallback(ABrowserId: Integer; AIdxName: string): TContextCallback;
 
+    function MakeCallbackIdxName: string;
   end;
 
 var
@@ -59,24 +61,41 @@ uses System.SysUtils;
 { TRenderJsCallbackMgr }
 
 
-function TRENDER_JsCallbackList.AddCallback(ACb: TContextCallbackRec): Integer;
+//返回一个唯一索引的回调函数idxname
+function TRENDER_JsCallbackList.AddCallback(ACb: TContextCallbackRec): string;
 var
   LContextCallback: TContextCallback;
 begin
-  Result := -1;
-  if GetCallback(Acb.BrowserId, ACb.CallerName) <> nil then Exit;
-  
+  Result := '';
+  if ACb.IdxName <> '' then
+  begin
+    ACb.CallbackFuncType := cftEvent;
+    LContextCallback := GetCallback(Acb.BrowserId, ACb.IdxName);
+    if LContextCallback <> nil then
+    begin
+      Result := LContextCallback.IdxName;
+      Exit;
+    end;
+  end
+  else
+  begin
+    ACb.CallbackFuncType := cftFunction;
+    Acb.IdxName := MakeCallbackIdxName;
+  end;
+
   //创建类
   LContextCallback := TContextCallback.Create;
   try
     LContextCallback.BrowserId := ACb.BrowserId;
-    LContextCallback.CallerName := ACb.CallerName;
-    LContextCallback.CallbackFuncType := ACb.CallerFuncType;
+    LContextCallback.IdxName := ACb.IdxName;
+    LContextCallback.CallbackFuncType := ACb.CallbackFuncType;
     LContextCallback.CallbackFunc := ACb.CallbackFunc;
     LContextCAllback.Context := ACb.Context;
 
     if AddCallback(LContextCallback) < 0 then
-      LContextCallback.Free;
+      LContextCallback.Free
+    else
+      Result := ACb.IdxName;
   except
     on E: Exception do
     begin
@@ -94,7 +113,7 @@ begin
   //根据对应的id和msg_name进行匹配，还有msg_type，如果对应context的回调中已经
   //包含有这个值，则直接进行丢弃，并且释放这个Acb
   Result := -1;
-  if GetCallback(ACb.BrowserId, ACb.CallerName) = nil then
+  if GetCallback(ACb.BrowserId, ACb.IdxName) = nil then
     Result := FCallbacks.Add(ACb);
 end;
 
@@ -123,7 +142,7 @@ end;
 
 
 function TRENDER_JsCallbackList.GetCallback(ABrowserId: Integer;
-  ACallerName: string): TContextCallback;
+  AIdxName: string): TContextCallback;
 var
   i: Integer;
 begin
@@ -133,7 +152,7 @@ begin
     if FCallbacks.Items[i] <> nil then
     begin
       if (FCallbacks.Items[i].BrowserId = ABrowserId)
-        and (FCallbacks.Items[i].CallerName = ACallerName) then
+        and (FCallbacks.Items[i].IdxName = AIdxName) then
       begin
         Result := FCallbacks.Items[i];
         Break;
@@ -142,6 +161,11 @@ begin
   end;
 end;
 
+
+function TRENDER_JsCallbackList.MakeCallbackIdxName: string;
+begin
+  Result := IntToStr(FCallbacks.Count) + '_' + FormatDateTime('yymmddhhnnsszzz', Now);
+end;
 
 function TRENDER_JsCallbackList.RemoveCallback(ACb: TContextCallback): Boolean;
 begin

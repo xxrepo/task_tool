@@ -22,7 +22,8 @@ uses
   uVVCefFunction in 'comm\uVVCefFunction.pas',
   uAppForm in 'forms\uAppForm.pas' {AppForm},
   uBROWSER_EventJsListnerList in 'comm\uBROWSER_EventJsListnerList.pas',
-  uBasicJsObjectBinding in 'basic\uBasicJsObjectBinding.pas';
+  uBasicJsObjectBinding in 'basic\uBasicJsObjectBinding.pas',
+  uVVConstants in 'comm\uVVConstants.pas';
 
 {$R *.res}
 
@@ -49,7 +50,7 @@ begin
     Application.MainFormOnTaskbar := True;
 
     Application.CreateForm(TAppForm, AppForm);
-  AppForm.WindowState := wsMaximized;
+    AppForm.WindowState := wsMaximized;
     Application.Run;
   end;
 

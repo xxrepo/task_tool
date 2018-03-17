@@ -64,29 +64,14 @@ end;
 function TBasicJsObjectBinding.Get(const name: ustring; const obj: ICefv8Value;
   out retval: ICefv8Value; var exception: ustring): Boolean;
 begin
-  if (name = 'test_val') then
-  begin
-    retval := TCefv8ValueRef.NewString(FTestVal);
-    Result := True;
-  end
-  else
-    Result := False;
+  Result := False;
 end;
 
 
 function TBasicJsObjectBinding.Put(const name: ustring; const obj: ICefv8Value;
   const value: ICefv8Value; var exception: ustring): Boolean;
 begin
-  if (name = 'test_val') then
-  begin
-    if value.IsString then
-      FTestVal := value.GetStringValue
-    else
-      exception := 'Invalid value type';
-    Result := True;
-  end
-  else
-    Result := False;
+  Result := False;
 end;
 
 
