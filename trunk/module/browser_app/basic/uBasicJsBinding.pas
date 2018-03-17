@@ -113,6 +113,7 @@ begin
   begin
     if (Length(arguments) = 2) and (arguments[0].IsString) and (arguments[1].IsFunction) then
     begin
+      //这里需要进行标记相应的事件
       //第一个参数为监听的事件的名称，第二个参数为事件发生时的回调函数
       //添加到回调函数列表中去，这里因为是新生成的对象，可能已经存在，则在回调中直接释放，回调列表仅保留一份
       LContextCallback.Context := TCefv8ContextRef.Current;
@@ -183,6 +184,12 @@ begin
   else if message.Name = BINDING_NAMESPACE + 'registerEventListner' then
   begin
     //向BROWSER_EventJsListner添加监听者
+
+    //在系统记录具体的哪个事件被监听，事件要能很容易进行处罚
+    //比如, browser_eventlist.eventnotify('event_name')
+    //这里的event_name要非常明确，比如basic.timer, basic.weighter_change，然后可以带上具体的browser_id
+
+
     //第一个参数为事件的名称，第二个参数为对应的回调方法在render进程中的名称
     LJsListnerRec.EventName := message.ArgumentList.GetString(0);
     LJsListnerRec.BrowserId := browser.Identifier;
