@@ -42,7 +42,7 @@ var
 
 implementation
 
-uses uBasicJsObjectBinding;
+uses uBaseJsObjectBinding;
 
 {$R *.dfm}
 

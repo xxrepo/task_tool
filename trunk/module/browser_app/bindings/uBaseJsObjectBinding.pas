@@ -1,4 +1,4 @@
-unit uBasicJsObjectBinding;
+unit uBaseJsObjectBinding;
 
 {$I cef.inc}
 
@@ -28,7 +28,7 @@ type
 
 implementation
 
-uses uBasicJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage;
+uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage;
 
 
 //在context初始化时绑定js
@@ -43,7 +43,7 @@ begin
   //还可以继续绑定其他的函数或者方法
   TBasicJsBinding.BindJsTo(TempObject);
 
-  ACefv8Value.SetValueByKey('JS_BRIDGE', TempObject, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('JSN_Base', TempObject, V8_PROPERTY_ATTRIBUTE_NONE);
 end;
 
 

@@ -11,6 +11,7 @@ object Form1: TForm1
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object btn1: TButton
@@ -36,5 +37,35 @@ object Form1: TForm1
     Bindings = <>
     Left = 64
     Top = 24
+  end
+  object cm1: TComm
+    CommName = 'COM2'
+    BaudRate = 9600
+    ParityCheck = False
+    Outx_CtsFlow = False
+    Outx_DsrFlow = False
+    DtrControl = DtrEnable
+    DsrSensitivity = False
+    TxContinueOnXoff = True
+    Outx_XonXoffFlow = True
+    Inx_XonXoffFlow = True
+    ReplaceWhenParityError = False
+    IgnoreNullChar = False
+    RtsControl = RtsEnable
+    XonLimit = 500
+    XoffLimit = 500
+    ByteSize = _8
+    Parity = None
+    StopBits = _1
+    XonChar = #17
+    XoffChar = #19
+    ReplacedChar = #0
+    ReadIntervalTimeout = 100
+    ReadTotalTimeoutMultiplier = 0
+    ReadTotalTimeoutConstant = 0
+    WriteTotalTimeoutMultiplier = 0
+    WriteTotalTimeoutConstant = 0
+    Left = 208
+    Top = 32
   end
 end

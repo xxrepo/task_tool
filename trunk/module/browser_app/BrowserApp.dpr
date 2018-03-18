@@ -17,13 +17,15 @@ uses
   uRENDER_JsCallbackList in 'comm\uRENDER_JsCallbackList.pas',
   uRENDER_ProcessProxy in 'comm\uRENDER_ProcessProxy.pas',
   uBasicChromeForm in 'basic\uBasicChromeForm.pas' {BasicChromeForm},
-  uBasicJsBinding in 'basic\uBasicJsBinding.pas',
+  uBaseJsBinding in 'bindings\uBaseJsBinding.pas',
   uDefines in 'comm\uDefines.pas',
   uVVCefFunction in 'comm\uVVCefFunction.pas',
   uAppForm in 'forms\uAppForm.pas' {AppForm},
   uBROWSER_EventJsListnerList in 'comm\uBROWSER_EventJsListnerList.pas',
-  uBasicJsObjectBinding in 'basic\uBasicJsObjectBinding.pas',
-  uVVConstants in 'comm\uVVConstants.pas';
+  uBaseJsObjectBinding in 'bindings\uBaseJsObjectBinding.pas',
+  uVVConstants in 'comm\uVVConstants.pas',
+  uSerialPortBinding in 'bindings\uSerialPortBinding.pas',
+  uBindingProxy in 'bindings\uBindingProxy.pas';
 
 {$R *.res}
 
@@ -50,7 +52,7 @@ begin
     Application.MainFormOnTaskbar := True;
 
     Application.CreateForm(TAppForm, AppForm);
-    AppForm.WindowState := wsMaximized;
+  AppForm.WindowState := wsMaximized;
     Application.Run;
   end;
 

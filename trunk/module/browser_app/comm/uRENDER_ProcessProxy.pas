@@ -39,14 +39,14 @@ type
 
 implementation
 
-uses uBasicJsObjectBinding, uCEFv8Value, uCEFv8Types, uVVCefFunction, uVVConstants;
+uses uBindingProxy, uCEFv8Value, uCEFv8Types, uVVCefFunction, uVVConstants;
 
 
 
 { TRenderProcessHelper }
 procedure TRENDER_ProcessProxy.OnContextCreated(const browser: ICefBrowser; const frame: ICefFrame; const context: ICefv8Context);
 begin
-  TBasicJsObjectBinding.BindJsTo(context.Global);
+  TBindingProxy.BindJsTo(context);
 end;
 
 

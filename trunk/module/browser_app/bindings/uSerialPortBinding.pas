@@ -1,28 +1,20 @@
-//运行在render进程中，属于jsv8的函数方法，本文件要么是单独能够提供服务，要么是向
-//browser进程发送消息
-//本进程还提供一个用于接收来自browser进程的方法，用于向render中运行的jsv8的context进行回调
-//而这里，具体的context接收的消息是来自于chromium实体里面的对象了，也就是jsv8的context对应的cefbrowser
-//另外，还有一个需要把回调函数的对象来保存在这个进程中对于不同类型事件的回调方法，有些回调函数是可以在回调
-//完成之后就进行释放的，而有些，比如对某个事件的监听，则直到整个context被释放，才不需要进行
-//这个函数方法是在render中执行的，同样，我们需要一个对应的实力来处理这些js方法函数，
-//这个对应的方法函数是应该在browser的进程中存在的
-
-
-unit uBasicJsBinding;
+unit uSerialPortBinding;
 
 {$I cef.inc}
 
 interface
 
 uses
-  uCEFTypes, uCEFInterfaces, uCEFv8Value, uCEFv8Handler, uCEFv8Context;
+  uCEFV8Value, uCEFv8Accessor, uCEFInterfaces, uCEFTypes, uCEFConstants,
+  uCEFv8Handler;
 
 type
-  TBasicJsBinding = class(TCefv8HandlerOwn)
+  TSerialPortFunctionBinding = class(TCefv8HandlerOwn)
   protected
     //Js Executed in Render Progress
     function Execute(const name: ustring; const obj: ICefv8Value; const arguments: TCefv8ValueArray; var retval: ICefv8Value; var exception: ustring): Boolean; override;
   public
+
     //Register Js to Context
     class procedure BindJsTo(const ACefv8Value: ICefv8Value); virtual;
 
@@ -32,84 +24,143 @@ type
                       const message: ICefProcessMessage; out Result: Boolean); virtual;
   end;
 
+  TSerialPortBinding = class(TCefV8AccessorOwn)
+  private
+  protected
+
+    function Get(const name: ustring; const obj: ICefv8Value;
+      out retval: ICefv8Value; var exception: ustring): Boolean; override;
+    function Put(const name: ustring; const obj, value: ICefv8Value;
+      var exception: ustring): Boolean; override;
+
+  public
+    class procedure BindJsTo(const ACefv8Value: ICefv8Value); static;
+    class procedure ExecuteInBrowser(Sender: TObject;
+      const browser: ICefBrowser; sourceProcess: TCefProcessId;
+      const message: ICefProcessMessage; out Result: Boolean); static;
+  end;
+
 
 implementation
 
-uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
-  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants;
-
+uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage,
+uRENDER_JsCallbackList, uCEFv8Context, uVVConstants;
 
 const
-  BINDING_NAMESPACE = 'BASIC/';
-
+  BINDING_NAMESPACE = 'SERIAL_PORT/';
 
 //在context初始化时绑定js
-class procedure TBasicJsBinding.BindJsTo(const ACefv8Value: ICefv8Value);
+class procedure TSerialPortBinding.BindJsTo(const ACefv8Value: ICefv8Value);
 var
-  TempHandler  : ICefv8Handler;
-  TempFunction : ICefv8Value;
+  TempAccessor : ICefV8Accessor;
+  TempObject   : ICefv8Value;
 begin
-  TempHandler  := TBasicJsBinding.Create;
+  TempAccessor := TSerialPortBinding.Create;
+  TempObject   := TCefv8ValueRef.NewObject(TempAccessor, nil);
 
-  ACefv8Value.SetValueByKey('__BROWSER_APP_VERSION', TCefv8ValueRef.NewString('1.0.0'), V8_PROPERTY_ATTRIBUTE_NONE);
+  //还可以继续绑定其他的函数或者方法
+  TSerialPortFunctionBinding.BindJsTo(TempObject);
 
-  TempFunction := TCefv8ValueRef.NewFunction('openNativeWindow', TempHandler);
-  ACefv8Value.SetValueByKey('openNativeWindow', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  ACefv8Value.SetValueByKey('JSN_SerialPort', TempObject, V8_PROPERTY_ATTRIBUTE_NONE);
+end;
 
-  TempFunction := TCefv8ValueRef.NewFunction('executeTask', TempHandler);
-  ACefv8Value.SetValueByKey('executeTask', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
-  TempFunction := TCefv8ValueRef.NewFunction('registerEventListner', TempHandler);
-  ACefv8Value.SetValueByKey('registerEventListner', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+//下面的代码在browser进程中执行
+class procedure TSerialPortBinding.ExecuteInBrowser(Sender: TObject;
+  const browser: ICefBrowser; sourceProcess: TCefProcessId;
+  const message: ICefProcessMessage; out Result: Boolean);
+begin
+  //要处理对BasicJsBinding，依次对上面的方法进行代理处理
+  TBasicJsBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
 end;
 
 
 
-//这个方法在render进程中执行
-function TBasicJsBinding.Execute(const name      : ustring;
-                              const obj       : ICefv8Value;
-                              const arguments : TCefv8ValueArray;
-                              var   retval    : ICefv8Value;
-                              var   exception : ustring): Boolean;
+
+
+//下面两个方法在Render中执行
+function TSerialPortBinding.Get(const name: ustring; const obj: ICefv8Value;
+  out retval: ICefv8Value; var exception: ustring): Boolean;
+begin
+  Result := False;
+end;
+
+
+function TSerialPortBinding.Put(const name: ustring; const obj: ICefv8Value;
+  const value: ICefv8Value; var exception: ustring): Boolean;
+begin
+  Result := False;
+end;
+
+
+
+{ TSerialPortFunctionBinding }
+
+class procedure TSerialPortFunctionBinding.BindJsTo(const ACefv8Value: ICefv8Value);
+var
+  TempHandler  : ICefv8Handler;
+  TempFunction : ICefv8Value;
+begin
+  TempHandler  := TSerialPortFunctionBinding.Create;
+
+  ACefv8Value.SetValueByKey('__NAMESPACE', TCefv8ValueRef.NewString(BINDING_NAMESPACE), V8_PROPERTY_ATTRIBUTE_NONE);
+
+  TempFunction := TCefv8ValueRef.NewFunction('connect', TempHandler);
+  ACefv8Value.SetValueByKey('connect', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+
+  TempFunction := TCefv8ValueRef.NewFunction('disconnect', TempHandler);
+  ACefv8Value.SetValueByKey('disconnect', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+
+  TempFunction := TCefv8ValueRef.NewFunction('write', TempHandler);
+  ACefv8Value.SetValueByKey('write', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+end;
+
+
+function TSerialPortFunctionBinding.Execute(const name: ustring;
+  const obj: ICefv8Value; const arguments: TCefv8ValueArray;
+  var retval: ICefv8Value; var exception: ustring): Boolean;
 var
   LMsg: ICefProcessMessage;
   LContextCallback: TContextCallbackRec;
   LMsgName, LCallbackIdxName: string;
 begin
   LMsgName := BINDING_NAMESPACE + name;
-  if (name = 'openNativeWindow') then
+  if (name = 'connect') then
   begin
+    //调用串口管理类，获取对应串口的实例，并且进行返回？还是可以进行回调？
     LMsg := TCefProcessMessageRef.New(LMsgName);
     LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
     TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
     Result := True;
   end
-  else if (name = 'executeTask') then
+  else if (name = 'disconnect') then
   begin
     if (Length(arguments) = 3) and (arguments[0].IsString) and (arguments[2].IsFunction) then
     begin
+      arguments[2].ExecuteFunction(nil, arguments);
+      retval := TCefv8ValueRef.NewString('return ok');
       //添加到回调函数列表中去，生成一个随机性的字符串，用来对应本次发起调用的回调函数
-      LContextCallback.Context := TCefv8ContextRef.Current;
-      LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
-      LContextCallback.CallbackFunc := arguments[2];
-      LCallbackIdxName := RENDER_JsCallbackList.AddCallback(LContextCallback);
-
-      if LCallbackIdxName <> '' then
-      begin
-        //发送消息到browser进程
-        LMsg := TCefProcessMessageRef.New(LMsgName);
-        LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
-        LMsg.ArgumentList.SetString(1, arguments[1].GetStringValue);
-        LMsg.ArgumentList.SetString(2, LCallbackIdxName);
-
-        TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
-      end
-      else
-        exception := 'callback function register error on ' + name;
+//      LContextCallback.Context := TCefv8ContextRef.Current;
+//      LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
+//      LContextCallback.CallbackFunc := arguments[2];
+//      LCallbackIdxName := RENDER_JsCallbackList.AddCallback(LContextCallback);
+//
+//      if LCallbackIdxName <> '' then
+//      begin
+//        //发送消息到browser进程
+//        LMsg := TCefProcessMessageRef.New(LMsgName);
+//        LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+//        LMsg.ArgumentList.SetString(1, arguments[1].GetStringValue);
+//        LMsg.ArgumentList.SetString(2, LCallbackIdxName);
+//
+//        TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+//      end
+//      else
+//        exception := 'callback function register error on ' + name;
     end;
     Result := True;
   end
-  else if (name = 'registerEventListner') then
+  else if (name = 'write') then
   begin
     if (Length(arguments) = 2) and (arguments[0].IsString) and (arguments[1].IsFunction) then
     begin
@@ -143,7 +194,7 @@ end;
 
 
 //下面的代码在browser进程中执行
-class procedure TBasicJsBinding.ExecuteInBrowser(Sender: TObject;
+class procedure TSerialPortFunctionBinding.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
   const message: ICefProcessMessage; out Result: Boolean);
 var
@@ -151,7 +202,7 @@ var
   LParams: ICefValue;
   LJsListnerRec: TEventJsListnerRec;
 begin
-  if message.Name = BINDING_NAMESPACE + 'openNativeWindow' then
+  if message.Name = BINDING_NAMESPACE + 'connect' then
   begin
     //发送消息给mainform.handle，在mainform.handle实现openNativeWindow的消息响应
     //回复一条回调函数的消息到render中，同时删掉对应的监听回调
@@ -167,7 +218,7 @@ begin
 
     Result := True;
   end
-  else if message.Name = BINDING_NAMESPACE + 'executeTask' then
+  else if message.Name = BINDING_NAMESPACE + 'disconnect' then
   begin
     //执行task，在结果返回时，把对应的执行结果放入lmsg中，作为rsp传入给render的js执行环节
     //回复一条回调函数的消息到render中，同时删掉对应的监听回调
@@ -181,7 +232,7 @@ begin
 
     Result := True;
   end
-  else if message.Name = BINDING_NAMESPACE + 'registerEventListner' then
+  else if message.Name = BINDING_NAMESPACE + 'write' then
   begin
     //向BROWSER_EventJsListner添加监听者
 
@@ -203,5 +254,6 @@ begin
   else
     Result := False;
 end;
+
 
 end.

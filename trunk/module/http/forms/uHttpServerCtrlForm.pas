@@ -5,18 +5,21 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, IdContext, IdCustomHTTPServer,
-  Vcl.StdCtrls, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer;
+  Vcl.StdCtrls, IdBaseComponent, IdComponent, IdCustomTCPServer, IdHTTPServer,
+  SPComm;
 
 type
   TForm1 = class(TForm)
     btn1: TButton;
     mmo1: TMemo;
     idhttpsrvrJobDispatch: TIdHTTPServer;
+    cm1: TComm;
     procedure btn1Click(Sender: TObject);
     procedure idhttpsrvrJobDispatchCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure idhttpsrvrJobDispatchCommandOther(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -40,6 +43,12 @@ begin
     IP := '127.0.0.1';
   end;
   idhttpsrvrJobDispatch.Active := True;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  //cm1.WriteCommData()
+
 end;
 
 procedure TForm1.idhttpsrvrJobDispatchCommandGet(AContext: TIdContext;
