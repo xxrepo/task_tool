@@ -44,7 +44,7 @@ begin
   GlobalCEFApp.OnContextCreated := PRENDER_RenderHelper.OnContextCreated;
   GlobalCEFApp.OnContextReleased := PRENDER_RenderHelper.OnContextReleased;
   GlobalCEFApp.OnProcessMessageReceived := PRENDER_RenderHelper.OnProcessMessageReceived;
-  GlobalCEFApp.SingleProcess := False;
+  GlobalCEFApp.SingleProcess := True;
 
   if GlobalCEFApp.StartMainProcess then
   begin

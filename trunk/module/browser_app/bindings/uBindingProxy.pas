@@ -38,8 +38,6 @@ class procedure TBindingProxy.ExecuteInBrowser(Sender: TObject;
 begin
   //要处理对BasicJsBinding，依次对上面的方法进行代理处理
   TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
-  if not Result then
-    TSerialPortBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
 end;
 
 
