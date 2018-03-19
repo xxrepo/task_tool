@@ -10,7 +10,7 @@ inherited AppForm: TAppForm
   inherited cfwndwprntMain: TCEFWindowParent
     Width = 739
     Height = 378
-    ExplicitWidth = 154
-    ExplicitHeight = 8
+    ExplicitWidth = 739
+    ExplicitHeight = 378
   end
 end

@@ -65,6 +65,7 @@ object Form1: TForm1
     ReadTotalTimeoutConstant = 0
     WriteTotalTimeoutMultiplier = 0
     WriteTotalTimeoutConstant = 0
+    OnReceiveData = cm1ReceiveData
     Left = 208
     Top = 32
   end

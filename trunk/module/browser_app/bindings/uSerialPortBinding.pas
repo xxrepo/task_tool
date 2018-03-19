@@ -9,16 +9,26 @@ uses
   uCEFv8Handler, System.Generics.Collections, SPComm;
 
 type
+  TSerialPortConnectRec = record
+    CommName: string;
+
+    OnDataReceivedCallbackFunc: ICefv8Value;
+    Context: ICefv8Context;
+    BrowserId: Integer;
+  end;
+
   //创建，对应的comm对象，comm名称，以及对应的回调函数
   TSerialPort = class
   private
-        //对sp的基本配置参数的保存
-    FCommName: string;
+    //对sp的基本配置参数的保存
+
 
     //实际的连接实例
     FComm: TComm;
-
   public
+    CommName: string;
+
+
     constructor Create;
     destructor Destroy; override;
 
@@ -26,7 +36,7 @@ type
 
     //维护一个方法来接收数据，并且根据名称的生成规则，在回调函数中找到对应的方法，并且发起回调，
     //如果获取到的回调列表为空，则本函数讲自动释放本实例，不再进行监听
-    procedure OnCommDataReceived;
+    procedure OnCommReceiveData(Sender: TObject; Buffer: Pointer; BufferLength: Word);
 
     //维护一个方法来响应disconnect，此时在回调函数中查找是否有还有其他回调函数，如果没有，则直接销毁本实例
     procedure Disconnect;
@@ -36,10 +46,11 @@ type
   TSerialPortMgr = class
   private
     FCommList: TObjectList<TSerialPort>;
+    function GetCommSerialPort(AComm: string): TSerialPort;
   public
     constructor Create;
     destructor Destroy; override;
-    procedure ConnectTo(AParams: string);
+    function ConnectTo(ARec: TSerialPortConnectRec): Boolean;
     procedure DisconnectFrom(AComm: string);
   end;
 
@@ -60,6 +71,9 @@ type
     class procedure BindJsTo(const ACefv8Value: ICefv8Value); static;
   end;
 
+var
+  RENDER_SerialPortMgr: TSerialPortMgr;
+
 
 implementation
 
@@ -68,9 +82,6 @@ uRENDER_JsCallbackList, uCEFv8Context, uVVConstants;
 
 const
   BINDING_NAMESPACE = 'SERIAL_PORT/';
-
-var
-  RENDER_SerialPortMgr: TSerialPortMgr;
 
 //在context初始化时绑定js
 class procedure TSerialPortBinding.BindJsTo(const ACefv8Value: ICefv8Value);
@@ -121,23 +132,30 @@ var
   LMsgName, LCallbackIdxName: string;
   LResult: ICefv8Value;
   LCefV8Accessor: ICefV8Accessor;
+  LSerialPortConnectRec: TSerialPortConnectRec;
 begin
   LMsgName := BINDING_NAMESPACE + name;
   if (name = 'connect') then
   begin
-    LCefV8Accessor := TCefV8AccessorOwn.Create;
-    LResult := TCefv8ValueRef.NewObject(LCefV8Accessor, nil);
-    LResult.SetValueByKey('disconnect', TCefv8ValueRef.NewFunction('disconnect', Self), V8_PROPERTY_ATTRIBUTE_NONE);
-    LResult.SetValueByKey('port_name', TCefv8ValueRef.NewString('COMMMMMM1'), V8_PROPERTY_ATTRIBUTE_NONE);
-
     //通知mgr需要给哪个comm口添加对当前context的环境变量的监听，回调函数还是添加到callbacks中，并不会独立处理，
     //但是必须标明是监听的哪个comm口的回调函数来标记idxname
-
-    //mgr负责创建comm口，并且对这个comm口负责管理，以及事件的触发，当接收到数据时，会从callbacks列表中
-    //找出对应的回调函数进行执行
-
-
-    retval := LResult;
+    LSerialPortConnectRec.CommName := arguments[0].GetStringValue;
+    LSerialPortConnectRec.OnDataReceivedCallbackFunc := arguments[0];
+    LSerialPortConnectRec.Context := TCefv8ContextRef.Current;
+    LSerialPortConnectRec.BrowserId := TCefv8ContextRef.Current.Browser.Identifier;
+    if RENDER_SerialPortMgr.ConnectTo(LSerialPortConnectRec) then
+    begin
+      //注册或者更新回调函数
+      LCefV8Accessor := TCefV8AccessorOwn.Create;
+      LResult := TCefv8ValueRef.NewObject(LCefV8Accessor, nil);
+      LResult.SetValueByKey('disconnect', TCefv8ValueRef.NewFunction('disconnect', Self), V8_PROPERTY_ATTRIBUTE_NONE);
+      LResult.SetValueByKey('port_name', TCefv8ValueRef.NewString('COMMMMMM1'), V8_PROPERTY_ATTRIBUTE_NONE);
+      retval := LResult;
+    end
+    else
+    begin
+      exception := 'connect to serial port failed!';
+    end;
     Result := True;
   end
   else if (name = 'disconnect') then
@@ -145,12 +163,12 @@ begin
     if obj.IsObject then
     begin
       //通知mgr哪个context的sp的哪个端口需要断开连接
-      retval := obj.GetValueByKey('port_name');
+      RENDER_SerialPortMgr.DisconnectFrom(obj.GetValueByKey('port_name').GetStringValue);
+      retval := TCefv8ValueRef.NewBool(True);
     end
     else
-      retval := TCefv8ValueRef.NewString('no object');
+      exception := 'no serial port to disconnected!';
 
-    //而且能知道当前的context，从而可以在comport的监听列表中移除对应的回调函数
     Result := True;
   end
   else if (name = 'write') then
@@ -172,59 +190,126 @@ end;
 
 { TSerialPortMgr }
 
-procedure TSerialPortMgr.ConnectTo(AParams: string);
+function TSerialPortMgr.ConnectTo(ARec: TSerialPortConnectRec): Boolean;
+var
+  LSerialPort: TSerialPort;
+  LCallback: TContextCallbackRec;
 begin
-  //从list中查找是否有对应comm口的监听对象，如果有，则直接
+  //从list中查找是否有对应comm口的监听对象，如果有，则直接返回这个对象，然后回调函数增加到列表中
+  Result := False;
+  LSerialPort := GetCommSerialPort(ARec.CommName);
 
+  if LSerialPort = nil then
+  begin
+    LSerialPort := TSerialPort.Create;
+    LSerialPort.CommName := ARec.CommName;
+
+    //创建回调函数添加
+    LCallback.Context := ARec.Context;
+    LCallback.BrowserId := ARec.BrowserId;
+    LCallback.CallbackFuncType := cftEvent;
+    LCallback.IdxName := BINDING_NAMESPACE + 'connect/' + ARec.CommName;
+    LCallback.CallbackFunc := ARec.OnDataReceivedCallbackFunc;
+    if RENDER_JsCallbackList.AddCallback(LCallback) <> '' then
+    begin
+      FCommList.Add(LSerialPort);
+      Result := True;
+    end
+    else
+      LSerialPort.Free;
+  end;
 end;
 
 
 constructor TSerialPortMgr.Create;
 begin
   inherited;
-
+  FCommList := TObjectList<TSerialPort>.Create(False);
 end;
 
 
 destructor TSerialPortMgr.Destroy;
+var
+  i: Integer;
 begin
-
+  for i := FCommList.Count - 1 downto 0 do
+  begin
+    //尝试清除回调函数
+    if FCommList.Items[i] is TSerialPort then
+      FCommList.Items[i].Free;
+  end;
+  FCommList.Free;
   inherited;
 end;
 
 
 procedure TSerialPortMgr.DisconnectFrom(AComm: string);
+var
+  i: Integer;
 begin
-
+  for i := 0 to FCommList.Count - 1 do
+  begin
+    if (FCommList.Items[i] <> nil) and (FCommList.Items[i].CommName = AComm) then
+    begin
+      FCommList.Items[i].Free;
+      FCommList.Delete(i);
+      Break;
+    end;
+  end;
 end;
+
+
+function TSerialPortMgr.GetCommSerialPort(AComm: string): TSerialPort;
+var
+  i: Integer;
+begin
+  Result := nil;
+  for i := 0 to FCommList.Count - 1 do
+  begin
+    if (FCommList.Items[i] <> nil) and (FCommList.Items[i].CommName = AComm) then
+    begin
+      Result := FCommList.Items[i];
+      Break;
+    end;
+  end;
+end;
+
 
 { TSerialPort }
 
 procedure TSerialPort.Connect;
 begin
+  //设置参数，同时设置数据接收事件
 
 end;
 
 constructor TSerialPort.Create;
 begin
   inherited;
-
+  FComm := TComm.Create(nil);
+  FComm.OnReceiveData := OnCommReceiveData;
 end;
 
 destructor TSerialPort.Destroy;
 begin
-
+  FComm.Free;
   inherited;
 end;
 
+
 procedure TSerialPort.Disconnect;
 begin
+  //检测监听列表，如果没有事件监听了，则进行释放
 
 end;
 
-procedure TSerialPort.OnCommDataReceived;
+
+procedure TSerialPort.OnCommReceiveData(Sender: TObject; Buffer: Pointer;
+  BufferLength: Word);
 begin
+  //调用回调函数列表中的回调函数
 
 end;
+
 
 end.

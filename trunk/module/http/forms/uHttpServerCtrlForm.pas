@@ -20,6 +20,8 @@ type
     procedure idhttpsrvrJobDispatchCommandOther(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure FormCreate(Sender: TObject);
+    procedure cm1ReceiveData(Sender: TObject; Buffer: Pointer;
+      BufferLength: Word);
   private
     { Private declarations }
   public
@@ -43,6 +45,12 @@ begin
     IP := '127.0.0.1';
   end;
   idhttpsrvrJobDispatch.Active := True;
+end;
+
+procedure TForm1.cm1ReceiveData(Sender: TObject; Buffer: Pointer;
+  BufferLength: Word);
+begin
+  //
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

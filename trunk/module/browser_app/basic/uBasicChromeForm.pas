@@ -27,6 +27,14 @@ type
     procedure chrmMainProcessMessageReceived(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
       const message: ICefProcessMessage; out Result: Boolean);
+
+
+    procedure WMMove(var aMessage : TWMMove); message WM_MOVE;
+    procedure WMMoving(var aMessage : TMessage); message WM_MOVING;
+    procedure WMEnterMenuLoop(var aMessage: TMessage); message WM_ENTERMENULOOP;
+    procedure WMExitMenuLoop(var aMessage: TMessage); message WM_EXITMENULOOP;
+    procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
+
   private
     procedure OpenForm(AMsg: string);
     { Private declarations }
@@ -42,7 +50,7 @@ var
 
 implementation
 
-uses uBaseJsObjectBinding;
+uses uBaseJsObjectBinding, uCEFApplication;
 
 {$R *.dfm}
 
@@ -97,6 +105,40 @@ begin
   finally
 
   end;
+end;
+
+
+
+
+procedure TBasicChromeForm.WMMove(var aMessage : TWMMove);
+begin
+  inherited;
+  if (chrmMain <> nil) then chrmMain.NotifyMoveOrResizeStarted;
+end;
+
+procedure TBasicChromeForm.WMMoving(var aMessage : TMessage);
+begin
+  inherited;
+  if (chrmMain <> nil) then chrmMain.NotifyMoveOrResizeStarted;
+end;
+
+
+procedure TBasicChromeForm.WMEnterMenuLoop(var aMessage: TMessage);
+begin
+  inherited;
+  if (aMessage.wParam = 0) and (GlobalCEFApp <> nil) then GlobalCEFApp.OsmodalLoop := True;
+end;
+
+procedure TBasicChromeForm.WMEnterSizeMove(
+  var Message: TMessage);
+begin
+  if (chrmMain <> nil) then chrmMain.NotifyMoveOrResizeStarted;
+end;
+
+procedure TBasicChromeForm.WMExitMenuLoop(var aMessage: TMessage);
+begin
+  inherited;
+  if (aMessage.wParam = 0) and (GlobalCEFApp <> nil) then GlobalCEFApp.OsmodalLoop := False;
 end;
 
 end.

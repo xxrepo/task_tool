@@ -40,11 +40,13 @@ begin
   RENDER_JsCallbackList := TRENDER_JsCallbackList.Create;
   PRENDER_RenderHelper := TRENDER_ProcessProxy.Create;
 
+  RENDER_SerialPortMgr := TSerialPortMgr.Create;
+
   GlobalCEFApp                  := TCefApplication.Create;
   GlobalCEFApp.OnContextCreated := PRENDER_RenderHelper.OnContextCreated;
   GlobalCEFApp.OnContextReleased := PRENDER_RenderHelper.OnContextReleased;
   GlobalCEFApp.OnProcessMessageReceived := PRENDER_RenderHelper.OnProcessMessageReceived;
-  GlobalCEFApp.SingleProcess := True;
+  GlobalCEFApp.SingleProcess := False;
 
   if GlobalCEFApp.StartMainProcess then
   begin
@@ -52,15 +54,19 @@ begin
     Application.MainFormOnTaskbar := True;
 
     Application.CreateForm(TAppForm, AppForm);
-  AppForm.WindowState := wsMaximized;
+    AppForm.WindowState := wsMaximized;
     Application.Run;
   end;
 
-  GlobalCEFApp.Free;
+  RENDER_SerialPortMgr.Free;
+
   PRENDER_RenderHelper.Free;
   RENDER_JsCallbackList.Free;
   BROWSER_EventJsListnerList.Free;
 
+
   FileCritical.Free;
   AppLogger.Free;
+
+  GlobalCEFApp.Free;
 end.
