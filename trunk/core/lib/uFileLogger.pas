@@ -35,7 +35,7 @@ type
     //通知到对应的窗口
     NoticeHandle: THandle;
 
-    property LogLevel: TLogLevel write FLogLevel;
+    property LogLevel: TLogLevel read FLogLevel write FLogLevel;
 
     constructor Create(AThreadCount: Integer = 1; const AFilePrefix: string = '';
           const ADtFormat: string = 'yyyymmddhh'; const ALogLevel: TLogLevel = llAll);
@@ -181,7 +181,7 @@ begin
     New(Request);
     Request^.LogLevel := AAlogLevel;
 
-    if Length(LogText) > 512 then
+    if (Length(LogText) > 512) and (AAlogLevel > llAll) and (AAlogLevel < llError) then
       Request^.LogText := LogText.Substring(0, 512)
     else
       Request^.LogText := LogText;

@@ -11,13 +11,14 @@ uses
 type
   //创建，对应的comm对象，comm名称，以及对应的回调函数
   TSerialPort = class
-  public
-    //对sp的基本配置参数的保存
-    CommName: string;
+  private
+        //对sp的基本配置参数的保存
+    FCommName: string;
 
     //实际的连接实例
-    Comm: TComm;
+    FComm: TComm;
 
+  public
     constructor Create;
     destructor Destroy; override;
 
@@ -173,6 +174,7 @@ end;
 
 procedure TSerialPortMgr.ConnectTo(AParams: string);
 begin
+  //从list中查找是否有对应comm口的监听对象，如果有，则直接
 
 end;
 

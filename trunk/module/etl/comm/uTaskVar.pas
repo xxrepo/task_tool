@@ -351,7 +351,7 @@ begin
           LStep.StepConfig.StepStatus := LStepStatus;
           LStep.ParseStepConfig(GetJsonObjectValue(AStepConfigJson, 'step_config'));
 
-          LStep.LogMsg('入参数据：' + LStep.InData.Data, llDebug);
+          LStep.LogMsg('入参数据：' + LStep.InData.Data, Logger.LogLevel);
 
           LTaskStep.OwnerBlock := ATaskBlock;
           LTaskStep.Id := LStep.StepConfig.StepId;

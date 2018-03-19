@@ -48,6 +48,9 @@ type
     function RemoveCallbackByContext(AContext: ICefV8Context): Boolean;
     function GetCallback(ABrowserId: Integer; AIdxName: string): TContextCallback;
 
+
+    function GetEventCallbacks(ABrowserId: Integer; AIdxName: string): TContextCallback;
+
     function MakeCallbackIdxName: string;
   end;
 
@@ -161,6 +164,12 @@ begin
   end;
 end;
 
+
+function TRENDER_JsCallbackList.GetEventCallbacks(ABrowserId: Integer;
+  AIdxName: string): TContextCallback;
+begin
+
+end;
 
 function TRENDER_JsCallbackList.MakeCallbackIdxName: string;
 begin
