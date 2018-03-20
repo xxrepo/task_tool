@@ -131,6 +131,7 @@
         <DCCReference Include="comm\uVVConstants.pas"/>
         <DCCReference Include="bindings\uSerialPortBinding.pas"/>
         <DCCReference Include="bindings\uBindingProxy.pas"/>
+        <DCCReference Include="comm\uGlobalVar.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -9,7 +9,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, uCEFChromium, uCEFInterfaces,
-  uCEFWindowParent, uCEFTypes, uBasicForm;
+  uCEFWindowParent, uCEFTypes, uBasicForm, uVVConstants;
 
 const
   MSG_LOAD_TARGET_URL = WM_USER + 9001;
@@ -24,6 +24,9 @@ type
     procedure chrmMainAfterCreated(Sender: TObject; const browser: ICefBrowser);
 
     procedure MsgLoadUrl(var AMsg: TMessage); message MSG_LOAD_TARGET_URL;
+    procedure MsgOpenNativeWindow(var AMsg: TMessage); message VVMSG_OPEN_NATIVE_WINDOW;
+
+
     procedure chrmMainProcessMessageReceived(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
       const message: ICefProcessMessage; out Result: Boolean);
@@ -36,7 +39,6 @@ type
     procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
 
   private
-    procedure OpenForm(AMsg: string);
     { Private declarations }
   protected
     FTargetUrl: string;
@@ -50,7 +52,7 @@ var
 
 implementation
 
-uses uBaseJsObjectBinding, uCEFApplication;
+uses uBindingProxy, uBaseJsBinding, uCEFApplication, uDefines;
 
 {$R *.dfm}
 
@@ -64,7 +66,7 @@ procedure TBasicChromeForm.chrmMainProcessMessageReceived(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
   const message: ICefProcessMessage; out Result: Boolean);
 begin
-  TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  TBindingProxy.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
 end;
 
 constructor TBasicChromeForm.Create(AOwner: TComponent; ATargetUrl: string);
@@ -84,27 +86,20 @@ begin
     chrmMain.LoadURL(FTargetUrl);
 end;
 
+procedure TBasicChromeForm.MsgOpenNativeWindow(var AMsg: TMessage);
+begin
+  if AMsg.Msg = VVMSG_OPEN_NATIVE_WINDOW then
+  begin
+    //获取全局参数
+    TBasicJsBinding.OpenNativeWindow(BROWSER_GlobalVar.GetParam(AMsg.WParam));
+  end;
+end;
+
 procedure TBasicChromeForm.tmrChromiumTimer(Sender: TObject);
 begin
   tmrChromium.Enabled := False;
   if (not chrmMain.CreateBrowser(cfwndwprntMain, '')) and (not chrmMain.Initialized) then
     tmrChromium.Enabled := True
-end;
-
-
-procedure TBasicChromeForm.OpenForm(AMsg: string);
-begin
-  try
-    with TBasicChromeForm.Create(nil, FTargetUrl) do
-    try
-      Caption := AMsg;
-      ShowModal;
-    finally
-      Free;
-    end;
-  finally
-
-  end;
 end;
 
 

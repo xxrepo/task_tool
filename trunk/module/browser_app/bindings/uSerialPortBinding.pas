@@ -6,33 +6,33 @@ interface
 
 uses
   uCEFV8Value, uCEFv8Accessor, uCEFInterfaces, uCEFTypes, uCEFConstants,
-  uCEFv8Handler, System.Generics.Collections, SPComm;
+  uCEFv8Handler, System.Generics.Collections, SPComm, Vcl.ExtCtrls;
 
 type
   TSerialPortConnectRec = record
     CommName: string;
-
-    OnDataReceivedCallbackFunc: ICefv8Value;
-    Context: ICefv8Context;
-    BrowserId: Integer;
+    CallbackIdxName: string;
+    Browser: ICefBrowser;
   end;
 
   //创建，对应的comm对象，comm名称，以及对应的回调函数
   TSerialPort = class
   private
     //对sp的基本配置参数的保存
-
+    FTimer: TTimer;
 
     //实际的连接实例
     FComm: TComm;
+    procedure OnTestTimer(Sender: TObject);
   public
     CommName: string;
+    ConnectRec: TSerialPortConnectRec;
 
 
     constructor Create;
     destructor Destroy; override;
 
-    procedure Connect;
+    procedure Connect(AConnectRec: TSerialPortConnectRec);
 
     //维护一个方法来接收数据，并且根据名称的生成规则，在回调函数中找到对应的方法，并且发起回调，
     //如果获取到的回调列表为空，则本函数讲自动释放本实例，不再进行监听
@@ -55,6 +55,7 @@ type
   end;
 
   TSerialPortFunctionBinding = class(TCefv8HandlerOwn)
+  private
   protected
     //Js Executed in Render Progress
     function Execute(const name: ustring; const obj: ICefv8Value; const arguments: TCefv8ValueArray; var retval: ICefv8Value; var exception: ustring): Boolean; override;
@@ -62,6 +63,9 @@ type
 
     //Register Js to Context
     class procedure BindJsTo(const ACefv8Value: ICefv8Value); virtual;
+    class procedure ExecuteInBrowser(Sender: TObject;
+      const browser: ICefBrowser; sourceProcess: TCefProcessId;
+      const message: ICefProcessMessage; out Result: Boolean); static;
   end;
 
   TSerialPortBinding = class
@@ -72,13 +76,13 @@ type
   end;
 
 var
-  RENDER_SerialPortMgr: TSerialPortMgr;
+  BROWSER_SerialPortMgr: TSerialPortMgr;
 
 
 implementation
 
 uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage,
-uRENDER_JsCallbackList, uCEFv8Context, uVVConstants;
+uRENDER_JsCallbackList, uCEFv8Context, uVVConstants, System.SysUtils;
 
 const
   BINDING_NAMESPACE = 'SERIAL_PORT/';
@@ -137,33 +141,44 @@ begin
   LMsgName := BINDING_NAMESPACE + name;
   if (name = 'connect') then
   begin
-    //通知mgr需要给哪个comm口添加对当前context的环境变量的监听，回调函数还是添加到callbacks中，并不会独立处理，
-    //但是必须标明是监听的哪个comm口的回调函数来标记idxname
-    LSerialPortConnectRec.CommName := arguments[0].GetStringValue;
-    LSerialPortConnectRec.OnDataReceivedCallbackFunc := arguments[0];
-    LSerialPortConnectRec.Context := TCefv8ContextRef.Current;
-    LSerialPortConnectRec.BrowserId := TCefv8ContextRef.Current.Browser.Identifier;
-    if RENDER_SerialPortMgr.ConnectTo(LSerialPortConnectRec) then
+    //还可以判断是否是合法的串口名称
+    if (Length(arguments) = 2) and (arguments[0].IsString) and (arguments[1].IsFunction) then
     begin
+      LContextCallback.Context := TCefv8ContextRef.Current;
+      LContextCallback.BrowserId := LContextCallback.Context.Browser.Identifier;
+      LContextCallback.IdxName := BINDING_NAMESPACE + 'connect/' + arguments[0].GetStringValue;
+      LContextCallback.CallbackFuncType := cftEvent;
+      LContextCallback.CallbackFunc := arguments[1];
+      LCallbackIdxName := RENDER_JsCallbackList.AddCallback(LContextCallback);
+
+      LMsg := TCefProcessMessageRef.New(LMsgName);
+      LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+      LMsg.ArgumentList.SetString(1, LContextCallback.IdxName);
+
+      //发送消息到BROWSER进程
+      TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+
       //注册或者更新回调函数
       LCefV8Accessor := TCefV8AccessorOwn.Create;
       LResult := TCefv8ValueRef.NewObject(LCefV8Accessor, nil);
       LResult.SetValueByKey('disconnect', TCefv8ValueRef.NewFunction('disconnect', Self), V8_PROPERTY_ATTRIBUTE_NONE);
-      LResult.SetValueByKey('port_name', TCefv8ValueRef.NewString('COMMMMMM1'), V8_PROPERTY_ATTRIBUTE_NONE);
+      LResult.SetValueByKey('port_name', arguments[0], V8_PROPERTY_ATTRIBUTE_NONE);
       retval := LResult;
     end
     else
-    begin
-      exception := 'connect to serial port failed!';
-    end;
+      exception := 'connect params error';
     Result := True;
   end
   else if (name = 'disconnect') then
   begin
     if obj.IsObject then
     begin
-      //通知mgr哪个context的sp的哪个端口需要断开连接
-      RENDER_SerialPortMgr.DisconnectFrom(obj.GetValueByKey('port_name').GetStringValue);
+      //发送消息给browser，断开对某个端口的监听
+      LMsg := TCefProcessMessageRef.New(LMsgName);
+      LMsg.ArgumentList.SetString(0, obj.GetValueByKey('port_name').GetStringValue);
+
+      TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
+
       retval := TCefv8ValueRef.NewBool(True);
     end
     else
@@ -188,6 +203,38 @@ begin
 end;
 
 
+//下面的代码在browser进程中执行
+class procedure TSerialPortFunctionBinding.ExecuteInBrowser(Sender: TObject;
+  const browser: ICefBrowser; sourceProcess: TCefProcessId;
+  const message: ICefProcessMessage; out Result: Boolean);
+var
+  LMsg: ICefProcessMessage;
+  LParams: ICefValue;
+  LJsListnerRec: TEventJsListnerRec;
+  LSerialPortConnectRec: TSerialPortConnectRec;
+begin
+  if message.Name = BINDING_NAMESPACE + 'connect' then
+  begin
+    //添加到BROWSER的串口列表中去
+    LSerialPortConnectRec.CommName := message.ArgumentList.GetString(0);
+    LSerialPortConnectRec.Browser := browser;
+    LSerialPortConnectRec.CallbackIdxName := message.ArgumentList.GetString(1);
+    BROWSER_SerialPortMgr.ConnectTo(LSerialPortConnectRec);
+
+    Result := True;
+  end
+  else if message.Name = BINDING_NAMESPACE + 'disconnect' then
+  begin
+    //从Browser_mgr里面移除对于那个的端口监听
+    BROWSER_SerialPortMgr.DisconnectFrom(message.ArgumentList.GetString(0));
+
+    Result := True;
+  end
+  else
+    Result := False;
+end;
+
+
 { TSerialPortMgr }
 
 function TSerialPortMgr.ConnectTo(ARec: TSerialPortConnectRec): Boolean;
@@ -203,20 +250,10 @@ begin
   begin
     LSerialPort := TSerialPort.Create;
     LSerialPort.CommName := ARec.CommName;
+    LSerialPort.ConnectRec := ARec;
+    LSerialPort.Connect(ARec);
 
-    //创建回调函数添加
-    LCallback.Context := ARec.Context;
-    LCallback.BrowserId := ARec.BrowserId;
-    LCallback.CallbackFuncType := cftEvent;
-    LCallback.IdxName := BINDING_NAMESPACE + 'connect/' + ARec.CommName;
-    LCallback.CallbackFunc := ARec.OnDataReceivedCallbackFunc;
-    if RENDER_JsCallbackList.AddCallback(LCallback) <> '' then
-    begin
-      FCommList.Add(LSerialPort);
-      Result := True;
-    end
-    else
-      LSerialPort.Free;
+    FCommList.Add(LSerialPort);
   end;
 end;
 
@@ -249,8 +286,9 @@ var
 begin
   for i := 0 to FCommList.Count - 1 do
   begin
-    if (FCommList.Items[i] <> nil) and (FCommList.Items[i].CommName = AComm) then
+    if (FCommList.Items[i] <> nil) and (FCommList.Items[i].ConnectRec.CommName = AComm) then
     begin
+      FCommList.Items[i].Disconnect;
       FCommList.Items[i].Free;
       FCommList.Delete(i);
       Break;
@@ -277,10 +315,11 @@ end;
 
 { TSerialPort }
 
-procedure TSerialPort.Connect;
+procedure TSerialPort.Connect(AConnectRec: TSerialPortConnectRec);
 begin
-  //设置参数，同时设置数据接收事件
-
+  //设置参数，同时设置数据接收事
+  ConnectRec := AConnectRec;
+  FTimer.Enabled := True;
 end;
 
 constructor TSerialPort.Create;
@@ -288,10 +327,15 @@ begin
   inherited;
   FComm := TComm.Create(nil);
   FComm.OnReceiveData := OnCommReceiveData;
+  FTimer := TTimer.Create(nil);
+  FTimer.Interval := 50;
+  FTimer.Enabled := False;
+  FTimer.OnTimer := OnTestTimer;
 end;
 
 destructor TSerialPort.Destroy;
 begin
+  FTimer.Free;
   FComm.Free;
   inherited;
 end;
@@ -300,7 +344,7 @@ end;
 procedure TSerialPort.Disconnect;
 begin
   //检测监听列表，如果没有事件监听了，则进行释放
-
+  FTimer.Enabled := False;
 end;
 
 
@@ -311,5 +355,18 @@ begin
 
 end;
 
+procedure TSerialPort.OnTestTimer(Sender: TObject);
+var
+  LCallback: TContextCallback;
+  LMsg: ICefProcessMessage;
+begin
+  //调用回调函数列表中的回调函数
+  LMsg := TCefProcessMessageRef.New(IPC_MSG_EXEC_CALLBACK);
+  LMsg.ArgumentList.SetString(0, ConnectRec.CallbackIdxName);
+  LMsg.ArgumentList.SetString(1, FormatDateTime('yyyymmddhhnnss.zzz', Now));
+  ConnectRec.Browser.SendProcessMessage(PID_RENDERER, LMsg);
+end;
+
 
 end.
+

@@ -25,7 +25,8 @@ uses
   uBaseJsObjectBinding in 'bindings\uBaseJsObjectBinding.pas',
   uVVConstants in 'comm\uVVConstants.pas',
   uSerialPortBinding in 'bindings\uSerialPortBinding.pas',
-  uBindingProxy in 'bindings\uBindingProxy.pas';
+  uBindingProxy in 'bindings\uBindingProxy.pas',
+  uGlobalVar in 'comm\uGlobalVar.pas';
 
 {$R *.res}
 
@@ -36,16 +37,18 @@ begin
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
 
+  BROWSER_GlobalVar := TGlobalVar.Create;
   BROWSER_EventJsListnerList := TBROWSER_EventJsListnerList.Create;
-  RENDER_JsCallbackList := TRENDER_JsCallbackList.Create;
-  PRENDER_RenderHelper := TRENDER_ProcessProxy.Create;
+  BROWSER_SerialPortMgr := TSerialPortMgr.Create;
 
-  RENDER_SerialPortMgr := TSerialPortMgr.Create;
+  RENDER_JsCallbackList := TRENDER_JsCallbackList.Create;
+  RENDER_RenderHelper := TRENDER_ProcessProxy.Create;
+
 
   GlobalCEFApp                  := TCefApplication.Create;
-  GlobalCEFApp.OnContextCreated := PRENDER_RenderHelper.OnContextCreated;
-  GlobalCEFApp.OnContextReleased := PRENDER_RenderHelper.OnContextReleased;
-  GlobalCEFApp.OnProcessMessageReceived := PRENDER_RenderHelper.OnProcessMessageReceived;
+  GlobalCEFApp.OnContextCreated := RENDER_RenderHelper.OnContextCreated;
+  GlobalCEFApp.OnContextReleased := RENDER_RenderHelper.OnContextReleased;
+  GlobalCEFApp.OnProcessMessageReceived := RENDER_RenderHelper.OnProcessMessageReceived;
   GlobalCEFApp.SingleProcess := False;
 
   if GlobalCEFApp.StartMainProcess then
@@ -54,16 +57,17 @@ begin
     Application.MainFormOnTaskbar := True;
 
     Application.CreateForm(TAppForm, AppForm);
-    AppForm.WindowState := wsMaximized;
+  AppForm.WindowState := wsMaximized;
     Application.Run;
   end;
 
-  RENDER_SerialPortMgr.Free;
 
-  PRENDER_RenderHelper.Free;
+  RENDER_RenderHelper.Free;
   RENDER_JsCallbackList.Free;
-  BROWSER_EventJsListnerList.Free;
 
+  BROWSER_SerialPortMgr.Free;
+  BROWSER_EventJsListnerList.Free;
+  BROWSER_GlobalVar.Free;
 
   FileCritical.Free;
   AppLogger.Free;

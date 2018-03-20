@@ -7,12 +7,11 @@ uses uCEFInterfaces, uCEFTypes;
 type
   TBindingProxy = class
   private
+  public
+    class procedure BindJsTo(const ACefV8Context: ICefv8Context); static;
     class procedure ExecuteInBrowser(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
       const message: ICefProcessMessage; out Result: Boolean); static;
-  public
-    class procedure BindJsTo(const ACefV8Context: ICefv8Context); static;
-
   end;
 
 implementation
@@ -38,6 +37,8 @@ class procedure TBindingProxy.ExecuteInBrowser(Sender: TObject;
 begin
   //要处理对BasicJsBinding，依次对上面的方法进行代理处理
   TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  if not Result then
+    TSerialPortFunctionBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
 end;
 
 

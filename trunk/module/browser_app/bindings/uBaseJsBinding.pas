@@ -30,13 +30,17 @@ type
     class procedure ExecuteInBrowser(Sender: TObject;
                       const browser: ICefBrowser; sourceProcess: TCefProcessId;
                       const message: ICefProcessMessage; out Result: Boolean); virtual;
+
+    class procedure OpenNativeWindow(AWindowParams: string); static;
   end;
 
 
 implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
-  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants;
+  uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants,
+  System.JSON, uDefines, uFunctions,
+  uBasicChromeForm;
 
 
 const
@@ -150,21 +154,12 @@ var
   LMsg: ICefProcessMessage;
   LParams: ICefValue;
   LJsListnerRec: TEventJsListnerRec;
+  LParamIdx: Integer;
 begin
   if message.Name = BINDING_NAMESPACE + 'openNativeWindow' then
   begin
-    //发送消息给mainform.handle，在mainform.handle实现openNativeWindow的消息响应
-    //回复一条回调函数的消息到render中，同时删掉对应的监听回调
-    LMsg := TCefProcessMessageRef.New(message.Name);
-    LMsg.ArgumentList.SetValue(0, message.ArgumentList.GetValue(0));
-
-    LParams := TCefValueRef.New;
-    LParams.SetString('hello, 这是测试字符串');
-    LMsg.ArgumentList.SetValue(0, LParams);
-
-    //TODO 可以告诉render，执行完毕后，可以移除这个回调函数
-    browser.SendProcessMessage(PID_RENDERER, LMsg);
-
+    LParamIdx := BROWSER_GlobalVar.AddParam(message.ArgumentList.GetString(0));
+    PostMessage(Application.MainForm.Handle, VVMSG_OPEN_NATIVE_WINDOW, LParamIdx, 0);
     Result := True;
   end
   else if message.Name = BINDING_NAMESPACE + 'executeTask' then
@@ -202,6 +197,30 @@ begin
   end
   else
     Result := False;
+end;
+
+
+//
+class procedure TBasicJsBinding.OpenNativeWindow(AWindowParams: string);
+var
+  LWindowParamsJson: TJSONObject;
+begin
+  LWindowParamsJson := TJSONObject.ParseJSONValue(AWindowParams) as TJSONObject;
+  if LWindowParamsJson = nil then Exit;
+
+  //甚至可以在这里提供几个自定义相关的不同窗口类来对外提供不同的原生窗口界面
+  try
+    with TBasicChromeForm.Create(nil, 'file:///' + ExePath + 'app/html/index.html') do
+    try
+      Caption := GetJsonObjectValue(LWindowParamsJson, 'caption');
+      ShowModal;
+    finally
+      Free;
+    end;
+  finally
+    LWindowParamsJson.Free;
+  end;
+
 end;
 
 end.
