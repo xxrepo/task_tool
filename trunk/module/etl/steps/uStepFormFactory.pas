@@ -22,7 +22,8 @@ uses
    , uStepIniReadForm
    , uStepIniWriteForm
    , uStepQueryForm
-   , uStepWriteTxtFileForm
+   , uStepTxtFileWriterForm
+   , uStepTxtFileReaderForm
    , uStepDatasetSpliterForm
    , uStepSubTaskForm
    , uStepConditionForm

@@ -112,6 +112,9 @@ begin
   FStepConfig.Free;
   if FInDataJson <> nil then
     FInDataJson.Free;
+  //TODO 如果这里是注册到taskvar，则不进行释放，有taskvar去进行释放？
+  if FOutData.JsonValue <> nil then
+    FreeAndNil(FOutData.JsonValue);
   inherited;
 end;
 

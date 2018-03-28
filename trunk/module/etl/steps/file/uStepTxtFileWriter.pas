@@ -1,4 +1,4 @@
-unit uStepWriteTxtFile;
+unit uStepTxtFileWriter;
 
 interface
 
@@ -6,7 +6,7 @@ uses
   uStepBasic, System.JSON;
 
 type
-  TStepWriteTxtFile = class (TStepBasic)
+  TStepTxtFileWriter = class (TStepBasic)
   private
     FFileName: string;
     FRealAbsFileName: string;
@@ -27,14 +27,14 @@ uses
 
 { TStepQuery }
 
-procedure TStepWriteTxtFile.MakeStepConfigJson(var AToConfig: TJSONObject);
+procedure TStepTxtFileWriter.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   inherited MakeStepConfigJson(AToConfig);
   AToConfig.AddPair(TJSONPair.Create('to_file_name', FFileName));
 end;
 
 
-procedure TStepWriteTxtFile.ParseStepConfig(AConfigJsonStr: string);
+procedure TStepTxtFileWriter.ParseStepConfig(AConfigJsonStr: string);
 begin
   inherited ParseStepConfig(AConfigJsonStr);
   FFileName := GetJsonObjectValue(StepConfig.ConfigJson, 'to_file_name');
@@ -42,7 +42,7 @@ begin
 end;
 
 
-procedure TStepWriteTxtFile.StartSelf;
+procedure TStepTxtFileWriter.StartSelf;
 var
   F: TextFile;
   LDir: string;
@@ -52,7 +52,7 @@ begin
 
     if FRealAbsFileName = '' then
     begin
-      StopExceptionRaise('目标txt文件名为空');
+      StopExceptionRaise('目标文件名为空');
     end;
     
     LDir := ExtractFileDir(FRealAbsFileName);
@@ -64,29 +64,9 @@ begin
       end;
     end;
 
-
-    //根据指定日期来重新生成
-//    while True do
-//    begin
-//      CheckTaskStatus;
-//
-//      AssignFile(F, FRealAbsFileName);
-//
-//      if not FileExists(FRealAbsFileName) then
-//        Rewrite(F)
-//      else
-//        Append(F);
-//
-//      Writeln(F, FInData.Data);
-//
-//      CloseFile(F);
-//
-//      Sleep(1000);
-//    end;
-
     AssignFile(F, FRealAbsFileName);
 
-    TaskVar.Logger.Debug(FormatLogMsg('写如文件：' + FRealAbsFileName));
+    TaskVar.Logger.Debug(FormatLogMsg('写入文件：' + FRealAbsFileName));
 
     if not FileExists(FRealAbsFileName) then
       Rewrite(F)
@@ -104,9 +84,9 @@ end;
 
 
 initialization
-RegisterClass(TStepWriteTxtFile);
+RegisterClass(TStepTxtFileWriter);
 
 finalization
-UnRegisterClass(TStepWriteTxtFile);
+UnRegisterClass(TStepTxtFileWriter);
 
 end.

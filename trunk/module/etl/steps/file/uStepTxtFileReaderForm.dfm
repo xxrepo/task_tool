@@ -1,21 +1,28 @@
-inherited StepWriteTxtFileForm: TStepWriteTxtFileForm
-  Caption = #20889'txt'#25991#20214
+inherited StepTxtFileReaderForm: TStepTxtFileReaderForm
+  Caption = #20889#25991#26412#25991#20214#65288'txt, json...'#65289
   ClientHeight = 341
-  ExplicitHeight = 370
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
     Top = 284
     ExplicitTop = 284
+    inherited btnOK: TBitBtn
+      ExplicitLeft = 450
+    end
+    inherited btnCancel: TBitBtn
+      ExplicitLeft = 560
+    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 284
+    ExplicitWidth = 667
     ExplicitHeight = 284
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
-      ExplicitWidth = 673
+      ExplicitWidth = 663
       ExplicitHeight = 257
       object lbl2: TLabel [1]
         Left = 52
@@ -49,8 +56,7 @@ inherited StepWriteTxtFileForm: TStepWriteTxtFileForm
     end
   end
   object dlgOpenToFileName: TOpenDialog
-    DefaultExt = 'txt'
-    Filter = #25991#26412#25991#20214#65288'*.txt'#65289'|*.txt'
+    Filter = #25991#26412#25991#20214
     Left = 537
     Top = 188
   end

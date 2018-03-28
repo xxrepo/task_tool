@@ -1,14 +1,14 @@
-unit uStepWriteTxtFileForm;
+unit uStepTxtFileWriterForm;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uStepBasicForm, Vcl.StdCtrls, RzTabs,
-  Vcl.Buttons, Vcl.ExtCtrls, uStepWriteTxtFile, Vcl.Mask, RzEdit, RzBtnEdt;
+  Vcl.Buttons, Vcl.ExtCtrls, uStepTxtFileWriter, Vcl.Mask, RzEdit, RzBtnEdt;
 
 type
-  TStepWriteTxtFileForm = class(TStepBasicForm)
+  TStepTxtFileWriterForm = class(TStepBasicForm)
     lbl2: TLabel;
     btnToFileName: TRzButtonEdit;
     dlgOpenToFileName: TOpenDialog;
@@ -25,7 +25,7 @@ type
   end;
 
 var
-  StepWriteTxtFileForm: TStepWriteTxtFileForm;
+  StepTxtFileWriterForm: TStepTxtFileWriterForm;
 
 implementation
 
@@ -33,16 +33,16 @@ uses uDesignTimeDefines;
 
 {$R *.dfm}
 
-procedure TStepWriteTxtFileForm.btnOKClick(Sender: TObject);
+procedure TStepTxtFileWriterForm.btnOKClick(Sender: TObject);
 begin
   inherited;
-  with Step as TStepWriteTxtFile do
+  with Step as TStepTxtFileWriter do
   begin
     ToFileName := btnToFileName.Text;
   end;
 end;
 
-procedure TStepWriteTxtFileForm.btnToFileNameButtonClick(Sender: TObject);
+procedure TStepTxtFileWriterForm.btnToFileNameButtonClick(Sender: TObject);
 begin
   inherited;
   dlgOpenToFileName.InitialDir := ExtractFileDir(TDesignUtil.GetRealAbsolutePath(btnToFileName.Text));
@@ -52,22 +52,22 @@ begin
   end;
 end;
 
-procedure TStepWriteTxtFileForm.ParseStepConfig(AConfigJsonStr: string);
+procedure TStepTxtFileWriterForm.ParseStepConfig(AConfigJsonStr: string);
 var
-  LStep: TStepWriteTxtFile;
+  LStep: TStepTxtFileWriter;
 begin
   inherited ParseStepConfig(AConfigJsonStr);
 
-  LStep := TStepWriteTxtFile(Step);
+  LStep := TStepTxtFileWriter(Step);
   btnToFileName.Text := LStep.ToFileName;
 end;
 
 
 initialization
-RegisterClass(TStepWriteTxtFileForm);
+RegisterClass(TStepTxtFileWriterForm);
 
 finalization
-UnRegisterClass(TStepWriteTxtFileForm);
+UnRegisterClass(TStepTxtFileWriterForm);
 
 end.
 

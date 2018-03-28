@@ -172,9 +172,9 @@
         <DCCReference Include="steps\common\uStepNullForm.pas">
             <Form>StepNullForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\database\uStepQuery.pas"/>
-        <DCCReference Include="steps\database\uStepQueryForm.pas">
-            <Form>StepQueryForm</Form>
+        <DCCReference Include="steps\database\uStepJson2Table.pas"/>
+        <DCCReference Include="steps\database\uStepJson2TableForm.pas">
+            <Form>StepJson2TableForm</Form>
         </DCCReference>
         <DCCReference Include="steps\file\uStepUnzip.pas"/>
         <DCCReference Include="steps\file\uStepUnzipForm.pas">
@@ -215,9 +215,9 @@
             <Form>GlobalVarSettingForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\data\uStepFieldsOper.pas"/>
-        <DCCReference Include="steps\data\uStepFieldsOperForm.pas">
-            <Form>StepFieldsOperForm</Form>
+        <DCCReference Include="steps\data\uStepFieldsMap.pas"/>
+        <DCCReference Include="steps\data\uStepFieldsMapForm.pas">
+            <Form>StepFieldsMapForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\report\uStepReportMachine.pas"/>
@@ -302,9 +302,9 @@
             <Form>StepHttpRequestForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="steps\file\uStepWriteTxtFile.pas"/>
-        <DCCReference Include="steps\file\uStepWriteTxtFileForm.pas">
-            <Form>StepWriteTxtFileForm</Form>
+        <DCCReference Include="steps\file\uStepTxtFileReader.pas"/>
+        <DCCReference Include="steps\file\uStepTxtFileReaderForm.pas">
+            <Form>StepTxtFileReaderForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\common\uStepCondition.pas"/>
@@ -314,6 +314,21 @@
         </DCCReference>
         <DCCReference Include="forms\uPackageHelperForm.pas">
             <Form>PackageHelperForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\file\uStepTxtFileWriter.pas"/>
+        <DCCReference Include="steps\file\uStepTxtFileWriterForm.pas">
+            <Form>StepTxtFileWriterForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\data\uStepFieldsOper.pas"/>
+        <DCCReference Include="steps\data\uStepFieldsOperForm.pas">
+            <Form>StepFieldsOperForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="steps\database\uStepQuery.pas"/>
+        <DCCReference Include="steps\database\uStepQueryForm.pas">
+            <Form>StepQueryForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
@@ -355,12 +370,27 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="ProjectiOSDeviceResourceRules">
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
@@ -714,27 +744,12 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
+                <DeployClass Name="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>

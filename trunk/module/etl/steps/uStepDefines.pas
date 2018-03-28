@@ -6,7 +6,7 @@ uses System.JSON, System.SysUtils;
 
 type
   //Step中数据的几个类型，实际上目前仅仅支持文本型，暂时不做其他处理
-  TStepDataType = (sdtText);
+  TStepDataType = (sdtText, sdtJsonValue, sdtJsonArray, sdtJsonObject);
 
   PStepData = ^TStepData;
 
@@ -14,6 +14,7 @@ type
   TStepData = record
     DataType: TStepDataType;
     Data: string;
+    JsonValue: TJSONValue;
   end;
 
 

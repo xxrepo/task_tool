@@ -43,8 +43,8 @@ uses
   uStepIniWrite in 'steps\file\uStepIniWrite.pas',
   uStepIniWriteForm in 'steps\file\uStepIniWriteForm.pas' {StepIniWriteForm},
   uStepNullForm in 'steps\common\uStepNullForm.pas' {StepNullForm},
-  uStepQuery in 'steps\database\uStepQuery.pas',
-  uStepQueryForm in 'steps\database\uStepQueryForm.pas' {StepQueryForm},
+  uStepJson2Table in 'steps\database\uStepJson2Table.pas',
+  uStepJson2TableForm in 'steps\database\uStepJson2TableForm.pas' {StepJson2TableForm},
   uStepUnzip in 'steps\file\uStepUnzip.pas',
   uStepUnzipForm in 'steps\file\uStepUnzipForm.pas' {StepUnzipForm},
   uStepFileDelete in 'steps\file\uStepFileDelete.pas',
@@ -65,8 +65,8 @@ uses
   uScheduleRunner in 'runners\uScheduleRunner.pas',
   uGlobalVar in 'comm\uGlobalVar.pas',
   uGlobalVarSettingForm in 'forms\uGlobalVarSettingForm.pas' {GlobalVarSettingForm},
-  uStepFieldsOper in 'steps\data\uStepFieldsOper.pas',
-  uStepFieldsOperForm in 'steps\data\uStepFieldsOperForm.pas' {StepFieldsOperForm},
+  uStepFieldsMap in 'steps\data\uStepFieldsMap.pas',
+  uStepFieldsMapForm in 'steps\data\uStepFieldsMapForm.pas' {StepFieldsMapForm},
   uStepReportMachine in 'steps\report\uStepReportMachine.pas',
   uStepReportMachineForm in 'steps\report\uStepReportMachineForm.pas' {StepReportMachineForm},
   uStepFormSettings in 'steps\uStepFormSettings.pas',
@@ -101,11 +101,17 @@ uses
   uStepExeCtrl in 'steps\util\uStepExeCtrl.pas',
   uStepExeCtrlForm in 'steps\util\uStepExeCtrlForm.pas' {StepExeCtrlForm},
   uStepHttpRequestForm in 'steps\network\uStepHttpRequestForm.pas' {StepHttpRequestForm},
-  uStepWriteTxtFile in 'steps\file\uStepWriteTxtFile.pas',
-  uStepWriteTxtFileForm in 'steps\file\uStepWriteTxtFileForm.pas' {StepWriteTxtFileForm},
+  uStepTxtFileReader in 'steps\file\uStepTxtFileReader.pas',
+  uStepTxtFileReaderForm in 'steps\file\uStepTxtFileReaderForm.pas' {StepTxtFileReaderForm},
   uStepCondition in 'steps\common\uStepCondition.pas',
   uStepConditionForm in 'steps\common\uStepConditionForm.pas' {StepConditionForm},
-  uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm};
+  uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm},
+  uStepTxtFileWriter in 'steps\file\uStepTxtFileWriter.pas',
+  uStepTxtFileWriterForm in 'steps\file\uStepTxtFileWriterForm.pas' {StepTxtFileWriterForm},
+  uStepFieldsOper in 'steps\data\uStepFieldsOper.pas',
+  uStepFieldsOperForm in 'steps\data\uStepFieldsOperForm.pas' {StepFieldsOperForm},
+  uStepQuery in 'steps\database\uStepQuery.pas',
+  uStepQueryForm in 'steps\database\uStepQueryForm.pas' {StepQueryForm};
 
 {$R *.res}
 
@@ -122,7 +128,10 @@ begin
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
   begin
     Application.CreateForm(TProjectForm, ProjectForm);
-    ProjectForm.WindowState := wsMaximized;
+  Application.CreateForm(TStepTxtFileWriterForm, StepTxtFileWriterForm);
+  Application.CreateForm(TStepFieldsOperForm, StepFieldsOperForm);
+  Application.CreateForm(TStepQueryForm, StepQueryForm);
+  ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;
 

@@ -1,68 +1,49 @@
-inherited StepFieldsOperForm: TStepFieldsOperForm
-  Caption = 'Fields'#23383#27573#22788#29702
-  ClientHeight = 504
-  ExplicitHeight = 543
+inherited StepFieldsMapForm: TStepFieldsMapForm
+  Caption = 'Fields'#23383#27573#26144#23556
+  ClientHeight = 512
+  ExplicitHeight = 551
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 447
+    Top = 455
     ExplicitTop = 447
-    inherited btnOK: TBitBtn
-      ExplicitLeft = 450
-    end
-    inherited btnCancel: TBitBtn
-      ExplicitLeft = 560
-    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 447
-    ExplicitWidth = 667
+    Height = 455
     ExplicitHeight = 447
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitLeft = 1
-      ExplicitTop = 24
-      ExplicitWidth = 663
       ExplicitHeight = 420
       object lbl2: TLabel [1]
-        Left = 52
-        Top = 120
-        Width = 56
+        Left = 19
+        Top = 115
+        Width = 89
         Height = 17
-        Caption = #23383#27573#21517#31216
+        Caption = 'JsonArray'#25968#25454
       end
       object lblParams: TLabel [2]
         Left = 52
-        Top = 210
+        Top = 156
         Width = 56
         Height = 17
         Caption = #36755#20986#21442#25968
       end
-      object lblDb: TRzLabel [3]
-        Left = 50
-        Top = 164
-        Width = 56
-        Height = 17
-        Alignment = taRightJustify
-        Caption = #23383#27573#31867#22411
-      end
       inherited edtDescription: TEdit
-        TabOrder = 5
+        TabOrder = 4
       end
       inherited chkRegDataToTask: TCheckBox
-        TabOrder = 6
-        Visible = False
+        TabOrder = 5
       end
-      object edtFieldName: TEdit
+      object edtDataRef: TEdit
         Left = 142
-        Top = 117
+        Top = 112
         Width = 305
         Height = 25
         TabOrder = 1
       end
       object dbnvgrParams: TDBNavigator
         Left = 142
-        Top = 206
+        Top = 152
         Width = 240
         Height = 25
         DataSource = dsParams
@@ -70,9 +51,9 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
       end
       object dbgrdhInputParams: TDBGridEh
         Left = 142
-        Top = 232
+        Top = 178
         Width = 469
-        Height = 159
+        Height = 241
         DataSource = dsParams
         DynProps = <>
         HorzScrollBar.Height = 10
@@ -108,7 +89,7 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
               'system.time'
               'system.timestamp')
             Title.Caption = #21442#25968#20540
-            Width = 177
+            Width = 142
           end
           item
             CellButtons = <>
@@ -141,22 +122,6 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
           end>
         object RowDetailData: TRowDetailPanelControlEh
         end
-      end
-      object cbbFieldDataType: TComboBox
-        Left = 142
-        Top = 161
-        Width = 305
-        Height = 25
-        Style = csDropDownList
-        ItemIndex = 0
-        TabOrder = 4
-        Text = 'string'
-        Items.Strings = (
-          'string'
-          'int'
-          'float'
-          'currency'
-          'datetime')
       end
     end
   end
@@ -194,12 +159,12 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 634
-    Top = 242
+    Left = 532
+    Top = 88
   end
   object dsParams: TDataSource
     DataSet = cdsParams
-    Left = 632
-    Top = 184
+    Left = 474
+    Top = 88
   end
 end

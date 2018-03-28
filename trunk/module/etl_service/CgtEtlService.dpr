@@ -21,11 +21,11 @@ uses
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
   uStepHttpRequest in '..\etl\steps\network\uStepHttpRequest.pas',
-  uStepQuery in '..\etl\steps\database\uStepQuery.pas',
+  uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
   uGlobalVar in '..\etl\comm\uGlobalVar.pas',
-  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
+  uStepFieldsMap in '..\etl\steps\data\uStepFieldsMap.pas',
   uStepFormSettings in '..\etl\steps\uStepFormSettings.pas',
   uStepJson2DataSet in '..\etl\steps\data\uStepJson2DataSet.pas',
   uTaskDefine in '..\etl\comm\uTaskDefine.pas',
@@ -54,9 +54,10 @@ uses
   uStepWaitTime in '..\etl\steps\util\uStepWaitTime.pas',
   uStepExeCtrl in '..\etl\steps\util\uStepExeCtrl.pas',
   uStepServiceCtrl in '..\etl\steps\util\uStepServiceCtrl.pas',
-  uStepWriteTxtFile in '..\etl\steps\file\uStepWriteTxtFile.pas',
   uStepCondition in '..\etl\steps\common\uStepCondition.pas',
-  uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas';
+  uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas',
+  uStepTxtFileReader in '..\etl\steps\file\uStepTxtFileReader.pas',
+  uStepTxtFileWriter in '..\etl\steps\file\uStepTxtFileWriter.pas';
 
 {$R *.RES}
 

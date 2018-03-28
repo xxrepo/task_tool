@@ -24,7 +24,8 @@ uses
   uStepIniRead,
   uStepIniWrite,
   uStepQuery,
-  uStepWriteTxtFile,
+  uStepTxtFileWriter,
+  uStepTxtFileReader,
   uStepDatasetSpliter,
   uStepSubTask,
   uStepCondition,
@@ -102,7 +103,11 @@ begin
       end;
       40020:
       begin
-        Result := TStepWriteTxtFile.Create(ATaskVar);
+        Result := TStepTxtFileWriter.Create(ATaskVar);
+      end;
+      40021:
+      begin
+        Result := TStepTxtFileReader.Create(ATaskVar);
       end;
       40030:
       begin
@@ -344,9 +349,18 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
   LRowJson.AddPair(TJSONPair.Create('step_type', 'FILE_WRITE_TEXT'));
   LRowJson.AddPair(TJSONPair.Create('step_type_id', '40020'));
-  LRowJson.AddPair(TJSONPair.Create('step_type_name', '写Txt文件'));
-  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepWriteTxtFile'));
-  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepWriteTxtFileForm'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '写文本文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTxtFileWriter'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTxtFileWriterForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'FILE_READ_TEXT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40021'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '读文本文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTxtFileReader'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTxtFileReaderForm'));
   SysSteps.AddElement(LRowJson);
 
 
