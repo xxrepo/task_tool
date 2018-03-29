@@ -19,7 +19,7 @@ function Md5String(AText: string): string;
 
 
 function VariantValueByDataType(AVar: Variant; ADataType: string = 'string'): Variant;
-
+function JsonValueToVariant(AJsonValue: TJSONValue): Variant;
 
 function SortJsonArray(AJsonArray: TJSONArray; ASortByField: string;
                AFieldType: string = 'string'; ASortType: string = 'ASC'): TJSONArray;
@@ -269,6 +269,44 @@ begin
     end;
   end;
   Result := VariantValueByDataType(Result);
+end;
+
+
+function GetJsonObjectRawValue(AJsonObject: TJSONObject; AKey: string): Variant;
+var
+  LJsonValue: TJSONValue;
+begin
+  Result := '';
+  if AJsonObject <> nil then
+    LJsonValue := AJsonObject.GetValue(AKey);
+  if (LJsonValue <> nil) then
+  begin
+    if (LJsonValue is TJSONObject) or (LJsonValue is TJSONArray) then
+    begin
+      Result := (LJsonValue.ToJSON);
+    end
+    else
+    begin
+      Result := LJsonValue.Value;
+    end;
+  end;
+  Result := VariantValueByDataType(Result);
+end;
+
+
+function JsonValueToVariant(AJsonValue: TJSONValue): Variant;
+begin
+  Result := AJsonValue.Value;
+  if AJsonValue is TJSONNull then
+    Result := null
+  else if AJsonValue is TJSONTrue then
+    Result := True
+  else if AJsonValue is TJSONFalse then
+    Result := False
+  else if AJsonValue is TJSONNumber then
+    Result := StrToFloatDef(AJsonValue.Value, 0)
+  else if AJsonValue is TJSONString then
+    Result := AJsonValue.Value;
 end;
 
 

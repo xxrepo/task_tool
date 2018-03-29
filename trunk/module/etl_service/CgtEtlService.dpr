@@ -21,7 +21,6 @@ uses
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
   uStepHttpRequest in '..\etl\steps\network\uStepHttpRequest.pas',
-  uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
   uThreadSafeFile in '..\etl\comm\uThreadSafeFile.pas',
   uGlobalVar in '..\etl\comm\uGlobalVar.pas',
@@ -57,7 +56,11 @@ uses
   uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas',
   uStepTxtFileReader in '..\etl\steps\file\uStepTxtFileReader.pas',
-  uStepTxtFileWriter in '..\etl\steps\file\uStepTxtFileWriter.pas';
+  uStepTxtFileWriter in '..\etl\steps\file\uStepTxtFileWriter.pas',
+  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
+  uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
+  uStepSQL in '..\etl\steps\database\uStepSQL.pas',
+  uStepQuery in '..\etl\steps\database\uStepQuery.pas';
 
 {$R *.RES}
 

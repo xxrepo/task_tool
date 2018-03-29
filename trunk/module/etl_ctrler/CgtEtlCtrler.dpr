@@ -34,13 +34,11 @@ uses
   uStepDatasetSpliter in '..\etl\steps\data\uStepDatasetSpliter.pas',
   uStepDefines in '..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\etl\steps\uStepFactory.pas',
-  uStepFieldsMap in '..\etl\steps\data\uStepFieldsMap.pas',
   uStepFileDelete in '..\etl\steps\file\uStepFileDelete.pas',
   uStepHttpRequest in '..\etl\steps\network\uStepHttpRequest.pas',
   uStepIniRead in '..\etl\steps\file\uStepIniRead.pas',
   uStepIniWrite in '..\etl\steps\file\uStepIniWrite.pas',
   uStepJson2DataSet in '..\etl\steps\data\uStepJson2DataSet.pas',
-  uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
   uStepTaskResult in '..\etl\steps\common\uStepTaskResult.pas',
   uStepVarDefine in '..\etl\steps\common\uStepVarDefine.pas',
   uFileFinder in '..\..\core\lib\uFileFinder.pas',
@@ -65,7 +63,12 @@ uses
   uStepCondition in '..\etl\steps\common\uStepCondition.pas',
   uStepExceptionCatch in '..\etl\steps\control\uStepExceptionCatch.pas',
   uStepTxtFileReader in '..\etl\steps\file\uStepTxtFileReader.pas',
-  uStepTxtFileWriter in '..\etl\steps\file\uStepTxtFileWriter.pas';
+  uStepTxtFileWriter in '..\etl\steps\file\uStepTxtFileWriter.pas',
+  uStepFieldsMap in '..\etl\steps\data\uStepFieldsMap.pas',
+  uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
+  uStepQuery in '..\etl\steps\database\uStepQuery.pas',
+  uStepSQL in '..\etl\steps\database\uStepSQL.pas',
+  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas';
 
 {$R *.res}
 

@@ -53,6 +53,14 @@ inherited StepTxtFileWriterForm: TStepTxtFileWriterForm
         ButtonWidth = 15
         OnButtonClick = btnToFileNameButtonClick
       end
+      object chkRewrite: TCheckBox
+        Left = 140
+        Top = 167
+        Width = 189
+        Height = 17
+        Caption = #35206#30422#24050#26377#25991#20214
+        TabOrder = 4
+      end
     end
   end
   object dlgOpenToFileName: TOpenDialog

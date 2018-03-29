@@ -110,6 +110,8 @@ uses
   uStepTxtFileWriterForm in 'steps\file\uStepTxtFileWriterForm.pas' {StepTxtFileWriterForm},
   uStepFieldsOper in 'steps\data\uStepFieldsOper.pas',
   uStepFieldsOperForm in 'steps\data\uStepFieldsOperForm.pas' {StepFieldsOperForm},
+  uStepSQL in 'steps\database\uStepSQL.pas',
+  uStepSQLForm in 'steps\database\uStepSQLForm.pas' {StepSQLForm},
   uStepQuery in 'steps\database\uStepQuery.pas',
   uStepQueryForm in 'steps\database\uStepQueryForm.pas' {StepQueryForm};
 
@@ -130,6 +132,7 @@ begin
     Application.CreateForm(TProjectForm, ProjectForm);
   Application.CreateForm(TStepTxtFileWriterForm, StepTxtFileWriterForm);
   Application.CreateForm(TStepFieldsOperForm, StepFieldsOperForm);
+  Application.CreateForm(TStepSQLForm, StepSQLForm);
   Application.CreateForm(TStepQueryForm, StepQueryForm);
   ProjectForm.WindowState := wsMaximized;
   end;

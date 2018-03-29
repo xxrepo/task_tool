@@ -11,6 +11,7 @@ type
     FFileName: string;
     FRealAbsFileName: string;
     //FFromField: string; //默认是
+    FRewriteExist: Boolean;
   protected
     procedure StartSelf; override;
   public
@@ -18,6 +19,7 @@ type
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); override;
 
     property ToFileName: string read FFileName write FFileName;
+    property RewriteExist: Boolean read FRewriteExist write FRewriteExist;
   end;
 
 implementation
@@ -31,6 +33,7 @@ procedure TStepTxtFileWriter.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   inherited MakeStepConfigJson(AToConfig);
   AToConfig.AddPair(TJSONPair.Create('to_file_name', FFileName));
+  AToConfig.AddPair(TJSONPair.Create('rewrite_exist', BoolToStr(FRewriteExist)));
 end;
 
 
@@ -39,6 +42,7 @@ begin
   inherited ParseStepConfig(AConfigJsonStr);
   FFileName := GetJsonObjectValue(StepConfig.ConfigJson, 'to_file_name');
   FRealAbsFileName := GetRealAbsolutePath(FFileName);
+  FRewriteExist := StrToBoolDef(GetJsonObjectValue(StepConfig.ConfigJson, 'rewrite_exist'), False);
 end;
 
 
@@ -68,7 +72,7 @@ begin
 
     TaskVar.Logger.Debug(FormatLogMsg('写入文件：' + FRealAbsFileName));
 
-    if not FileExists(FRealAbsFileName) then
+    if (not FileExists(FRealAbsFileName)) or (FRewriteExist) then
       Rewrite(F)
     else
       Append(F);

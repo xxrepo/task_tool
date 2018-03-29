@@ -12,6 +12,8 @@ type
     FTableName: string;
     FUniqueKeyFields: string;
     FSkipExists: Boolean;
+    procedure LoadIntoTable;
+    procedure ReplaceIntoTable;
 
   protected
     procedure StartSelf; override;
@@ -28,7 +30,8 @@ type
 implementation
 
 uses
-  uDefines, uFunctions, uStepDefines, Winapi.ActiveX, System.SysUtils;
+  uDefines, uFunctions, uStepDefines, Winapi.ActiveX, System.SysUtils, UniLoader,
+  Datasnap.DBClient;
 
 { TStepQuery }
 
@@ -53,17 +56,35 @@ end;
 
 
 procedure TStepJson2Table.StartSelf;
-var
-  LQuery: TUniQuery;
-  i: Integer;
-  LParamName: string;
-  LParamConfig: TJSONObject;
-  LSqlParamsConfigJson: TJSONArray;
 begin
   CheckTaskStatus;
   CoInitialize(nil);
+  try
+    //根据是否填写了unique_key_fields来调用不同的方法
+    if FUniqueKeyFields <> '' then
+    begin
+      ReplaceIntoTable;
+    end
+    else
+    begin
+      LoadIntoTable;
+    end;
+  finally
+    CoUninitialize;
+  end;
+end;
 
-  //获取数据库连接
+
+procedure TStepJson2Table.ReplaceIntoTable;
+var
+  i, j: Integer;
+  LQuery: TUniQuery;
+  LUniqueKeyFields: TStringList;
+  LCondition, LParamName: string;
+  LData: TJSONArray;
+  LRow: TJSONObject;
+  LFieldPair: TJSONPair;
+begin
   LQuery := TUniQuery.Create(nil);
   try
     TaskVar.Logger.Debug(FormatLogMsg('获取数据库连接：' + FDBConTitle));
@@ -76,62 +97,142 @@ begin
       LQuery.SpecificOptions.Add('CommandTimeout=30');
     end;
 
-    TaskVar.Logger.Debug(FormatLogMsg('SQL：' + FTableName));
+    TaskVar.Logger.Debug(FormatLogMsg('导入数据到数据表：' + FTableName));
+    LQuery.KeyFields := FUniqueKeyFields;
 
-    //获取Sql语句
-    LQuery.SQL.Text := 'select * from ' + FTableName + ' where 1';
-
-    //解析绑定参数
-    if LQuery.ParamCount > 0 then
-    begin
-      try
-        //依次，逐条处理，根据unique_key_fields来进行定位更新
-
-
-
-        for i := 0 to LQuery.ParamCount - 1 do
-        begin
-          LParamName := LQuery.Params[i].Name;
-          LParamConfig := GetRowInJsonArray(LSqlParamsConfigJson, 'param_name', LParamName);
-
-          LQuery.ParamByName(LParamName).Value := GetParamValue(LParamConfig);
-
-          TaskVar.Logger.Debug(FormatLogMsg('Sql绑定参数：' + LParamName + '=' + LQuery.ParamByName(LParamName).Value));
-        end;
-      finally
-        LSqlParamsConfigJson.Free;
-      end;
-    end;
-
-    //执行
+    //对unique_key_fields进行处理
+    LUniqueKeyFields := TStringList.Create;
     try
-      LQuery.Prepare;
-      LQuery.Open;
-    except
-      on E: Exception do
+      LUniqueKeyFields.Delimiter := ';';
+      LUniqueKeyFields.DelimitedText := FUniqueKeyFields;
+      LCondition := '';
+      for i := 0 to LUniqueKeyFields.Count - 1 do
       begin
-        TaskVar.Logger.Error('Query.Open执行异常：' + E.Message);
-        StopExceptionRaise(E.Message);
+        LCondition := ' and ' + LUniqueKeyFields.Strings[i] + '=:' + LUniqueKeyFields.Strings[i];
       end;
+    finally
+      LUniqueKeyFields.Free;
     end;
 
-
-    if LQuery.Active then
+    //对数据进行循环处理
+    if not (FInData.JsonValue is TJSONArray) then
     begin
-      FOutData.DataType := sdtText;
-      FOutData.Data := UniQueryToJsonStr(LQuery);
-
-      TaskVar.Logger.Debug(FormatLogMsg('Sql运行成功，记录数：' + IntToStr(LQuery.RecordCount)));
+      LData := InDataJson as TJSONArray;
     end
     else
-      TaskVar.Logger.Debug(FormatLogMsg('Sql运行失败'));
+    begin
+      LData := FInData.JsonValue as TJSONArray;
+    end;
+
+    if LData = nil then
+    begin
+      DebugMsg('没有要导入的数据');
+      Exit;
+    end;
+
+    for i := 0 to LData.Count - 1 do
+    begin
+      LRow := LData.Items[i] as TJSONObject;
+      if LRow = nil then
+      begin
+        StopExceptionRaise('LRow为空');
+      end;
+
+      if LQuery.Active then
+        LQuery.Close;
+
+      //获取Sql语句 解析绑定参数 查找定位记录
+      LQuery.SQL.Text := 'select * from ' + FTableName + ' where 1' + LCondition;
+      for j := 0 to LQuery.ParamCount - 1 do
+      begin
+        LParamName := LQuery.Params[j].Name;
+        LQuery.ParamByName(LParamName).Value := JsonValueToVariant(LRow.GetValue(LParamName));
+        TaskVar.Logger.Debug(FormatLogMsg('Sql绑定参数：' + LParamName + '=' + LQuery.ParamByName(LParamName).Value));
+      end;
+      LQuery.Prepare;
+      LQuery.Open;
+
+      if LQuery.RecordCount > 1 then
+      begin
+        //报错，unique_key_fields设置错误
+        StopExceptionRaise('Unique Key Fields设置错误：' + FUniqueKeyFields + ' in Table ' + FTableName);
+      end
+      else if LQuery.RecordCount = 1 then
+      begin
+        if FSkipExists then Continue;
+
+        //更新
+        LQuery.Edit;
+        for j := 0 to LRow.Count - 1 do
+        begin
+          LFieldPair := LRow.Pairs[j];
+          LQuery.FieldByName(LFieldPair.JsonString.Value).Value := JsonValueToVariant(LFieldPair.JsonValue);
+        end;
+        LQuery.Post;
+      end
+      else
+      begin
+        //插入
+        LQuery.Append;
+        for j := 0 to LRow.Count - 1 do
+        begin
+          LFieldPair := LRow.Pairs[j];
+          LQuery.FieldByName(LFieldPair.JsonString.Value).Value := JsonValueToVariant(LFieldPair.JsonValue);
+        end;
+        LQuery.Post;
+      end;
+    end;
   finally
-    LQuery.Close;
     LQuery.Free;
-    CoUninitialize;
   end;
 end;
 
+
+procedure TStepJson2Table.LoadIntoTable;
+var
+  LLoader: TUniLoader;
+  LClientDataSet: TClientDataSet;
+  LData: TJSONArray;
+begin
+  //一次性导入目标表
+  LClientDataSet := TClientDataSet.Create(nil);
+  LLoader := TUniLoader.Create(nil);
+  try
+    LLoader.TableName := FTableName;
+    TaskVar.Logger.Debug(FormatLogMsg('获取数据库连接：' + FDBConTitle));
+
+    LLoader.Connection := TaskVar.DbConMgr.GetDBConnection(FDBConTitle);
+    if (LLoader.Connection.ProviderName = 'SQL Server')
+        or (LLoader.Connection.ProviderName = 'MySQL')
+        or (LLoader.Connection.ProviderName = 'PostgreSQL') then
+    begin
+      //LLoader.SpecificOptions.Add('CommandTimeout=100');
+    end;
+
+    //对数据进行循环处理
+    if not (FInData.JsonValue is TJSONArray) then
+    begin
+      LData := InDataJson as TJSONArray;
+    end
+    else
+    begin
+      LData := FInData.JsonValue as TJSONArray;
+    end;
+
+    if LData = nil then
+    begin
+      DebugMsg('没有要导入的数据');
+      Exit;
+    end;
+
+    JsonToDataSet(LData, LClientDataSet);
+    LLoader.LoadFromDataSet(LClientDataSet);
+    LLoader.Load;
+  finally
+    LLoader.Free;
+    LClientDataSet.Free;
+  end;
+end;
 
 
 initialization

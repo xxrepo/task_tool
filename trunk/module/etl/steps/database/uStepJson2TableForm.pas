@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uStepBasicForm, Vcl.StdCtrls, RzTabs,
   Vcl.Buttons, Vcl.ExtCtrls, RzLabel, RzEdit, DBGridEhGrouping, ToolCtrlsEh,
   DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh,
-  Data.DB, Datasnap.DBClient, MemDS, DBAccess, Uni;
+  Data.DB, Datasnap.DBClient, MemDS, DBAccess, Uni, DALoader, UniLoader;
 
 type
   TStepJson2TableForm = class(TStepBasicForm)
@@ -15,7 +15,6 @@ type
     btnDbConfig: TBitBtn;
     cbbDbCon: TComboBox;
     lblDb: TRzLabel;
-    unqrySql: TUniQuery;
     edtTableName: TEdit;
     lbl3: TRzLabel;
     edtUniqueKeyFields: TEdit;

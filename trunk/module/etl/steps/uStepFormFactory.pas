@@ -18,10 +18,13 @@ implementation
 uses
   uFunctions, uDefines,
   uStepFieldsOperForm
+   , uStepFieldsMapForm
    , uStepHttpRequestForm
    , uStepIniReadForm
    , uStepIniWriteForm
    , uStepQueryForm
+   , uStepSQLForm
+   , uStepJson2TableForm
    , uStepTxtFileWriterForm
    , uStepTxtFileReaderForm
    , uStepDatasetSpliterForm

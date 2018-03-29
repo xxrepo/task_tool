@@ -48,7 +48,7 @@ var
 implementation
 
 uses
-  uDefines, uFunctions, System.JSON, uDatabaseConnectTestForm;
+  uDefines, uFunctions, System.JSON, uDatabaseConnectTestForm, uThreadSafeFile;
 
 
 {$R *.dfm}
@@ -70,23 +70,18 @@ end;
 
 procedure TDatabasesForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var
-  LStringList: TStringList;
   LDbJson: TJSONArray;
 begin
   inherited;
-  if not FileExists(DataBaseConfigFile) then Exit;
-
-  LStringList := TStringList.Create;
   try
     LDbJson := DataSetToJson(cdsDatabases);
     if LDbJson <> nil then
     begin
-      LStringList.Text := LDbJson.ToJSON;
-      LStringList.SaveToFile(DataBaseConfigFile);
+      TThreadSafeFile.WriteContentTo(DataBaseConfigFile, LDbJson.ToJSON);
       LDbJson.Free;
     end;
   finally
-    LStringList.Free;
+
   end;
 end;
 

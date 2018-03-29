@@ -20,10 +20,12 @@ implementation
 uses
   uFunctions, uDefines,
   uStepFieldsOper,
+  uStepFieldsMap,
   uStepHttpRequest,
   uStepIniRead,
   uStepIniWrite,
   uStepQuery,
+  uStepSQL,
   uStepTxtFileWriter,
   uStepTxtFileReader,
   uStepDatasetSpliter,
@@ -32,6 +34,7 @@ uses
   uStepVarDefine,
   uStepFileDelete,
   uStepJson2DataSet,
+  uStepJson2Table,
   uStepTaskResult,
   uStepFastReport,
   uStepReportMachine,
@@ -81,9 +84,21 @@ begin
       begin
         Result := TStepQuery.Create(ATaskVar);
       end;
+      20011:
+      begin
+        Result := TStepSQL.Create(ATaskVar);
+      end;
+      20020:
+      begin
+        Result := TStepJson2Table.Create(ATaskVar);
+      end;
       30010:
       begin
         Result := TStepFieldsOper.Create(ATaskVar);
+      end;
+      30011:
+      begin
+        Result := TStepFieldsMap.Create(ATaskVar);
       end;
       30020:
       begin
@@ -295,6 +310,26 @@ begin
   SysSteps.AddElement(LRowJson);
 
 
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据库'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'DB_SQLSQL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '20011'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'SQL_SQL'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepSQL'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepSQLForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据库'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'DB_JSON2TABLE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '20020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'JSON导入数据表'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepJson2Table'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepJson2TableForm'));
+  SysSteps.AddElement(LRowJson);
+
+
 
   LRowJson := TJSONObject.Create;
   LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
@@ -303,6 +338,15 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', '字段处理'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFieldsOper'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFieldsOperForm'));
+  SysSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'DATASET_FILEDS_MAP'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '30011'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '字段映射转化'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFieldsMap'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFieldsMapForm'));
   SysSteps.AddElement(LRowJson);
 
   LRowJson := TJSONObject.Create;
@@ -353,6 +397,7 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTxtFileWriter'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTxtFileWriterForm'));
   SysSteps.AddElement(LRowJson);
+
 
   LRowJson := TJSONObject.Create;
   LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));

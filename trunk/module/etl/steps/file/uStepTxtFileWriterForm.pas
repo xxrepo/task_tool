@@ -12,6 +12,7 @@ type
     lbl2: TLabel;
     btnToFileName: TRzButtonEdit;
     dlgOpenToFileName: TOpenDialog;
+    chkRewrite: TCheckBox;
     procedure btnOKClick(Sender: TObject);
     procedure btnToFileNameButtonClick(Sender: TObject);
   private
@@ -39,6 +40,7 @@ begin
   with Step as TStepTxtFileWriter do
   begin
     ToFileName := btnToFileName.Text;
+    RewriteExist := chkRewrite.Checked;
   end;
 end;
 
@@ -60,6 +62,7 @@ begin
 
   LStep := TStepTxtFileWriter(Step);
   btnToFileName.Text := LStep.ToFileName;
+  chkRewrite.Checked := LStep.RewriteExist;
 end;
 
 

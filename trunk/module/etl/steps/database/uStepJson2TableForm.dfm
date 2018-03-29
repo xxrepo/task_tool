@@ -10,7 +10,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
   inherited pnlOper: TPanel
     Top = 331
     Width = 687
-    ExplicitTop = 392
+    ExplicitTop = 331
     ExplicitWidth = 687
     inherited btnOK: TBitBtn
       Left = 470
@@ -25,13 +25,13 @@ inherited StepJson2TableForm: TStepJson2TableForm
     Width = 687
     Height = 331
     ExplicitWidth = 687
-    ExplicitHeight = 392
+    ExplicitHeight = 331
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
       ExplicitWidth = 683
-      ExplicitHeight = 365
+      ExplicitHeight = 304
       object lbl2: TRzLabel [1]
         Left = 64
         Top = 159
@@ -102,9 +102,5 @@ inherited StepJson2TableForm: TStepJson2TableForm
         TabOrder = 7
       end
     end
-  end
-  object unqrySql: TUniQuery
-    Left = 479
-    Top = 202
   end
 end

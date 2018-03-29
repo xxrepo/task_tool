@@ -103,7 +103,8 @@ begin
     end;
 
   finally
-
+    if LInJsonArray <> nil then
+      LInJsonArray.Free;
   end;
 end;
 

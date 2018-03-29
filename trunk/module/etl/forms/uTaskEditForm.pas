@@ -592,6 +592,8 @@ begin
   inherited;
   rzspltrLogForm.LowerRight.Visible := True;
 
+  //TODO 建议在这里采用JobDispatcher来运行，防止单任务执行时卡死的情况
+
   try
     CurrentTask.TaskVar.Logger.Force('运行任务：' + EditingTaskConfigRec.FileName + '；主任务文件：' + EntryTaskConfigRec.FileName);
     //debug到最后一步
