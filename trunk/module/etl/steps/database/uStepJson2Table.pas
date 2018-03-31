@@ -132,6 +132,8 @@ begin
 
     for i := 0 to LData.Count - 1 do
     begin
+      CheckTaskStatus;
+
       LRow := LData.Items[i] as TJSONObject;
       if LRow = nil then
       begin
