@@ -150,7 +150,12 @@ begin
     end;
   finally
     if AInitData <> nil then
+    begin
+      //TOD
+//      if AInitData.JsonValue <> nil then
+//        AInitData.JsonValue.Free;
       Dispose(AInitData);
+    end;
   end;
 end;
 

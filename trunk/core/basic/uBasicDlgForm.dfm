@@ -11,6 +11,7 @@ inherited BasicDlgForm: TBasicDlgForm
     Width = 645
     Height = 57
     Align = alBottom
+    BevelOuter = bvNone
     TabOrder = 0
     DesignSize = (
       645

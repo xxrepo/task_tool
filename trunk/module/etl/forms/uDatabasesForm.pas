@@ -142,6 +142,7 @@ begin
       Connect := conDbs;
       conDbs.ConnectString := cdsDatabases.FieldByName('connection_str').AsString;
       edtDbTitle.Text := cdsDatabases.FieldByName('db_title').AsString;
+      edtDbTitle.Enabled := False;
       cbbProvider.Text := conDbs.ProviderName;
       edtServer.Text := conDbs.Server;
       edtPort.Text := IntToStr(conDbs.Port);
@@ -152,15 +153,13 @@ begin
 
       if ShowModal = mrOk then
       begin
-        if conDbs.Connected then
-        begin
-          cdsDatabases.Edit;
-          cdsDatabases.FieldByName('db_title').AsString := edtDbTitle.Text;
-          cdsDatabases.FieldByName('connection_str').AsString := conDbs.ConnectString;
-          cdsDatabases.FieldByName('password').AsString := edtPassword.Text;
-          cdsDatabases.FieldByName('specific_str').AsString := conDbs.SpecificOptions.Text;
-          cdsDatabases.Post;
-        end;
+        cdsDatabases.Edit;
+        //目前不许允许编辑db_title
+        //cdsDatabases.FieldByName('db_title').AsString := edtDbTitle.Text;
+        cdsDatabases.FieldByName('connection_str').AsString := conDbs.ConnectString;
+        cdsDatabases.FieldByName('password').AsString := edtPassword.Text;
+        cdsDatabases.FieldByName('specific_str').AsString := conDbs.SpecificOptions.Text;
+        cdsDatabases.Post;
       end;
     finally
       Free;

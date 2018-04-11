@@ -249,7 +249,7 @@ end;
 function TStepReportMachine.NewReporteInstance: TRMReport;
 begin
   Result := TRMReport.Create(nil);
-  Result.ReportInfo.Title := '测试报表sdfa';
+  Result.ReportInfo.Title := '测试报表';
 end;
 
 

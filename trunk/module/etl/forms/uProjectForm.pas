@@ -293,7 +293,15 @@ begin
   end
   else if LExt = '.jobs' then
   begin
-    JobMgrEditClick(Sender);
+    //这里需要实现对特定jobs文件的编辑处理
+    with TJobsForm.Create(nil) do
+    try
+      ConfigJobs(lstFiles.SelectedItem.PathName);
+      WindowState := wsMaximized;
+      ShowModal;
+    finally
+      Free;
+    end;
   end
   else if LExt = '.dbs' then
   begin

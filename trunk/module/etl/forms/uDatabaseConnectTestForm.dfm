@@ -79,6 +79,7 @@ inherited DatabaseConnectTestForm: TDatabaseConnectTestForm
       Left = 202
       Width = 72
       Caption = #20445#23384
+      OnClick = btnOKClick
       ExplicitLeft = 202
       ExplicitWidth = 72
     end

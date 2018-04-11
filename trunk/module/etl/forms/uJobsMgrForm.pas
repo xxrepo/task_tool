@@ -253,7 +253,6 @@ begin
   inherited;
   AppLogger.NoticeHandle := Handle;
   JobStarter := TJobStarter.Create(2);
-  //JobMgr.LoadConfigFrom(CurrentProject.JobsFile);
   JobStarter.LogNoticeHandle := Handle;
   lstLogs.Folder.PathName := CurrentProject.RootPath + 'task_log\';
 end;

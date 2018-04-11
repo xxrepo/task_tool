@@ -29,7 +29,9 @@ type
     mmoSpecificStr: TMemo;
     btnTest: TBitBtn;
     procedure btnTestClick(Sender: TObject);
+    procedure btnOKClick(Sender: TObject);
   private
+    procedure AssignData;
     { Private declarations }
   public
     { Public declarations }
@@ -45,11 +47,15 @@ uses uDesignTimeDefines;
 
 {$R *.dfm}
 
-procedure TDatabaseConnectTestForm.btnTestClick(Sender: TObject);
+procedure TDatabaseConnectTestForm.btnOKClick(Sender: TObject);
 begin
   inherited;
-  if Connect.Connected then
-    Connect.Close;
+  AssignData;
+end;
+
+
+procedure TDatabaseConnectTestForm.AssignData;
+begin
   Connect.ProviderName := cbbProvider.Text;
   Connect.Server := edtServer.Text;
   Connect.Port := StrToIntDef(edtPort.Text, 0);
@@ -57,6 +63,15 @@ begin
   Connect.Username := edtUserName.Text;
   Connect.Password := edtPassword.Text;
   Connect.SpecificOptions.Text := mmoSpecificStr.Text;
+end;
+
+procedure TDatabaseConnectTestForm.btnTestClick(Sender: TObject);
+begin
+  inherited;
+  if Connect.Connected then
+    Connect.Close;
+
+  AssignData;
 
   try
     Connect.Connect;

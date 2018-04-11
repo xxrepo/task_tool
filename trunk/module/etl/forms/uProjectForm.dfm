@@ -17,7 +17,6 @@ inherited ProjectForm: TProjectForm
     BorderOuter = fsFlat
     BorderSides = [sdLeft, sdTop, sdRight]
     TabOrder = 0
-    ExplicitWidth = 759
     DesignSize = (
       862
       44)
@@ -37,7 +36,6 @@ inherited ProjectForm: TProjectForm
       Caption = #28165#29702#26087#29256
       TabOrder = 0
       OnClick = btnClearOldClick
-      ExplicitLeft = 657
     end
     object btnServiceControl: TBitBtn
       Left = 653
@@ -48,7 +46,6 @@ inherited ProjectForm: TProjectForm
       Caption = #26381#21153#31649#29702
       TabOrder = 1
       OnClick = btnServiceControlClick
-      ExplicitLeft = 550
     end
     object btnHttpServerCtrl: TBitBtn
       Left = 508
@@ -80,7 +77,6 @@ inherited ProjectForm: TProjectForm
     Percent = 28
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 759
     BarSize = (
       245
       0
@@ -111,11 +107,11 @@ inherited ProjectForm: TProjectForm
       IconOptions.AutoArrange = True
       MultiSelect = True
       PopupMenu = pmProjectFile
+      RowSelect = True
       TabOrder = 0
-      ViewStyle = vsList
+      ViewStyle = vsReport
       OnDblClickOpen = lstFilesDblClickOpen
       OnFolderChanged = lstFilesFolderChanged
-      ExplicitWidth = 510
     end
   end
   object stat1: TStatusBar
@@ -124,7 +120,6 @@ inherited ProjectForm: TProjectForm
     Width = 862
     Height = 19
     Panels = <>
-    ExplicitWidth = 759
   end
   object dlgOpenProject: TOpenDialog
     DefaultExt = 'project'

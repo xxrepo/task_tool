@@ -15,6 +15,9 @@
         <Projects Include="..\module\etl_once\CgtEtlOnce.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\etl_calendar\CgtEtlCalendar.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="..\module\http\CgtTest.dproj">
             <Dependencies/>
         </Projects>
@@ -65,6 +68,15 @@
     <Target Name="CgtEtlOnce:Make">
         <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CgtEtlCalendar">
+        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj"/>
+    </Target>
+    <Target Name="CgtEtlCalendar:Clean">
+        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlCalendar:Make">
+        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj" Targets="Make"/>
+    </Target>
     <Target Name="CgtTest">
         <MSBuild Projects="..\module\http\CgtTest.dproj"/>
     </Target>
@@ -84,13 +96,13 @@
         <MSBuild Projects="..\module\browser_app\BrowserApp.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtTest;BrowserApp"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;CgtTest;BrowserApp"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtTest:Clean;BrowserApp:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;CgtTest:Clean;BrowserApp:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtTest:Make;BrowserApp:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;CgtTest:Make;BrowserApp:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
