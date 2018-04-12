@@ -260,9 +260,9 @@ var
 begin
   Result := ADefaultValue;
 
-  if AFieldName = '*' then
+  if (AFieldName = '*') then
   begin
-    Result := AStepData.Data;
+    if (AStepData.Data <> '') then Result := AStepData.Data;
   end
   else
   begin

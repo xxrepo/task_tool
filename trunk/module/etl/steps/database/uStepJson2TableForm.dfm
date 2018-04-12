@@ -1,14 +1,14 @@
 inherited StepJson2TableForm: TStepJson2TableForm
   Caption = 'SQL Query'
-  ClientHeight = 388
+  ClientHeight = 424
   ClientWidth = 687
   OnShow = FormShow
   ExplicitWidth = 703
-  ExplicitHeight = 427
+  ExplicitHeight = 463
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 331
+    Top = 367
     Width = 687
     ExplicitTop = 331
     ExplicitWidth = 687
@@ -23,7 +23,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Width = 687
-    Height = 331
+    Height = 367
     ExplicitWidth = 687
     ExplicitHeight = 331
     FixedDimension = 23
@@ -34,7 +34,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
       ExplicitHeight = 304
       object lbl2: TRzLabel [1]
         Left = 64
-        Top = 159
+        Top = 199
         Width = 42
         Height = 17
         Alignment = taRightJustify
@@ -42,7 +42,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
       end
       object lblDb: TRzLabel [2]
         Left = 64
-        Top = 117
+        Top = 157
         Width = 42
         Height = 17
         Alignment = taRightJustify
@@ -50,11 +50,18 @@ inherited StepJson2TableForm: TStepJson2TableForm
       end
       object lbl3: TRzLabel [4]
         Left = 15
-        Top = 201
+        Top = 241
         Width = 105
         Height = 17
         Alignment = taRightJustify
         Caption = 'Unique Key Fields'
+      end
+      object lbl4: TLabel [5]
+        Left = 64
+        Top = 114
+        Width = 42
+        Height = 17
+        Caption = #28304#25968#25454
       end
       inherited edtDescription: TEdit
         TabOrder = 3
@@ -64,7 +71,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
       end
       object btnDbConfig: TBitBtn
         Left = 474
-        Top = 114
+        Top = 154
         Width = 75
         Height = 27
         Caption = #37197#32622
@@ -73,7 +80,7 @@ inherited StepJson2TableForm: TStepJson2TableForm
       end
       object cbbDbCon: TComboBox
         Left = 142
-        Top = 114
+        Top = 154
         Width = 305
         Height = 25
         Style = csDropDownList
@@ -81,25 +88,32 @@ inherited StepJson2TableForm: TStepJson2TableForm
       end
       object edtTableName: TEdit
         Left = 142
-        Top = 156
+        Top = 196
         Width = 305
         Height = 25
         TabOrder = 5
       end
       object edtUniqueKeyFields: TEdit
         Left = 142
-        Top = 198
+        Top = 238
         Width = 305
         Height = 25
         TabOrder = 6
       end
       object chkSkipExist: TCheckBox
         Left = 142
-        Top = 245
+        Top = 285
         Width = 189
         Height = 17
         Caption = #36339#36807#24050#32463#23384#22312#30340#25968#25454
         TabOrder = 7
+      end
+      object edtDataRef: TEdit
+        Left = 142
+        Top = 111
+        Width = 305
+        Height = 25
+        TabOrder = 8
       end
     end
   end

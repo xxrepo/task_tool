@@ -10,7 +10,7 @@ type
   private
     FFileName: string;
     FRealAbsFileName: string;
-    //FFromField: string; //默认是
+    FDataRef: string; //默认是
     FRewriteExist: Boolean;
   protected
     procedure StartSelf; override;
@@ -18,6 +18,7 @@ type
     procedure ParseStepConfig(AConfigJsonStr: string); override;
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); override;
 
+    property DataRef: string read FDataRef write FDataRef;
     property ToFileName: string read FFileName write FFileName;
     property RewriteExist: Boolean read FRewriteExist write FRewriteExist;
   end;
@@ -32,6 +33,7 @@ uses
 procedure TStepTxtFileWriter.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   inherited MakeStepConfigJson(AToConfig);
+  AToConfig.AddPair(TJSONPair.Create('data_ref', FDataRef));
   AToConfig.AddPair(TJSONPair.Create('to_file_name', FFileName));
   AToConfig.AddPair(TJSONPair.Create('rewrite_exist', BoolToStr(FRewriteExist)));
 end;
@@ -40,6 +42,7 @@ end;
 procedure TStepTxtFileWriter.ParseStepConfig(AConfigJsonStr: string);
 begin
   inherited ParseStepConfig(AConfigJsonStr);
+  FDataRef := GetJsonObjectValue(StepConfig.ConfigJson, 'data_ref', 'parent.*');
   FFileName := GetJsonObjectValue(StepConfig.ConfigJson, 'to_file_name');
   FRealAbsFileName := GetRealAbsolutePath(FFileName);
   FRewriteExist := StrToBoolDef(GetJsonObjectValue(StepConfig.ConfigJson, 'rewrite_exist'), False);
@@ -77,7 +80,7 @@ begin
     else
       Append(F);
 
-    Writeln(F, FInData.Data);
+    Writeln(F, GetParamValue(DataRef, 'string', ''));
 
     CloseFile(F);
 

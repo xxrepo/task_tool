@@ -44,11 +44,12 @@ var
 
 implementation
 
-uses uSettingForm, uAppDefine, uDefines, uCalendarJobConfig, System.JSON;
+uses uSettingForm, uAppDefine, uDefines, uCalendarJobConfig, System.JSON, System.DateUtils;
 
 type
   TTaskParamsRec = record
-    Date: string;
+    TimeFrom: string;
+    TimeTo: string;
   end;
 
 var
@@ -60,7 +61,8 @@ var
 
 procedure TCalendarJobForm.PrepareTaskParams;
 begin
-  TaskParamsRec.Date := FormatDateTime('yyyy-mm-dd', dtpDate.DateTime);
+  TaskParamsRec.TimeFrom := FormatDateTime('yyyy-mm-dd 00:00:00', dtpDate.DateTime);
+  TaskParamsRec.TimeTo := FormatDateTime('yyyy-mm-dd 00:00:00', IncDay(dtpDate.DateTime, 1));
 end;
 
 procedure TCalendarJobForm.btnSettingClick(Sender: TObject);
@@ -160,7 +162,8 @@ begin
   Result := nil;
   LJsonData := TJSONObject.Create;
   try
-    LJsonData.AddPair(TJSONPair.Create('date', TaskParamsRec.Date));
+    LJsonData.AddPair(TJSONPair.Create('time_from', TaskParamsRec.TimeFrom));
+    LJsonData.AddPair(TJSONPair.Create('time_to', TaskParamsRec.TimeTo));
     New(Result);
     Result^.DataType := sdtText;
     Result^.Data := LJsonData.ToJSON;

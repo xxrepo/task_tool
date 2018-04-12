@@ -8,12 +8,13 @@ uses
 type
   TStepJson2Table = class (TStepBasic)
   private
+    FDataRef: string;
     FDBConTitle: string;
     FTableName: string;
     FUniqueKeyFields: string;
     FSkipExists: Boolean;
-    procedure LoadIntoTable;
-    procedure ReplaceIntoTable;
+    procedure LoadIntoTable(AData: TJSONArray);
+    procedure ReplaceIntoTable(AData: TJSONArray);
 
   protected
     procedure StartSelf; override;
@@ -21,6 +22,7 @@ type
     procedure ParseStepConfig(AConfigJsonStr: string); override;
     procedure MakeStepConfigJson(var AToConfig: TJSONObject); override;
 
+    property DataRef: string read FDataRef write FDataRef;
     property DBConTitle: string read FDBConTitle write FDBConTitle;
     property TableName: string read FTableName write FTableName;
     property UniqueKeyFields: string read FUniqueKeyFields write FUniqueKeyFields;
@@ -38,6 +40,7 @@ uses
 procedure TStepJson2Table.MakeStepConfigJson(var AToConfig: TJSONObject);
 begin
   inherited MakeStepConfigJson(AToConfig);
+  AToConfig.AddPair(TJSONPair.Create('data_ref', FDataRef));
   AToConfig.AddPair(TJSONPair.Create('db_title', FDBConTitle));
   AToConfig.AddPair(TJSONPair.Create('table_name', FTableName));
   AToConfig.AddPair(TJSONPair.Create('unique_key_fields', FUniqueKeyFields));
@@ -48,6 +51,7 @@ end;
 procedure TStepJson2Table.ParseStepConfig(AConfigJsonStr: string);
 begin
   inherited ParseStepConfig(AConfigJsonStr);
+  FDataRef := GetJsonObjectValue(StepConfig.ConfigJson, 'data_ref', 'parent.*');
   FDBConTitle := GetJsonObjectValue(StepConfig.ConfigJson, 'db_title');
   FTableName := GetJsonObjectValue(StepConfig.ConfigJson, 'table_name');
   FUniqueKeyFields := GetJsonObjectValue(StepConfig.ConfigJson, 'unique_key_fields');
@@ -56,32 +60,63 @@ end;
 
 
 procedure TStepJson2Table.StartSelf;
+var
+  LData: TJSONValue;
+  LStepData: TStepData;
 begin
   CheckTaskStatus;
   CoInitialize(nil);
   try
-    //根据是否填写了unique_key_fields来调用不同的方法
-    if FUniqueKeyFields <> '' then
+    LStepData := GetStepDataFrom(FDataRef);
+
+    //对数据进行循环处理
+    if (LStepData.JsonValue is TJSONArray) then
     begin
-      ReplaceIntoTable;
+      LData := LStepData.JsonValue;
     end
     else
     begin
-      LoadIntoTable;
+      LData := TJSONObject.ParseJSONValue(LStepData.Data);
+    end;
+    if LData = nil then
+    begin
+      if LStepData.Data <> '' then
+        DebugMsg('数据转换失败')
+      else
+        DebugMsg('没有要导入的数据');
+      Exit;
+    end
+    else if not (LData is TJSONArray) then
+    begin
+      DebugMsg('数据格式不正确');
+      Exit;
+    end;
+
+
+
+    //根据是否填写了unique_key_fields来调用不同的方法
+    if FUniqueKeyFields <> '' then
+    begin
+      ReplaceIntoTable(LData as TJSONArray);
+    end
+    else
+    begin
+      LoadIntoTable(LData as TJSONArray);
     end;
   finally
+    if not (LStepData.JsonValue is TJSONArray) and (LData <> nil) then
+      LData.Free;
     CoUninitialize;
   end;
 end;
 
 
-procedure TStepJson2Table.ReplaceIntoTable;
+procedure TStepJson2Table.ReplaceIntoTable(AData: TJSONArray);
 var
   i, j: Integer;
   LQuery: TUniQuery;
   LUniqueKeyFields: TStringList;
   LCondition, LParamName: string;
-  LData: TJSONArray;
   LRow: TJSONObject;
   LFieldPair: TJSONPair;
 begin
@@ -114,27 +149,11 @@ begin
       LUniqueKeyFields.Free;
     end;
 
-    //对数据进行循环处理
-    if not (FInData.JsonValue is TJSONArray) then
-    begin
-      LData := InDataJson as TJSONArray;
-    end
-    else
-    begin
-      LData := FInData.JsonValue as TJSONArray;
-    end;
-
-    if LData = nil then
-    begin
-      DebugMsg('没有要导入的数据');
-      Exit;
-    end;
-
-    for i := 0 to LData.Count - 1 do
+    for i := 0 to AData.Count - 1 do
     begin
       CheckTaskStatus;
 
-      LRow := LData.Items[i] as TJSONObject;
+      LRow := AData.Items[i] as TJSONObject;
       if LRow = nil then
       begin
         StopExceptionRaise('LRow为空');
@@ -190,11 +209,10 @@ begin
 end;
 
 
-procedure TStepJson2Table.LoadIntoTable;
+procedure TStepJson2Table.LoadIntoTable(AData: TJSONArray);
 var
   LLoader: TUniLoader;
   LClientDataSet: TClientDataSet;
-  LData: TJSONArray;
 begin
   //一次性导入目标表
   LClientDataSet := TClientDataSet.Create(nil);
@@ -211,23 +229,7 @@ begin
       //LLoader.SpecificOptions.Add('CommandTimeout=100');
     end;
 
-    //对数据进行循环处理
-    if not (FInData.JsonValue is TJSONArray) then
-    begin
-      LData := InDataJson as TJSONArray;
-    end
-    else
-    begin
-      LData := FInData.JsonValue as TJSONArray;
-    end;
-
-    if LData = nil then
-    begin
-      DebugMsg('没有要导入的数据');
-      Exit;
-    end;
-
-    JsonToDataSet(LData, LClientDataSet);
+    JsonToDataSet(AData, LClientDataSet);
     LLoader.LoadFromDataSet(LClientDataSet);
     LLoader.Load;
   finally

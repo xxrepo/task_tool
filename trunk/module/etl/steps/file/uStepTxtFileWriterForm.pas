@@ -13,6 +13,8 @@ type
     btnToFileName: TRzButtonEdit;
     dlgOpenToFileName: TOpenDialog;
     chkRewrite: TCheckBox;
+    lbl3: TLabel;
+    edtDataRef: TEdit;
     procedure btnOKClick(Sender: TObject);
     procedure btnToFileNameButtonClick(Sender: TObject);
   private
@@ -39,6 +41,7 @@ begin
   inherited;
   with Step as TStepTxtFileWriter do
   begin
+    DataRef := edtDataRef.Text;
     ToFileName := btnToFileName.Text;
     RewriteExist := chkRewrite.Checked;
   end;
@@ -61,6 +64,7 @@ begin
   inherited ParseStepConfig(AConfigJsonStr);
 
   LStep := TStepTxtFileWriter(Step);
+  edtDataRef.Text := LStep.DataRef;
   btnToFileName.Text := LStep.ToFileName;
   chkRewrite.Checked := LStep.RewriteExist;
 end;

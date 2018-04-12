@@ -121,6 +121,7 @@ begin
   end
   else
   begin
+    RefreshData;
     tmrJobsSchedule.Enabled := True;
     btnStartAll.Caption := '停止全部任务';
   end;

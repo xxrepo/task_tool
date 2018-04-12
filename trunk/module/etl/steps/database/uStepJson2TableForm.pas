@@ -19,6 +19,8 @@ type
     lbl3: TRzLabel;
     edtUniqueKeyFields: TEdit;
     chkSkipExist: TCheckBox;
+    lbl4: TLabel;
+    edtDataRef: TEdit;
     procedure btnDbConfigClick(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -63,6 +65,7 @@ begin
   inherited;
   //¸³Öµµ½step
   LStep := (Step as TStepJson2Table);
+  LStep.DataRef := edtDataRef.Text;
   LStep.DBConTitle := cbbDbCon.Text;
   LStep.TableName := edtTableName.Text;
   LStep.UniqueKeyFields := edtUniqueKeyFields.Text;
@@ -99,6 +102,7 @@ begin
   ReLoadDBs;
 
   LStep := (Step as TStepJson2Table);
+  edtDataRef.Text := LStep.DataRef;
   edtStepTitle.Text := LStep.StepConfig.StepTitle;
   edtTableName.Text := LStep.TableName;
   edtUniqueKeyFields.Text := LStep.UniqueKeyFields;
