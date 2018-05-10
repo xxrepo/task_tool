@@ -68,7 +68,10 @@ uses
   uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
   uStepQuery in '..\etl\steps\database\uStepQuery.pas',
   uStepSQL in '..\etl\steps\database\uStepSQL.pas',
-  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas';
+  uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
+  CVRDLL in '..\etl\steps\tools\CVRDLL.pas',
+  uStepIdCardHS100UC in '..\etl\steps\tools\uStepIdCardHS100UC.pas',
+  uInitIdCardReadForm in 'forms\uInitIdCardReadForm.pas' {InitIdCardReadForm};
 
 {$R *.res}
 
@@ -85,8 +88,9 @@ begin
   FileCritical := TCriticalSection.Create;
 
 
-  Application.Title := '采购通智能助手1.0';
+  Application.Title := '智能助手';
   Application.CreateForm(TCtrlMainForm, CtrlMainForm);
+  Application.CreateForm(TInitIdCardReadForm, InitIdCardReadForm);
   CtrlMainForm.Close;
   Application.Run;
 

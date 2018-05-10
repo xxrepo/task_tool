@@ -12,6 +12,8 @@ var
   FileCritical: TCriticalSection;
 
 
+
+
 const
   APP_VER: string = '1.1.1';
 

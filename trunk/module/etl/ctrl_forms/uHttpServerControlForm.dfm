@@ -11,7 +11,8 @@ inherited HttpServerControlForm: THttpServerControlForm
   inherited rzspltrLogForm: TRzSplitter
     Width = 689
     Height = 604
-    Position = 410
+    Position = 423
+    Percent = 70
     UsePercent = False
     HotSpotSizePercent = 50
     ExplicitWidth = 689
@@ -25,7 +26,7 @@ inherited HttpServerControlForm: THttpServerControlForm
       Left = 0
       Top = 0
       Width = 689
-      Height = 410
+      Height = 423
       Align = alClient
       AutoSize = True
       BorderOuter = fsFlat
@@ -190,9 +191,9 @@ inherited HttpServerControlForm: THttpServerControlForm
     end
     inherited redtLog: TRichEdit
       Width = 689
-      Height = 142
+      Height = 129
       ExplicitWidth = 689
-      ExplicitHeight = 142
+      ExplicitHeight = 129
     end
     inherited rzpnl3: TRzPanel
       Width = 689

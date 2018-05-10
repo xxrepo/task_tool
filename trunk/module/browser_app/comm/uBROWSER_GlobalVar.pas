@@ -1,11 +1,11 @@
-unit uGlobalVar;
+unit uBROWSER_GlobalVar;
 
 interface
 
 uses System.SyncObjs, System.Classes;
 
 type
-  TGlobalVar = class
+  TBROWSER_GlobalVar = class
   private
     FCritical: TCriticalSection;
     FParams: TStringList;
@@ -24,7 +24,7 @@ uses System.SysUtils;
 
 { TGlobalVar }
 
-constructor TGlobalVar.Create;
+constructor TBROWSER_GlobalVar.Create;
 begin
   inherited;
   FCritical := TCriticalSection.Create;
@@ -32,7 +32,7 @@ begin
 end;
 
 
-function TGlobalVar.DelParam(AIndex: Integer): string;
+function TBROWSER_GlobalVar.DelParam(AIndex: Integer): string;
 begin
   FCritical.Enter;
   try
@@ -48,7 +48,7 @@ begin
 end;
 
 
-destructor TGlobalVar.Destroy;
+destructor TBROWSER_GlobalVar.Destroy;
 begin
   FParams.Free;
   FCritical.Free;
@@ -56,7 +56,7 @@ begin
 end;
 
 
-function TGlobalVar.AddParam(AParam: string): Integer;
+function TBROWSER_GlobalVar.AddParam(AParam: string): Integer;
 begin
   FCritical.Enter;
   try
@@ -67,7 +67,7 @@ begin
 end;
 
 
-function TGlobalVar.GetParam(AIndex: Integer): string;
+function TBROWSER_GlobalVar.GetParam(AIndex: Integer): string;
 begin
   try
     Result := '';

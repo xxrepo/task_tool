@@ -133,6 +133,7 @@ begin
   try
     if cdsJobs.RecordCount > 0 then
     begin
+      btnClearLog.Click;
       JobStarter.StartJob(cdsJobs.FieldByName('job_name').AsString);
     end;
   finally

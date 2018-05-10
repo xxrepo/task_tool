@@ -44,7 +44,8 @@ uses
   uStepExeCtrl,
   uStepFolderCtrl,
   uStepWaitTime,
-  uStepExceptionCatch;
+  uStepExceptionCatch,
+  uStepIdCardHS100UC;
 
 var
   SysSteps: TJSONArray;
@@ -503,6 +504,16 @@ begin
   LRowJson.AddPair(TJSONPair.Create('step_type_name', '等待时间'));
   LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepWaitTime'));
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepWaitTimeForm'));
+  SysSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '设备'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'DEVICE_IDCARD_HS100UC'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '90010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '身份证读卡器-华视100UC'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepIdCardHS100UC'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepIdCardHS100UCForm'));
   SysSteps.AddElement(LRowJson);
 
   Result := SysSteps.ToJSON;

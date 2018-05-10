@@ -11,7 +11,7 @@ type
     class procedure BindJsTo(const ACefV8Context: ICefv8Context); static;
     class procedure ExecuteInBrowser(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
-      const message: ICefProcessMessage; out Result: Boolean); static;
+      const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle); static;
   end;
 
 implementation
@@ -33,12 +33,12 @@ end;
 //下面的代码在browser进程中执行
 class procedure TBindingProxy.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
-  const message: ICefProcessMessage; out Result: Boolean);
+  const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle);
 begin
   //要处理对BasicJsBinding，依次对上面的方法进行代理处理
-  TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  TBasicJsObjectBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result, AFormHandle);
   if not Result then
-    TSerialPortFunctionBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+    TSerialPortFunctionBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result, AFormHandle);
 end;
 
 

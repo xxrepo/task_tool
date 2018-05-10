@@ -23,7 +23,7 @@ type
     class procedure BindJsTo(const ACefv8Value: ICefv8Value); static;
     class procedure ExecuteInBrowser(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
-      const message: ICefProcessMessage; out Result: Boolean); static;
+      const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle); static;
   end;
 
 implementation
@@ -50,10 +50,10 @@ end;
 //下面的代码在browser进程中执行
 class procedure TBasicJsObjectBinding.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
-  const message: ICefProcessMessage; out Result: Boolean);
+  const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle);
 begin
   //要处理对BasicJsBinding，依次对上面的方法进行代理处理
-  TBasicJsBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  TBasicJsBinding.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result, AFormHandle);
 end;
 
 

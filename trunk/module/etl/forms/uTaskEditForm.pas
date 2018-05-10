@@ -599,6 +599,7 @@ begin
     //debug到最后一步
     if chktrTaskSteps.Items.Count > 0 then
     begin
+      btnClearLog.Click;
       CurrentTask.TaskVar.DebugToStep(chktrTaskSteps.Items.Count - 1, TaskBlock);
       CurrentTask.Start;
     end;

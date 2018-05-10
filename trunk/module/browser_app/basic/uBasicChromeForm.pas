@@ -52,7 +52,7 @@ var
 
 implementation
 
-uses uBindingProxy, uBaseJsBinding, uCEFApplication, uDefines;
+uses uBindingProxy, uBaseJsBinding, uCEFApplication, uDefines, uAppDefines;
 
 {$R *.dfm}
 
@@ -66,7 +66,7 @@ procedure TBasicChromeForm.chrmMainProcessMessageReceived(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
   const message: ICefProcessMessage; out Result: Boolean);
 begin
-  TBindingProxy.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result);
+  TBindingProxy.ExecuteInBrowser(Sender, browser, sourceProcess, message, Result, Handle);
 end;
 
 constructor TBasicChromeForm.Create(AOwner: TComponent; ATargetUrl: string);

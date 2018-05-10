@@ -65,7 +65,7 @@ type
     class procedure BindJsTo(const ACefv8Value: ICefv8Value); virtual;
     class procedure ExecuteInBrowser(Sender: TObject;
       const browser: ICefBrowser; sourceProcess: TCefProcessId;
-      const message: ICefProcessMessage; out Result: Boolean); static;
+      const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle); static;
   end;
 
   TSerialPortBinding = class
@@ -206,7 +206,7 @@ end;
 //下面的代码在browser进程中执行
 class procedure TSerialPortFunctionBinding.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
-  const message: ICefProcessMessage; out Result: Boolean);
+  const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle);
 var
   LMsg: ICefProcessMessage;
   LParams: ICefValue;

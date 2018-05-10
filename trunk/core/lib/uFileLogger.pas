@@ -129,37 +129,37 @@ begin
     case Request.LogLevel of
       llAll:
       begin
-        LogTitle := 'ALL';
+        LogTitle := '[ALL]';
       end;
       llDebug:
         begin
-          LogTitle := 'DEBUG';
+          LogTitle := '';
         end;
       llInfo:
         begin
-          LogTitle := 'INFO';
+          LogTitle := '[INFO]';
         end;
       llWarn:
         begin
-          LogTitle := 'WARN';
+          LogTitle := '[WARN]';
         end;
       llError:
         begin
-          LogTitle := 'ERROR';
+          LogTitle := '[ERROR]';
         end;
       llFatal:
         begin
-          LogTitle := 'FATAL';
+          LogTitle := '[FATAL]';
         end;
       llForce:
         begin
-          LogTitle := 'FORCE';
+          LogTitle := '[FORCE]';
         end;
     end;
     FileName := FFilePrefix +  FormatDateTime(FFileFormat,
         Now) + '.log';
 
-    LogToFile(FileName, '[' + LogTitle + ']: ' + Request^.LogText);
+    LogToFile(FileName, LogTitle + Request^.LogText);
   finally
     Dispose(Request);
     InterlockedDecrement(FUnHandledLogCount);

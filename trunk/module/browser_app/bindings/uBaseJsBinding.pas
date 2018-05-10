@@ -29,7 +29,7 @@ type
     //Js Executed in Browser Progress
     class procedure ExecuteInBrowser(Sender: TObject;
                       const browser: ICefBrowser; sourceProcess: TCefProcessId;
-                      const message: ICefProcessMessage; out Result: Boolean); virtual;
+                      const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle); virtual;
 
     class procedure OpenNativeWindow(AWindowParams: string); static;
   end;
@@ -39,8 +39,8 @@ implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
   uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants,
-  System.JSON, uDefines, uFunctions,
-  uBasicChromeForm;
+  System.JSON, uAppDefines, uFunctions,
+  uBasicChromeForm, uDefines, uJobDispatcher, uFileLogger;
 
 
 const
@@ -60,8 +60,8 @@ begin
   TempFunction := TCefv8ValueRef.NewFunction('openNativeWindow', TempHandler);
   ACefv8Value.SetValueByKey('openNativeWindow', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
-  TempFunction := TCefv8ValueRef.NewFunction('executeTask', TempHandler);
-  ACefv8Value.SetValueByKey('executeTask', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
+  TempFunction := TCefv8ValueRef.NewFunction('startJob', TempHandler);
+  ACefv8Value.SetValueByKey('startJob', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
 
   TempFunction := TCefv8ValueRef.NewFunction('registerEventListner', TempHandler);
   ACefv8Value.SetValueByKey('registerEventListner', TempFunction, V8_PROPERTY_ATTRIBUTE_NONE);
@@ -88,7 +88,7 @@ begin
     TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
     Result := True;
   end
-  else if (name = 'executeTask') then
+  else if (name = 'startJob') then
   begin
     if (Length(arguments) = 3) and (arguments[0].IsString) and (arguments[2].IsFunction) then
     begin
@@ -104,6 +104,8 @@ begin
         LMsg := TCefProcessMessageRef.New(LMsgName);
         LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
         LMsg.ArgumentList.SetString(1, arguments[1].GetStringValue);
+
+        //第二个参数为回调函数
         LMsg.ArgumentList.SetString(2, LCallbackIdxName);
 
         TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
@@ -149,12 +151,20 @@ end;
 //下面的代码在browser进程中执行
 class procedure TBasicJsBinding.ExecuteInBrowser(Sender: TObject;
   const browser: ICefBrowser; sourceProcess: TCefProcessId;
-  const message: ICefProcessMessage; out Result: Boolean);
+  const message: ICefProcessMessage; out Result: Boolean; const AFormHandle: THandle);
 var
   LMsg: ICefProcessMessage;
   LParams: ICefValue;
   LJsListnerRec: TEventJsListnerRec;
   LParamIdx: Integer;
+
+
+  LSyncJobDispatcher: TJobDispatcher;
+  LOutResult: TOutResult;
+  LJobDispatcherRec: PJobDispatcherRec;
+  LSplitterPos: Integer;
+  LDispatch: string;
+  LProjectName, LJobName: string;
 begin
   if message.Name = BINDING_NAMESPACE + 'openNativeWindow' then
   begin
@@ -162,14 +172,45 @@ begin
     PostMessage(Application.MainForm.Handle, VVMSG_OPEN_NATIVE_WINDOW, LParamIdx, 0);
     Result := True;
   end
-  else if message.Name = BINDING_NAMESPACE + 'executeTask' then
+  else if message.Name = BINDING_NAMESPACE + 'startJob' then
   begin
     //执行task，在结果返回时，把对应的执行结果放入lmsg中，作为rsp传入给render的js执行环节
     //回复一条回调函数的消息到render中，同时删掉对应的监听回调
+    //这里可以引入临时变量尝试
+    LDispatch := message.ArgumentList.GetString(0);
+    LSplitterPos := Pos('/', LDispatch);
+    LProjectName := Copy(LDispatch, 1, LSplitterPos - 1);
+    LJobName := Copy(LDispatch, LSplitterPos + 1, Length(LDispatch) - LSplitterPos);
+
+    New(LJobDispatcherRec);
+    if LJobDispatcherRec <> nil then
+    try
+      LJobDispatcherRec^.ProjectFile := ExePath + 'projects\' + LProjectName + '\project.jobs';
+      LJobDispatcherRec^.JobName := LJobName;
+      LJobDispatcherRec^.InParams := message.ArgumentList.GetString(1);
+      LJobDispatcherRec^.LogLevel := llDebug;
+      LJobDispatcherRec^.LogNoticeHandle := AFormHandle;
+    finally
+
+    end;
+
+    LSyncJobDispatcher := BROWSER_JobDispatcherMgr.NewDispatcher;
+    try
+      LSyncJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
+
+      if LSyncJobDispatcher <> nil then
+        LOutResult := LSyncJobDispatcher.OutResult;
+    finally
+      BROWSER_JobDispatcherMgr.FreeDispatcher(LSyncJobDispatcher);
+    end;
+
     LMsg := TCefProcessMessageRef.New(IPC_MSG_EXEC_CALLBACK);
     LMsg.ArgumentList.SetValue(0, message.ArgumentList.GetValue(2)); //callback_idxname
-    LMsg.ArgumentList.SetValue(1, message.ArgumentList.GetValue(0));
-    LMsg.ArgumentList.SetValue(2, message.ArgumentList.GetValue(1));
+
+    //设置参数结果
+    LMsg.ArgumentList.SetInt(1, LOutResult.Code);
+    LMsg.ArgumentList.SetString(2, LOutResult.Msg);
+    LMsg.ArgumentList.SetString(3, LOutResult.Data);
 
     //TODO 可以告诉render，执行完毕后，可以移除这个回调函数
     browser.SendProcessMessage(PID_RENDERER, LMsg);

@@ -41,7 +41,8 @@ uses
    , uStepExeCtrlForm
    , uStepFolderCtrlForm
    , uStepWaitTimeForm
-   , uStepExceptionCatchForm;
+   , uStepExceptionCatchForm
+   , uStepIdCardHS100UCForm;
 
 class function TStepFormFactory.GetStepSettingForm(AStepType: TStepType; ATaskVar: TTaskVar): TStepBasicForm;
 var

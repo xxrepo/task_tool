@@ -1,6 +1,6 @@
 inherited CtrlMainForm: TCtrlMainForm
   BorderStyle = bsDialog
-  Caption = #37319#36141#36890#26234#33021#21161#25163
+  Caption = #26234#33021#21161#25163
   ClientHeight = 153
   ClientWidth = 337
   PopupMenu = pmTray
@@ -13,11 +13,11 @@ inherited CtrlMainForm: TCtrlMainForm
   PixelsPerInch = 96
   TextHeight = 17
   object lbl1: TLabel
-    Left = 72
+    Left = 88
     Top = 56
-    Width = 192
+    Width = 129
     Height = 25
-    Caption = #37319#36141#36890#26234#33021#21161#25163'1.1.0'
+    Caption = #26234#33021#21161#25163'1.1.0'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -21
@@ -64,6 +64,10 @@ inherited CtrlMainForm: TCtrlMainForm
     object N8: TMenuItem
       Caption = '-'
     end
+    object N2: TMenuItem
+      Caption = #35835#21345#31614#21040
+      OnClick = N2Click
+    end
     object N1: TMenuItem
       Caption = #21319#32423
       Visible = False
@@ -84,9 +88,13 @@ inherited CtrlMainForm: TCtrlMainForm
     end
   end
   object rztrycnTool: TRzTrayIcon
+    Animate = True
     HideOnStartup = True
     PopupMenu = pmTray
+    RestoreOn = ticNone
+    PopupMenuOn = ticRightClick
     OnRestoreApp = rztrycnToolRestoreApp
+    OnLButtonUp = rztrycnToolLButtonUp
     Left = 280
     Top = 88
   end
@@ -98,7 +106,7 @@ inherited CtrlMainForm: TCtrlMainForm
     Left = 24
     Top = 16
     Bitmap = {
-      494C0101050024004C000C000C00FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
+      494C01010500240058000C000C00FFFFFFFF2110FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000300000001800000001002000000000000012
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

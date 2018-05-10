@@ -110,6 +110,7 @@ begin
     end;
     FServer.DefaultPort := AServerConfigRec.Port;
     FServer.MaxConnections := FServerConfigRec.MaxConnection;
+    //FServer.ListenQueue := 1;
     FServer.Active := True;
     FStatus := rsRunning;
   except

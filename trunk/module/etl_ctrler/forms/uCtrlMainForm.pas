@@ -27,6 +27,7 @@ type
     imglistTray: TImageList;
     pmiExePath: TMenuItem;
     N1: TMenuItem;
+    N2: TMenuItem;
     procedure pmiExitClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure pmiLocalServerSettingClick(Sender: TObject);
@@ -39,6 +40,8 @@ type
     procedure pmiExePathClick(Sender: TObject);
     procedure pmiAutoStartClick(Sender: TObject);
     procedure N1Click(Sender: TObject);
+    procedure rztrycnToolLButtonUp(Sender: TObject);
+    procedure N2Click(Sender: TObject);
   private
     FInteractiveJobDispatcher: TJobDispatcher;
     FMsgThread: TThread;
@@ -60,7 +63,7 @@ var
 
 implementation
 
-uses uHttpServerControlForm, uDesignTimeDefines, uFunctions, Winapi.ShellAPI, uExeUtil;
+uses uHttpServerControlForm, uDesignTimeDefines, uFunctions, Winapi.ShellAPI, uExeUtil, uInitIdCardReadForm;
 
 const
   AppAutoStartName: string = 'CGTLocalCtrlTool';
@@ -204,6 +207,12 @@ begin
 end;
 
 
+procedure TCtrlMainForm.rztrycnToolLButtonUp(Sender: TObject);
+begin
+  inherited;
+  rztrycnTool.ShowMenu;
+end;
+
 procedure TCtrlMainForm.rztrycnToolRestoreApp(Sender: TObject);
 begin
   inherited;
@@ -280,5 +289,12 @@ begin
   //仅仅只是运行一个任务
 
 end;
+
+procedure TCtrlMainForm.N2Click(Sender: TObject);
+begin
+  inherited;
+  InitIdCardReadForm.ShowModal;
+end;
+
 
 end.

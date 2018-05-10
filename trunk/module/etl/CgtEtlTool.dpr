@@ -113,7 +113,10 @@ uses
   uStepSQL in 'steps\database\uStepSQL.pas',
   uStepSQLForm in 'steps\database\uStepSQLForm.pas' {StepSQLForm},
   uStepQuery in 'steps\database\uStepQuery.pas',
-  uStepQueryForm in 'steps\database\uStepQueryForm.pas' {StepQueryForm};
+  uStepQueryForm in 'steps\database\uStepQueryForm.pas' {StepQueryForm},
+  uStepIdCardHS100UCForm in 'steps\tools\uStepIdCardHS100UCForm.pas' {StepIdCardHS100UCForm},
+  uStepIdCardHS100UC in 'steps\tools\uStepIdCardHS100UC.pas',
+  CVRDLL in 'steps\tools\CVRDLL.pas';
 
 {$R *.res}
 
@@ -127,6 +130,10 @@ begin
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
 
+
+
+
+
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
   begin
     Application.CreateForm(TProjectForm, ProjectForm);
@@ -134,6 +141,7 @@ begin
   Application.CreateForm(TStepFieldsOperForm, StepFieldsOperForm);
   Application.CreateForm(TStepSQLForm, StepSQLForm);
   Application.CreateForm(TStepQueryForm, StepQueryForm);
+  Application.CreateForm(TStepIdCardHS100UCForm, StepIdCardHS100UCForm);
   ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;
@@ -143,6 +151,8 @@ begin
   begin
     FreeAndNil(HttpServerRunner);
   end;
+
+
   FileCritical.Free;
   AppLogger.Free;
 end.
