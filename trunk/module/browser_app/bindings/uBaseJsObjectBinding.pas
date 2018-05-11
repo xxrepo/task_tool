@@ -28,7 +28,7 @@ type
 
 implementation
 
-uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage;
+uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage, uXpFunctions;
 
 
 //在context初始化时绑定js
@@ -38,7 +38,9 @@ var
   TempObject   : ICefv8Value;
 begin
   TempAccessor := TBasicJsObjectBinding.Create;
-  TempObject   := TCefv8ValueRef.NewObject(TempAccessor, nil);
+
+
+  TempObject   := TXpFunction.TCefv8ValueRef_NewObject(TempAccessor, nil);
 
   //还可以继续绑定其他的函数或者方法
   TBasicJsBinding.BindJsTo(TempObject);

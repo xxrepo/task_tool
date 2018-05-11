@@ -76,7 +76,8 @@ uses
   uNetUtil in '..\..\core\lib\uNetUtil.pas',
   uPYCode in '..\..\core\lib\uPYCode.pas',
   uServiceUtil in '..\..\core\lib\uServiceUtil.pas',
-  uThreadQueueUtil in '..\..\core\lib\uThreadQueueUtil.pas';
+  uThreadQueueUtil in '..\..\core\lib\uThreadQueueUtil.pas',
+  uXpFunctions in 'comm\uXpFunctions.pas';
 
 {$R *.res}
 
@@ -100,7 +101,7 @@ begin
   GlobalCEFApp.OnContextCreated := RENDER_RenderHelper.OnContextCreated;
   GlobalCEFApp.OnContextReleased := RENDER_RenderHelper.OnContextReleased;
   GlobalCEFApp.OnProcessMessageReceived := RENDER_RenderHelper.OnProcessMessageReceived;
-  GlobalCEFApp.SingleProcess := False;
+  GlobalCEFApp.SingleProcess := True;
 
   if GlobalCEFApp.StartMainProcess then
   begin

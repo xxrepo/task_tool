@@ -82,7 +82,7 @@ var
 implementation
 
 uses uBaseJsBinding, uCEFValue, uBROWSER_EventJsListnerList, uCEFProcessMessage,
-uRENDER_JsCallbackList, uCEFv8Context, uVVConstants, System.SysUtils;
+uRENDER_JsCallbackList, uCEFv8Context, uVVConstants, System.SysUtils, uXpFunctions;
 
 const
   BINDING_NAMESPACE = 'SERIAL_PORT/';
@@ -94,7 +94,8 @@ var
   TempObject   : ICefv8Value;
 begin
   TempAccessor := TCefV8AccessorOwn.Create;
-  TempObject   := TCefv8ValueRef.NewObject(TempAccessor, nil);
+
+  TempObject   := TXpFunction.TCefv8ValueRef_NewObject(TempAccessor, nil);
 
   //还可以继续绑定其他的函数或者方法
   TSerialPortFunctionBinding.BindJsTo(TempObject);
@@ -160,7 +161,8 @@ begin
 
       //注册或者更新回调函数
       LCefV8Accessor := TCefV8AccessorOwn.Create;
-      LResult := TCefv8ValueRef.NewObject(LCefV8Accessor, nil);
+      LResult := TXpFunction.TCefv8ValueRef_NewObject(LCefV8Accessor, nil);
+
       LResult.SetValueByKey('disconnect', TCefv8ValueRef.NewFunction('disconnect', Self), V8_PROPERTY_ATTRIBUTE_NONE);
       LResult.SetValueByKey('port_name', arguments[0], V8_PROPERTY_ATTRIBUTE_NONE);
       retval := LResult;
@@ -363,7 +365,7 @@ begin
   //调用回调函数列表中的回调函数
   LMsg := TCefProcessMessageRef.New(IPC_MSG_EXEC_CALLBACK);
   LMsg.ArgumentList.SetString(0, ConnectRec.CallbackIdxName);
-  LMsg.ArgumentList.SetString(1, FormatDateTime('yyyymmddhhnnss.zzz', Now));
+  LMsg.ArgumentList.SetString(1, FormatDateTime('yyyymmddhhnnss.zzz你好', Now));
   ConnectRec.Browser.SendProcessMessage(PID_RENDERER, LMsg);
 end;
 

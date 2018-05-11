@@ -9,7 +9,7 @@ function CefValueToCefV8Value(ACefValue: ICefValue): ICefV8Value;
 
 implementation
 
-uses uCEFTypes, uCEFv8Value, System.Classes, uCEFConstants;
+uses uCEFTypes, uCEFv8Value, System.Classes, uCEFConstants, uXpFunctions;
 
 
 function CefValueToCefV8Value(ACefValue: ICefValue): ICefV8Value;
@@ -50,7 +50,8 @@ begin
     end;
     VTYPE_DICTIONARY:
     begin
-      Result := TCefv8ValueRef.NewObject(nil, nil);
+      Result := TXpFunction.TCefv8ValueRef_NewObject(nil, nil);
+
       LDictionary := ACefValue.GetDictionary;
       LKeys := TStringList.Create;
       try
