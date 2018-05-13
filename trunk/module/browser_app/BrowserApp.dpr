@@ -82,7 +82,9 @@ uses
 {$R *.res}
 
 begin
+  {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown := True;
+  {$ENDIF}
 
   ExePath := ExtractFilePath(Application.ExeName);
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');

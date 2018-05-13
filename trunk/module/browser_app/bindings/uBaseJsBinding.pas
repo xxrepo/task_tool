@@ -247,6 +247,31 @@ class procedure TBasicJsBinding.OpenNativeWindow(AWindowParams: string);
 var
   LWindowParamsJson: TJSONObject;
   LTargetUrl: string;
+  LForm: TBasicChromeForm;
+
+  procedure SetFormParam(AForm: TForm);
+  var
+    LWindowSetting: TJSONObject;
+  begin
+    if GetJsonObjectValue(LWindowParamsJson, 'window_setting') <> '' then
+    begin
+      LWindowSetting := LWindowParamsJson.GetValue('window_setting') as TJSONObject;
+      if LWindowSetting <> nil then
+      begin
+        if StrToBool(GetJsonObjectValue(LWindowSetting, 'maximized', '0')) then
+        begin
+          AForm.WindowState := wsMaximized;
+        end
+        else
+        begin
+          AForm.Width := GetJsonObjectValue(LWindowSetting, 'width', '800', 'int');
+          AForm.Height := GetJsonObjectValue(LWindowSetting, 'height', '600', 'int');
+        end;
+
+        AForm.Caption := GetJsonObjectValue(LWindowSetting, 'caption', '系统管理');
+      end;
+    end;
+  end;
 begin
   LWindowParamsJson := TJSONObject.ParseJSONValue(AWindowParams) as TJSONObject;
   if LWindowParamsJson = nil then Exit;
@@ -269,12 +294,13 @@ begin
     end;
     if LTargetUrl = '' then Exit;
 
-    with TBasicChromeForm.Create(nil, LTargetUrl) do
+    LForm := TBasicChromeForm.Create(nil, LTargetUrl);
+    with LForm do
     try
-      Caption := GetJsonObjectValue(LWindowParamsJson, 'caption', '系统管理');
-      ShowModal;
+      SetFormParam(LForm);
+      LForm.ShowModal;
     finally
-      Free;
+      LForm.Free;
     end;
   finally
     LWindowParamsJson.Free;
