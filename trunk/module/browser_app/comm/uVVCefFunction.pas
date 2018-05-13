@@ -2,14 +2,18 @@ unit uVVCefFunction;
 
 interface
 
-uses uCEFInterfaces;
+uses uCEFTypes, uCEFConstants, uCEFMiscFunctions, uCEFInterfaces;
 
 function CefValueToCefV8Value(ACefValue: ICefValue): ICefV8Value;
+function CefV8ValueToCefValue(ACefV8Value: ICefV8Value): ICefValue;
+function CefValueToJsonString(ACefValue: ICefValue; AOptions: TCefJsonWriterOptions = JSON_WRITER_DEFAULT): string;
+
 
 
 implementation
 
-uses uCEFTypes, uCEFv8Value, System.Classes, uCEFConstants, uXpFunctions;
+uses uCEFv8Value, System.Classes, uXpFunctions, uCEFValue,
+uCEFDictionaryValue, uCEFListValue;
 
 
 function CefValueToCefV8Value(ACefValue: ICefValue): ICefV8Value;
@@ -74,6 +78,63 @@ begin
       end;
     end;
   end;
+end;
+
+
+function CefV8ValueToCefValue(ACefV8Value: ICefV8Value): ICefValue;
+var
+  LKeys: TStringList;
+  LDictionary: ICefDictionaryValue;
+  LList: ICefListValue;
+  i: Integer;
+begin
+  Result := TCefValueRef.New;
+  Result.SetNull;
+  if ACefV8Value.IsBool then
+    if ACefV8Value.GetBoolValue then
+      Result.SetBool(1)
+    else
+      Result.SetBool(0)
+  else if ACefV8Value.IsInt then
+    Result.SetInt(ACefV8Value.GetIntValue)
+  else if ACefV8Value.IsUInt then
+    Result.SetInt(ACefV8Value.GetUIntValue)
+  else if ACefV8Value.IsDouble then
+    Result.SetDouble(ACefV8Value.GetDoubleValue)
+  else if ACefV8Value.IsString then
+    Result.SetString(ACefV8Value.GetStringValue)
+  else if ACefV8Value.IsObject then
+  begin
+    //×ª³ÉjsonObject
+    LKeys := TStringList.Create;
+    try
+      LDictionary := TCefDictionaryValueRef.New;
+      ACefV8Value.GetKeys(LKeys);
+      for i := 0 to LKeys.Count - 1 do
+      begin
+        LDictionary.SetValue(LKeys.Strings[i], CefV8ValueToCefValue(ACefV8Value.GetValueByKey(LKeys.Strings[i])));
+      end;
+      Result.SetDictionary(LDictionary);
+    finally
+      LKeys.Free;
+    end;
+  end
+  else if ACefV8Value.IsArray then
+  begin
+    LList := TCefListValueRef.New;
+    for i := 0 to ACefV8Value.GetArrayLength - 1 do
+    begin
+      LList.SetValue(i, CefV8ValueToCefValue(ACefV8Value.GetValueByIndex(i)));
+    end;
+    Result.SetList(LList);
+  end;
+end;
+
+
+
+function CefValueToJsonString(ACefValue: ICefValue; AOptions: TCefJsonWriterOptions = JSON_WRITER_DEFAULT): string;
+begin
+  Result := CefWriteJson(ACefValue, AOptions);
 end;
 
 

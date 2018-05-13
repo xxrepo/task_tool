@@ -101,7 +101,7 @@ begin
   GlobalCEFApp.OnContextCreated := RENDER_RenderHelper.OnContextCreated;
   GlobalCEFApp.OnContextReleased := RENDER_RenderHelper.OnContextReleased;
   GlobalCEFApp.OnProcessMessageReceived := RENDER_RenderHelper.OnProcessMessageReceived;
-  GlobalCEFApp.SingleProcess := True;
+  GlobalCEFApp.SingleProcess := False;
 
   if GlobalCEFApp.StartMainProcess then
   begin

@@ -39,7 +39,7 @@ implementation
 
 uses Winapi.Windows, Vcl.Dialogs, System.SysUtils, Vcl.Forms, uCEFProcessMessage,
   uRENDER_JsCallbackList, uCEFValue, uCEFConstants, uBROWSER_EventJsListnerList, uVVConstants,
-  System.JSON, uAppDefines, uFunctions,
+  System.JSON, uAppDefines, uFunctions, uVVCefFunction,
   uBasicChromeForm, uDefines, uJobDispatcher, uFileLogger;
 
 
@@ -84,7 +84,7 @@ begin
   if (name = 'openNativeWindow') then
   begin
     LMsg := TCefProcessMessageRef.New(LMsgName);
-    LMsg.ArgumentList.SetString(0, arguments[0].GetStringValue);
+    LMsg.ArgumentList.SetValue(0, CefV8ValueToCefValue(arguments[0]));
     TCefv8ContextRef.Current.Browser.SendProcessMessage(PID_BROWSER, LMsg);
     Result := True;
   end
@@ -168,7 +168,8 @@ var
 begin
   if message.Name = BINDING_NAMESPACE + 'openNativeWindow' then
   begin
-    LParamIdx := BROWSER_GlobalVar.AddParam(message.ArgumentList.GetString(0));
+
+    LParamIdx := BROWSER_GlobalVar.AddParam(CefValueToJsonString(message.ArgumentList.GetValue(0)));
     PostMessage(Application.MainForm.Handle, VVMSG_OPEN_NATIVE_WINDOW, LParamIdx, 0);
     Result := True;
   end
@@ -245,15 +246,32 @@ end;
 class procedure TBasicJsBinding.OpenNativeWindow(AWindowParams: string);
 var
   LWindowParamsJson: TJSONObject;
+  LTargetUrl: string;
 begin
   LWindowParamsJson := TJSONObject.ParseJSONValue(AWindowParams) as TJSONObject;
   if LWindowParamsJson = nil then Exit;
 
   //甚至可以在这里提供几个自定义相关的不同窗口类来对外提供不同的原生窗口界面
   try
-    with TBasicChromeForm.Create(nil, 'file:///' + ExePath + 'app/html/index.html') do
+    LTargetUrl := GetJsonObjectValue(LWindowParamsJson, 'file_url');
+    if LTargetUrl = '' then
+    begin
+      LTargetUrl := GetJsonObjectValue(LWindowParamsJson, 'url');
+    end
+    else
+    begin
+      if not FileExists(ExePath + LTargetUrl) then
+      begin
+        ShowMessage('文件不能存在');
+        Exit;
+      end;
+      LTargetUrl := 'file:///' + ExePath + LTargetUrl;
+    end;
+    if LTargetUrl = '' then Exit;
+
+    with TBasicChromeForm.Create(nil, LTargetUrl) do
     try
-      Caption := GetJsonObjectValue(LWindowParamsJson, 'caption');
+      Caption := GetJsonObjectValue(LWindowParamsJson, 'caption', '系统管理');
       ShowModal;
     finally
       Free;
