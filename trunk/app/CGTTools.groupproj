@@ -24,6 +24,9 @@
         <Projects Include="..\module\http\CgtTest.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\module\etl_dll\CgtEtlDll.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -95,14 +98,23 @@
     <Target Name="CgtTest:Make">
         <MSBuild Projects="..\module\http\CgtTest.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CgtEtlDll">
+        <MSBuild Projects="..\module\etl_dll\CgtEtlDll.dproj"/>
+    </Target>
+    <Target Name="CgtEtlDll:Clean">
+        <MSBuild Projects="..\module\etl_dll\CgtEtlDll.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CgtEtlDll:Make">
+        <MSBuild Projects="..\module\etl_dll\CgtEtlDll.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;BrowserApp;CgtTest"/>
+        <CallTarget Targets="CgtEtlTool;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;BrowserApp;CgtTest;CgtEtlDll"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;BrowserApp:Clean;CgtTest:Clean"/>
+        <CallTarget Targets="CgtEtlTool:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;BrowserApp:Clean;CgtTest:Clean;CgtEtlDll:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;BrowserApp:Make;CgtTest:Make"/>
+        <CallTarget Targets="CgtEtlTool:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;BrowserApp:Make;CgtTest:Make;CgtEtlDll:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -69,9 +69,9 @@ uses
   uStepQuery in '..\etl\steps\database\uStepQuery.pas',
   uStepSQL in '..\etl\steps\database\uStepSQL.pas',
   uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
+  uInitIdCardReadForm in 'forms\uInitIdCardReadForm.pas' {InitIdCardReadForm},
   CVRDLL in '..\etl\steps\tools\CVRDLL.pas',
-  uStepIdCardHS100UC in '..\etl\steps\tools\uStepIdCardHS100UC.pas',
-  uInitIdCardReadForm in 'forms\uInitIdCardReadForm.pas' {InitIdCardReadForm};
+  uStepIdCardHS100UC in '..\etl\steps\tools\uStepIdCardHS100UC.pas';
 
 {$R *.res}
 

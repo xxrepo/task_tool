@@ -65,7 +65,9 @@ uses
   uAppDefine in 'comm\uAppDefine.pas',
   uDesignTimeDefines in '..\etl\comm\uDesignTimeDefines.pas',
   uProject in '..\etl\comm\uProject.pas',
-  uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm};
+  uSelectFolderForm in '..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
+  CVRDLL in '..\etl\steps\tools\CVRDLL.pas',
+  uStepIdCardHS100UC in '..\etl\steps\tools\uStepIdCardHS100UC.pas';
 
 {$R *.res}
 
