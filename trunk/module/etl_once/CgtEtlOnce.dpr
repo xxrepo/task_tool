@@ -55,7 +55,9 @@ uses
   uStepFieldsOper in '..\etl\steps\data\uStepFieldsOper.pas',
   uStepJson2Table in '..\etl\steps\database\uStepJson2Table.pas',
   uStepQuery in '..\etl\steps\database\uStepQuery.pas',
-  uStepSQL in '..\etl\steps\database\uStepSQL.pas';
+  uStepSQL in '..\etl\steps\database\uStepSQL.pas',
+  CVRDLL in '..\etl\steps\tools\CVRDLL.pas',
+  uStepIdCardHS100UC in '..\etl\steps\tools\uStepIdCardHS100UC.pas';
 
 {$R *.res}
 
