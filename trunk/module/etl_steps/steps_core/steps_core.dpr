@@ -118,7 +118,7 @@ var
 
 
 //需要能够打开form
-function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllSubModuleRec: TPCharSubModuleRec): TForm; stdcall;
+function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TForm; stdcall;
 begin
   if RunInfo = nil then
   begin
@@ -132,9 +132,10 @@ begin
 end;
 
 
+
 //需要能够运行steps，但是具体的steps也有可能是最终呈现一个form，比如报表类，当然，报表类也可以通过文件的方式进行处理
 //需要能够打开form
-function ModuleStep(DllRunInfo: TRunInfo; DllSubModuleRec: TPCharSubModuleRec): TForm; stdcall;
+function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TForm; stdcall;
 begin
   if RunInfo = nil then
   begin
@@ -154,16 +155,70 @@ procedure ModulesRegister(DllModuleList: TObjectList); stdcall;
 var
   DllModule: TPCharModuleInfo;
 begin
-  if (DllModuleList <> nil) and (FormatDateTime('yyyy-mm-dd hh:nn:ss', Now) < '2018-01-01') then//DesDecrypt('867E0F1CBBBB6A685FE80EE87C000D66FCE3CC097008CBDB', 'sdhfiahfea')) then
+  if (DllModuleList <> nil) then
   begin
-//    DllModule:=TPCharModuleInfo.Create(MODULE_VVPHP,'vvphp','VVPHP框架','');
-//    DllModule.Add(MODULE_VVPHP,VVPHP_INIT_APP,'initapp','应用初始化',
-//             '初始化新系统应用');
-//    DllModule.Add(MODULE_VVPHP,VVPHP_CREATE_TABLEOBJECT,'createtblobj','PDM文件处理',
-//             '创建表对象类(ORM)文件, 查看表结构');
-//    DllModule.Add(MODULE_VVPHP,VVPHP_CTRL_PHPVER,'controlphpver','PHP版本控制',
-//             '切换PHP开发版本');
-//    DllModuleList.Add(DllModule);
+    //common
+    DllModule:=TPCharModuleInfo.Create('common', '通用', '');
+    DllModule.Add('null', 'Null空组件', '');
+    DllModule.Add('var_define', '变量定义', '');
+    DllModule.Add('condition', '条件判断', '');
+    DllModule.Add('sub_task', '子任务', '');
+    DllModule.Add('task_result', '任务结果', '');
+    DllModuleList.Add(DllModule);
+
+    //control
+    DllModule:=TPCharModuleInfo.Create('control', '控制组件', '');
+    DllModule.Add('exception', '异常捕捉', '');
+    DllModuleList.Add(DllModule);
+
+    //data
+    DllModule:=TPCharModuleInfo.Create('data', '数据组件', '');
+    DllModule.Add('dataset_spliter', '数据集切割', '');
+    DllModule.Add('fields_map', '字段映射', '');
+    DllModule.Add('fields_oper', '字段操作', '');
+    DllModule.Add('json_2_dataset', 'Json转Dataset', '');
+    DllModuleList.Add(DllModule);
+
+    //database
+    DllModule:=TPCharModuleInfo.Create('database', '数据库组件', '');
+    DllModule.Add('json_2_table', 'Json转Table', '');
+    DllModule.Add('query', 'Query数据库查询', '');
+    DllModule.Add('sql_execute', 'SQL执行', '');
+    DllModuleList.Add(DllModule);
+
+    //file
+    DllModule:=TPCharModuleInfo.Create('file', '文件操作组件', '');
+    DllModule.Add('file_delete', '文件删除', '');
+    DllModule.Add('folder_ctrl', '文件夹控制', '');
+    DllModule.Add('ini_read', 'Ini文件读取', '');
+    DllModule.Add('ini_write', 'Ini文件保存', '');
+    DllModule.Add('txt_read', 'Text文件读取', '');
+    DllModule.Add('txt_write', 'Text文件保存', '');
+    DllModule.Add('unzip', 'Zip文件解压', '');
+    DllModuleList.Add(DllModule);
+
+    //network
+    DllModule:=TPCharModuleInfo.Create('network', '网络操作组件', '');
+    DllModule.Add('download_file', '下载文件', '');
+    DllModule.Add('http_request', 'Http请求', '');
+    DllModuleList.Add(DllModule);
+
+    //report
+    DllModule:=TPCharModuleInfo.Create('report', '报表组件', '');
+    DllModule.Add('fast_report', 'FastReport组件', '');
+    DllModule.Add('report_machine', 'RM组件', '');
+    DllModuleList.Add(DllModule);
+
+    //tools
+
+
+    //util
+    DllModule:=TPCharModuleInfo.Create('util', '实用组件', '');
+    DllModule.Add('exe_ctrl', 'Exe可执行文件控制组件', '');
+    DllModule.Add('service_ctrl', '系统服务控制组件', '');
+    DllModule.Add('wait_time', 'TimeWait组件', '');
+    DllModuleList.Add(DllModule);
+
   end;
 end;
 

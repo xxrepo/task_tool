@@ -10,7 +10,7 @@ unit PublicInfoClass;
 interface
 
 uses
-  Contnrs, Vcl.Controls, Vcl.Graphics, IniFiles, Windows, Messages, System.Classes, uFileLogger, System.SyncObjs;
+  Contnrs, Vcl.Controls, Vcl.Graphics, IniFiles, Windows, Messages;
 
 type
   {*****************************************************************************
@@ -20,14 +20,11 @@ type
    2. 子模块相当于主窗口中的一个Tab页；
    3. 子模块的属性定义相当于给主窗口中的Tab页进行属性的定义；
    ****************************************************************************}
-  TPCharSubModuleRec = record
-//    OwnerID: Cardinal;     // 附属主模块ID，主模块是左侧导航栏中的顶级栏
-//    ID: Byte;              // 子模块在主模块中的ID，OwnerID + ID 在系统中唯一
+  TPCharModuleStepRec = record
+    //对于Step的结构的描述
+    StepId: Integer;
 
-    UniqueID: PChar;        // 用于真实确定当前Submodule，每个SubModule都有一个全局唯一的命名包
-
-// 还需要给出这个module是step还是step的DesignForm
-
+    //对外进行呈现的一些属性
     Name: PChar;
     Caption: PChar;
     Hint: PChar;
@@ -41,18 +38,21 @@ type
   是TPCharSubModuleParams记录结构的封装体，用于方便内存的管理，确保
   内存被完全释放
   *****************************************************************************}
-  TPCharSubModuleInfo=class
+  TPCharModuleStepInfo=class
   private
-    FSubModuleParams: TPCharSubModuleRec;
+    FModuleStepRec: TPCharModuleStepRec;
   public
-    constructor Create(ASubModuleRec: TPCharSubModuleRec);
-    property Name: PChar read FSubModuleParams.Name write FSubModuleParams.Name;
-    property Caption: PChar read FSubModuleParams.Caption write FSubModuleParams.Caption;
-    property Hint: PChar read FSubModuleParams.Hint write FSubModuleParams.Hint;
-    property ShowDlg: WordBool read FSubModuleParams.ShowDlg write FSubModuleParams.ShowDlg;
-    property AllowMulti: WordBool read FSubModuleParams.AllowMulti write FSubModuleParams.AllowMulti;
-    property InitBeforeCall: WordBool read FSubModuleParams.InitBeforeCall write FSubModuleParams.InitBeforeCall;
+    constructor Create(aName,aCaption,aHint: PChar;
+                        aShowDlg: WordBool=True; aAllowMulti: WordBool=False;
+                        aInitBeforeCall: WordBool=True);
+    property Name: PChar read FModuleStepRec.Name write FModuleStepRec.Name;
+    property Caption: PChar read FModuleStepRec.Caption write FModuleStepRec.Caption;
+    property Hint: PChar read FModuleStepRec.Hint write FModuleStepRec.Hint;
+    property ShowDlg: WordBool read FModuleStepRec.ShowDlg write FModuleStepRec.ShowDlg;
+    property AllowMulti: WordBool read FModuleStepRec.AllowMulti write FModuleStepRec.AllowMulti;
+    property InitBeforeCall: WordBool read FModuleStepRec.InitBeforeCall write FModuleStepRec.InitBeforeCall;
   end;
+
 
   {*****************************************************************************
   记录Module信息, 用作Dll向主程序提供整个模块的参数时调用，它包括
@@ -63,36 +63,26 @@ type
     FName: PChar;
     FCaption: PChar;
     FHint: PChar;
-    FID: Integer;
-    //FNo: Integer; // 排序号，用于模块之间的排序，可配置
-    FSubModuleList: TObjectList;
+    FNo: Integer; // 排序号，用于模块之间的排序，可配置
+    FModuleStepList: TObjectList;
     function getSubModuleCount: Byte;
-    procedure setSubModule(idx: Byte; const value: TPCharSubModuleInfo);
-    function getSubModule(idx: Byte): TPCharSubModuleInfo;
+    procedure setModuleStep(idx: Byte; const value: TPCharModuleStepInfo);
+    function getModuleStep(idx: Byte): TPCharModuleStepInfo;
   public
     constructor Create; overload;
-    constructor Create(aID:Integer; aName, aCaption, aHint: PChar); overload;
+    constructor Create(aName, aCaption, aHint: PChar); overload;
     destructor Destroy; override;
-    function Add(aPCharSubModuleInfo: TPCharSubModuleInfo): Integer;overload;
-    function Add(ASubModuleRec: TPCharSubModuleRec):Integer;overload;
+    function Add(aPCharModuleStepInfo: TPCharModuleStepInfo): Integer;overload;
+    function Add(aName,aCaption,aHint: PChar;
+                        aShowDlg: WordBool=True; aAllowMulti: WordBool=True;
+                        aInitBeforeCall: WordBool=True):Integer;overload;
     property Name: PChar read FName write FName;
     property Caption: PChar read FCaption write FCaption;
     property Hint: PChar read FHint write FHint;
-    property ID: Integer read FID write FID;
-    property SubModuleCount: Byte read getSubModuleCount;
-    property SubModules: TObjectList read FSubModuleList write FSubModuleList;
-    property SubModule[idx: Byte]: TPCharSubModuleInfo read getSubModule
-                               write setSubModule;
-  end;
-
-
-  {*****************************************************************************
-  对跨dll模块的全局传参的类
-  *****************************************************************************}
-  TRunGlobalVar = class
-    ExePath: PChar;
-    FileLogger: TThreadFileLog;
-    FileCritical: TCriticalSection;
+    property ModuleStepCount: Byte read getSubModuleCount;
+    property ModuleSteps: TObjectList read FModuleStepList write FModuleStepList;
+    property ModuleStep[idx: Byte]: TPCharModuleStepInfo read getModuleStep
+                               write setModuleStep;
   end;
 
 
@@ -101,32 +91,29 @@ type
   *****************************************************************************}
   TRunInfo = class
   private
-    //以下参数主要用来提供vcl中的消息循环，提供对dll中创建窗体的宿主
     FApplication: Integer;
     FMainScreen: Integer;
     FMainForm: Integer;
     FMainFormHandle: THandle;
 
-    //其他全局变量，主要用于在exe和dll的任务派发之间进行处理
-    //比如，数据库链接在不同dll的step中共享
-    //比如，日志操作组件在不同dll之间的共享
-    //比如，提供全局的院子级别的锁等等
-    FRunGlobalVar: Integer;
+    FThemeStyle: Byte;
+    FConfigFile: TiniFile;
+    FDebug: Integer;  // 存储VVDebug
   public
-    constructor Create(aApplication, aMainScreen, aMainForm, aRunGlobalVar: Integer;
-                       aMainFormHandle: THandle);
-    //
+    constructor Create(aApplication, aMainScreen, aMainForm: Integer; aMainFormHandle: THandle);
+    destructor Destroy; override;
     property Application:Integer read FApplication;
     property MainScreen:Integer read FMainScreen;
     property MainForm:Integer read FMainForm write FMainForm;
     property MainFormHandle:THandle read FMainFormHandle;
 
-    property __RUN_GLOBAL: Integer read FRunGlobalVar;
+    property ThemeStyle: Byte read FThemeStyle write FThemeStyle;
+    property ConfigFile: TIniFile read FConfigFile write FConfigFile;
+    property Debug: Integer read FDebug write FDebug;
   end;
 
 
 var
-  //Dll和主程序都要有的控制变量
   RunInfo: TRunInfo;
 
 implementation
@@ -135,16 +122,16 @@ uses Vcl.Forms, SysUtils;
 
 { TPCharSubModuleInfo }
 
-constructor TPCharSubModuleInfo.Create(ASubModuleRec: TPCharSubModuleRec);
+constructor TPCharModuleStepInfo.Create(
+  aName, aCaption, aHint: PChar; aShowDlg, aAllowMulti,
+  aInitBeforeCall: WordBool);
 begin
-//  OwnerID:=ASubModuleRec.OwnerID;
-//  ID:=ASubModuleRec.ID;
-  Name:=ASubModuleRec.Name;
-  Caption:=ASubModuleRec.Caption;
-  Hint:=ASubModuleRec.Hint;
-  ShowDlg := ASubModuleRec.ShowDlg;
-  AllowMulti := ASubModuleRec.AllowMulti;
-  InitBeforeCall := ASubModuleRec.InitBeforeCall;
+  Name:=aName;
+  Caption:=aCaption;
+  Hint:=aHint;
+  ShowDlg := aShowDlg;
+  AllowMulti := aAllowMulti;
+  InitBeforeCall := aInitBeforeCall;
 end;
 
 
@@ -153,15 +140,13 @@ end;
 constructor TPCharModuleInfo.Create;
 begin
   inherited Create;
-  SubModules:=TObjectList.Create;
+  ModuleSteps:=TObjectList.Create;
 end;
 
-constructor TPCharModuleInfo.Create(aID: Integer; aName, aCaption,
-  aHint: PChar);
+constructor TPCharModuleInfo.Create(aName, aCaption, aHint: PChar);
 begin
   inherited Create;
-  SubModules:=TObjectList.Create;
-  FID:=aID;
+  ModuleSteps:=TObjectList.Create;
   FName:=aName;
   FCaption:=aCaption;
   FHint:=aHint;
@@ -169,56 +154,63 @@ end;
 
 destructor TPCharModuleInfo.Destroy;
 begin
-  SubModules.Clear;
-  SubModules.Free;
+  ModuleSteps.Clear;
+  ModuleSteps.Free;
   inherited;
 end;
 
-function TPCharModuleInfo.GetSubModule(idx: Byte): TPCharSubModuleInfo;
+function TPCharModuleInfo.GetModuleStep(idx: Byte): TPCharModuleStepInfo;
 begin
-  Result:=TPCharSubModuleInfo(FSubModuleList[idx]);
+  Result:=TPCharModuleStepInfo(FModuleStepList[idx]);
 end;
 
-procedure TPCharModuleInfo.setSubModule(idx: Byte;
-  const value: TPCharSubModuleInfo);
+procedure TPCharModuleInfo.setModuleStep(idx: Byte;
+  const value: TPCharModuleStepInfo);
 begin
-  FSubModuleList[idx]:=value;
+  FModuleStepList[idx]:=value;
 end;
 
-function TPCharModuleInfo.Add(aPCharSubModuleInfo: TPCharSubModuleInfo): Integer;
+function TPCharModuleInfo.Add(aPCharModuleStepInfo: TPCharModuleStepInfo): Integer;
 begin
   Result:=-1;
-  if (aPCharSubModuleInfo<>nil) and (FSubModuleList.Count<255) then
+  if (aPCharModuleStepInfo<>nil) and (FModuleStepList.Count<255) then
   begin
-    FSubModuleList.Add(aPCharSubModuleInfo);
-    Result:=FSubModuleList.Count;
+    FModuleStepList.Add(aPCharModuleStepInfo);
+    Result:=FModuleStepList.Count;
   end;
 end;
 
-function TPCharModuleInfo.Add(ASubModuleRec: TPCharSubModuleRec): Integer;
+function TPCharModuleInfo.Add(aName,
+  aCaption, aHint: PChar; aShowDlg, aAllowMulti, aInitBeforeCall: WordBool): Integer;
 var
-  aPCharSubModuleInfo: TPCharSubModuleInfo;
+  aPCharModuleStepInfo: TPCharModuleStepInfo;
 begin
-  aPCharSubModuleInfo:=TPCharSubModuleInfo.Create(ASubModuleRec);
-  Result:=Add(aPCharSubModuleInfo);
+  aPCharModuleStepInfo:=TPCharModuleStepInfo.Create(aName,aCaption,aHint,
+                         aShowDlg,aAllowMulti,aInitBeforeCall);
+  Result:=Add(aPCharModuleStepInfo);
 end;
 
 function TPCharModuleInfo.getSubModuleCount: Byte;
 begin
-  Result:=FSubModuleList.Count;
+  Result:=FModuleStepList.Count;
 end;
 
 
 
 { TRunInfo }
 
-constructor TRunInfo.Create(aApplication, aMainScreen, aMainForm, aRunGlobalVar: Integer;
-                       aMainFormHandle: THandle);
+constructor TRunInfo.Create(aApplication, aMainScreen, aMainForm: Integer; aMainFormHandle: THandle);
 begin
   FApplication     := aApplication;
   FMainScreen      := aMainScreen;
   FMainForm        := aMainForm;
-  FRunGlobalVar    := aRunGlobalVar;
+  FMainFormHandle  := aMainFormHandle;
+end;
+
+
+destructor TRunInfo.Destroy;
+begin
+  inherited;
 end;
 
 end.
