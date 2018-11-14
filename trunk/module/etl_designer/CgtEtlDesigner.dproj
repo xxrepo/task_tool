@@ -178,11 +178,6 @@
             <Form>PackageHelperForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\..\etl\basic\uStepBasic.pas"/>
-        <DCCReference Include="..\..\etl\basic\uStepBasicForm.pas">
-            <Form>StepBasicForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\..\etl\steps\uStepDefines.pas"/>
         <DCCReference Include="..\..\etl\steps\uStepFactory.pas"/>
         <DCCReference Include="..\..\etl\steps\uStepFormFactory.pas"/>
@@ -216,6 +211,15 @@
         </DCCReference>
         <DCCReference Include="..\..\etl\forms\uTaskStepSourceForm.pas">
             <Form>TaskStepSourceForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\common\uRunInfo.pas"/>
+        <DCCReference Include="..\..\common\uStepMgrClass.pas"/>
+        <DCCReference Include="comm\uAppConfig.pas"/>
+        <DCCReference Include="comm\uAppDefines.pas"/>
+        <DCCReference Include="..\..\etl\basic\uStepBasic.pas"/>
+        <DCCReference Include="..\..\etl\basic\uStepBasicForm.pas">
+            <Form>StepBasicForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

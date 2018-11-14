@@ -84,7 +84,7 @@ unit ModuleMgrClass;
 interface
 
 uses
-  PublicInfoClass, Contnrs, Classes;
+  PublicInfoClass, Contnrs, Classes, System.JSON;
 
 type
   TModuleStepRec = record
@@ -129,6 +129,7 @@ type
     DllNameSpace: string;
     StepId: Integer;
   end;
+
 
 
   //模块管理器，包括对系统全部Module信息的管理，以及对所有运行中的Module的管理

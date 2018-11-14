@@ -16,8 +16,6 @@ uses
   Winapi.Windows,
   Vcl.Forms,
   System.Contnrs,
-  ModuleMgrClass in '..\..\..\common\ModuleMgrClass.pas',
-  PublicInfoClass in '..\..\..\common\PublicInfoClass.pas',
   uBasicForm in '..\..\..\core\basic\uBasicForm.pas' {BasicForm},
   uBasicDlgForm in '..\..\..\core\basic\uBasicDlgForm.pas' {BasicDlgForm},
   uFunctions in '..\..\..\common\uFunctions.pas',
@@ -107,7 +105,8 @@ uses
   uBasicLogForm in '..\..\..\core\basic\uBasicLogForm.pas' {BasicLogForm},
   uStepTypeSelectForm in '..\..\..\etl\forms\uStepTypeSelectForm.pas' {StepTypeSelectForm},
   uTaskStepSourceForm in '..\..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
-  uSelectFolderForm in '..\..\..\common\uSelectFolderForm.pas' {SelectFolderForm};
+  uSelectFolderForm in '..\..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
+  uRunInfo in '..\..\..\common\uRunInfo.pas';
 
 {$R *.res}
 
@@ -118,7 +117,7 @@ var
 
 
 //需要能够打开form
-function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TForm; stdcall;
+function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TStepBasicForm; stdcall;
 begin
   if RunInfo = nil then
   begin
@@ -135,7 +134,7 @@ end;
 
 //需要能够运行steps，但是具体的steps也有可能是最终呈现一个form，比如报表类，当然，报表类也可以通过文件的方式进行处理
 //需要能够打开form
-function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TForm; stdcall;
+function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TStepBasic; stdcall;
 begin
   if RunInfo = nil then
   begin

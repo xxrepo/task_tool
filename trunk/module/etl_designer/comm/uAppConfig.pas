@@ -13,16 +13,6 @@ type
   public
     Debug: string;
 
-    LoginUrl: string;
-    AgencyCode: string;
-    AgencyName: string;
-    Token: string;
-
-    ApiUrl: string;
-    ClientCode: string;
-
-    WindowMode: string;
-
     constructor Create;
     destructor Destroy; override;
     procedure Load;
@@ -37,13 +27,7 @@ type
 implementation
 
 uses
-  uDesignTimeDefines, Winapi.Windows, System.SysUtils, Vcl.Dialogs;
-
-const
-  TargetServer: string = 'sc.caigoutong.org/';
-
-var
-  TestServer: string;
+  uDesignTimeDefines, Winapi.Windows, System.SysUtils, Vcl.Dialogs, uDefines;
 
 { TCgtConfig }
 
@@ -63,27 +47,7 @@ end;
 
 procedure TAppConfig.Load;
 begin
-  //agency≈‰÷√
-  AgencyCode := FParamIniFile.ReadString('settings', 'agency_code', '');
-  ClientCode := FParamIniFile.ReadString('settings', 'client_code', '');
 
-  WindowMode := FCfgIniFile.ReadString('settings', 'window_mode', 'interactive');
-
-  //ini
-  LoginUrl := FCfgIniFile.ReadString('settings', 'login_url', 'http://'+ TargetServer + 'mall/agency/');
-  ApiUrl := FCfgIniFile.ReadString('settings', 'api_url', 'http://'+ TargetServer + 'mall/agency/');
-  Debug := '0';
-  TestServer := FCfgIniFile.ReadString('settings', 'test_server', 'http://huarui.org/');
-
-{$IFDEF DEBUG}
-  LoginUrl := FCfgIniFile.ReadString('settings', 'login_url', TestServer + 'mall/agency/');
-  Debug := '1';
-{$ENDIF}
-  if FCfgIniFile.ReadString('settings', 'run_mode', 'release') = 'debug_cgtkj_dev' then
-  begin
-    LoginUrl := FCfgIniFile.ReadString('settings', 'login_url', TestServer + 'mall/agency/');
-    Debug := '1';
-  end;
 end;
 
 
@@ -94,10 +58,6 @@ end;
 procedure TAppConfig.Save;
 begin
   //ini
-  FParamIniFile.WriteString('settings', 'agency_code', AgencyCode);
-  FParamIniFile.WriteString('settings', 'client_code', ClientCode);
-
-  FCfgIniFile.WriteString('settings', 'window_mode', WindowMode);
 end;
 
 

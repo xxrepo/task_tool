@@ -6,7 +6,7 @@
     版权所有-----------Dony Zhang @ VeryView.com.cn
     2009-12-5                                                   }
 
-unit PublicInfoClass;
+unit uRunInfo;
 
 interface
 
@@ -14,6 +14,20 @@ uses
   Contnrs, Vcl.Controls, Vcl.Graphics, IniFiles, Windows, Messages;
 
 type
+  TModuleStepRec = record
+    StepFullId: string;
+    DllNameSpace: string;
+    StepId: Integer;
+    StepName: string;
+
+    Caption: string;
+    Hint: string;
+    ShowDlg: Boolean;
+    AllowMulti: Boolean;
+    InitBeforeCall: Boolean;
+    Existed: Boolean;
+  end;
+
   {*****************************************************************************
    1. 每个子模块创建时需要的参数，从该结构读取，这是主程序调用Dll中的
   子模块时向Dll传递的参数，采用记录结构是因为为了管理大规模的子模
@@ -114,12 +128,28 @@ type
   end;
 
 
+  //几个公用的用于在内部的结构和外部的传参结构之间的数据格式的转换
+  function PCharStepRecToStepRec(APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
+  function StepRecToPCharStepRec(AStepRec: TModuleStepRec): TPCharModuleStepRec;
+
 var
   RunInfo: TRunInfo;
 
 implementation
 
 uses Vcl.Forms, SysUtils;
+
+function PCharStepRecToStepRec(APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
+begin
+  Result.StepFullId := '';
+  Result.StepId := APCharStepRec.StepId;
+end;
+
+function StepRecToPCharStepRec(AStepRec: TModuleStepRec): TPCharModuleStepRec;
+begin
+
+end;
+
 
 { TPCharSubModuleInfo }
 

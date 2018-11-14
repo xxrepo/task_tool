@@ -38,8 +38,6 @@ uses
   uUserNotifyMsgForm in '..\..\common\uUserNotifyMsgForm.pas' {UserNotifyMsgForm},
   uJobStarter in 'comm\uJobStarter.pas',
   uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm},
-  uStepBasic in '..\..\etl\basic\uStepBasic.pas',
-  uStepBasicForm in '..\..\etl\basic\uStepBasicForm.pas' {StepBasicForm},
   uStepDefines in '..\..\etl\steps\uStepDefines.pas',
   uStepFactory in '..\..\etl\steps\uStepFactory.pas',
   uStepFormFactory in '..\..\etl\steps\uStepFormFactory.pas',
@@ -59,7 +57,13 @@ uses
   uDatabasesForm in '..\..\etl\forms\uDatabasesForm.pas' {DatabasesForm},
   uStepTypeSelectForm in '..\..\etl\forms\uStepTypeSelectForm.pas' {StepTypeSelectForm},
   uTaskEditForm in '..\..\etl\forms\uTaskEditForm.pas' {TaskEditForm},
-  uTaskStepSourceForm in '..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm};
+  uTaskStepSourceForm in '..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
+  uRunInfo in '..\..\common\uRunInfo.pas',
+  uStepMgrClass in '..\..\common\uStepMgrClass.pas',
+  uAppConfig in 'comm\uAppConfig.pas',
+  uAppDefines in 'comm\uAppDefines.pas',
+  uStepBasic in '..\..\etl\basic\uStepBasic.pas',
+  uStepBasicForm in '..\..\etl\basic\uStepBasicForm.pas' {StepBasicForm};
 
 {$R *.res}
 
@@ -86,6 +90,7 @@ begin
   Application.CreateForm(TStepTypeSelectForm, StepTypeSelectForm);
   Application.CreateForm(TTaskEditForm, TaskEditForm);
   Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
+  Application.CreateForm(TStepBasicForm, StepBasicForm);
   ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;
