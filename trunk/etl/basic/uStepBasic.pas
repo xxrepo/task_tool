@@ -78,7 +78,7 @@ type
 
 implementation
 
-uses uFunctions, uDefines, uExceptions, uStepFactory, System.StrUtils, uFileUtil, uTaskDefine;
+uses uFunctions, uDefines, uExceptions, System.StrUtils, uFileUtil, uTaskDefine;
 
 
 { TStepBasic }

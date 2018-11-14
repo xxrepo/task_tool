@@ -39,9 +39,6 @@ uses
   uJobStarter in 'comm\uJobStarter.pas',
   uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm},
   uStepDefines in '..\..\etl\steps\uStepDefines.pas',
-  uStepFactory in '..\..\etl\steps\uStepFactory.pas',
-  uStepFormFactory in '..\..\etl\steps\uStepFormFactory.pas',
-  uStepFormSettings in '..\..\etl\steps\uStepFormSettings.pas',
   uTask in '..\..\etl\comm\uTask.pas',
   uTaskDefine in '..\..\etl\comm\uTaskDefine.pas',
   uTaskResult in '..\..\etl\comm\uTaskResult.pas',
@@ -78,20 +75,10 @@ begin
   FileCritical := TCriticalSection.Create;
 
 
-
-
-
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
   begin
     Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TStepBasicForm, StepBasicForm);
-  Application.CreateForm(TDatabaseConnectTestForm, DatabaseConnectTestForm);
-  Application.CreateForm(TDatabasesForm, DatabasesForm);
-  Application.CreateForm(TStepTypeSelectForm, StepTypeSelectForm);
-  Application.CreateForm(TTaskEditForm, TaskEditForm);
-  Application.CreateForm(TTaskStepSourceForm, TaskStepSourceForm);
-  Application.CreateForm(TStepBasicForm, StepBasicForm);
-  ProjectForm.WindowState := wsMaximized;
+    ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;
 

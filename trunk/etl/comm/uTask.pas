@@ -32,7 +32,7 @@ type
 
 implementation
 
-uses uExceptions, uFunctions, uStepFactory, uDefines, uThreadSafeFile;
+uses uExceptions, uFunctions, uDefines, uThreadSafeFile;
 
 const
   VER: string = '1.0.0';

@@ -83,7 +83,7 @@ var
 implementation
 
 uses
-  uDefines, uFunctions, uStepTypeSelectForm, uDatabasesForm, uStepBasicForm, uStepFormFactory,
+  uDefines, uFunctions, uStepTypeSelectForm, uDatabasesForm, uStepBasicForm,
   uFileUtil, uDesignTimeDefines, Vcl.Clipbrd, uStepBasic, uTaskStepSourceForm;
 
 {$R *.dfm}
@@ -155,11 +155,11 @@ begin
     if ShowModal = mrOk then
     begin
       //添加时，直接生成对应的Step加入到树节点中
-      LStep := TStepFormFactory.GetStep(StepType, CurrentTask.TaskVar);
+      LStep := StepMgr.GetStep(StepType, CurrentTask.TaskVar);
       if LStep <> nil then
       begin
         LStepConfigJson := TJSONObject.Create;
-        LStepDefine := TStepFormFactory.GetStepDefine(StepType);
+        LStepDefine := StepMgr.GetStepDefine(StepType);
         LStep.StepConfig.StepTitle := LStepDefine.StepTypeName;
         try
           //执行画布添加节点
@@ -316,7 +316,7 @@ begin
   LStepData := TStepConfig(chktrTaskSteps.Selected.Data);
 
   //根据StepData创建Step
-  LForm := TStepFormFactory.GetStepSettingForm(LStepData.StepType, CurrentTask.TaskVar);
+  LForm := StepMgr.GetStepDesignForm(LStepData.StepType, CurrentTask.TaskVar);
   if LForm <> nil then
   try
     CurrentTask.TaskVar.DesignToStep(chktrTaskSteps.Selected.AbsoluteIndex, TaskBlock);

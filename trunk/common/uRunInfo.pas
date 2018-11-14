@@ -15,17 +15,13 @@ uses
 
 type
   TModuleStepRec = record
-    StepFullId: string;
     DllNameSpace: string;
+
     StepId: Integer;
     StepName: string;
 
     Caption: string;
     Hint: string;
-    ShowDlg: Boolean;
-    AllowMulti: Boolean;
-    InitBeforeCall: Boolean;
-    Existed: Boolean;
   end;
 
   {*****************************************************************************
@@ -38,67 +34,13 @@ type
   TPCharModuleStepRec = record
     //对于Step的结构的描述
     StepId: Integer;
+    StepName: PChar;
 
     //对外进行呈现的一些属性
-    Name: PChar;
     Caption: PChar;
     Hint: PChar;
-    ShowDlg: WordBool;     // 创建时是否以Dlg的模式显示，TODO: 将统一去掉，由子模块自行实现如何显示
-    AllowMulti: WordBool;  // 是否同时允许多个子模块运行，一般在文档型应用子模块中
-    InitBeforeCall: WordBool; // 每次调用前初始化标志
   end;
 
-  {*****************************************************************************
-  记录subModule信息, 用作Dll向主程序提供本子模块的参数时调用，该类
-  是TPCharSubModuleParams记录结构的封装体，用于方便内存的管理，确保
-  内存被完全释放
-  *****************************************************************************}
-  TPCharModuleStepInfo=class
-  private
-    FModuleStepRec: TPCharModuleStepRec;
-  public
-    constructor Create(aName,aCaption,aHint: PChar;
-                        aShowDlg: WordBool=True; aAllowMulti: WordBool=False;
-                        aInitBeforeCall: WordBool=True);
-    property Name: PChar read FModuleStepRec.Name write FModuleStepRec.Name;
-    property Caption: PChar read FModuleStepRec.Caption write FModuleStepRec.Caption;
-    property Hint: PChar read FModuleStepRec.Hint write FModuleStepRec.Hint;
-    property ShowDlg: WordBool read FModuleStepRec.ShowDlg write FModuleStepRec.ShowDlg;
-    property AllowMulti: WordBool read FModuleStepRec.AllowMulti write FModuleStepRec.AllowMulti;
-    property InitBeforeCall: WordBool read FModuleStepRec.InitBeforeCall write FModuleStepRec.InitBeforeCall;
-  end;
-
-
-  {*****************************************************************************
-  记录Module信息, 用作Dll向主程序提供整个模块的参数时调用，它包括
-  模块中的所有子模块的信息，是PCharSubModuleInfo的管理者
-  *****************************************************************************}
-  TPCharModuleInfo=class
-  private
-    FName: PChar;
-    FCaption: PChar;
-    FHint: PChar;
-    FNo: Integer; // 排序号，用于模块之间的排序，可配置
-    FModuleStepList: TObjectList;
-    function getSubModuleCount: Byte;
-    procedure setModuleStep(idx: Byte; const value: TPCharModuleStepInfo);
-    function getModuleStep(idx: Byte): TPCharModuleStepInfo;
-  public
-    constructor Create; overload;
-    constructor Create(aName, aCaption, aHint: PChar); overload;
-    destructor Destroy; override;
-    function Add(aPCharModuleStepInfo: TPCharModuleStepInfo): Integer;overload;
-    function Add(aName,aCaption,aHint: PChar;
-                        aShowDlg: WordBool=True; aAllowMulti: WordBool=True;
-                        aInitBeforeCall: WordBool=True):Integer;overload;
-    property Name: PChar read FName write FName;
-    property Caption: PChar read FCaption write FCaption;
-    property Hint: PChar read FHint write FHint;
-    property ModuleStepCount: Byte read getSubModuleCount;
-    property ModuleSteps: TObjectList read FModuleStepList write FModuleStepList;
-    property ModuleStep[idx: Byte]: TPCharModuleStepInfo read getModuleStep
-                               write setModuleStep;
-  end;
 
 
   {*****************************************************************************
@@ -111,6 +53,11 @@ type
     FMainForm: Integer;
     FMainFormHandle: THandle;
 
+
+    //执行任务相关
+    FStepMgr: Integer;
+
+
     FThemeStyle: Byte;
     FConfigFile: TiniFile;
     FDebug: Integer;  // 存储VVDebug
@@ -122,6 +69,8 @@ type
     property MainForm:Integer read FMainForm write FMainForm;
     property MainFormHandle:THandle read FMainFormHandle;
 
+    property StepMgr: Integer read FStepMgr;
+
     property ThemeStyle: Byte read FThemeStyle write FThemeStyle;
     property ConfigFile: TIniFile read FConfigFile write FConfigFile;
     property Debug: Integer read FDebug write FDebug;
@@ -129,7 +78,7 @@ type
 
 
   //几个公用的用于在内部的结构和外部的传参结构之间的数据格式的转换
-  function PCharStepRecToStepRec(APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
+  function PCharStepRecToStepRec(ADllNameSpace: PChar; APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
   function StepRecToPCharStepRec(AStepRec: TModuleStepRec): TPCharModuleStepRec;
 
 var
@@ -139,91 +88,20 @@ implementation
 
 uses Vcl.Forms, SysUtils;
 
-function PCharStepRecToStepRec(APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
+function PCharStepRecToStepRec(ADllNameSpace: PChar; APCharStepRec: TPCharModuleStepRec): TModuleStepRec;
 begin
-  Result.StepFullId := '';
+  Result.DllNameSpace := ADllNameSpace;
   Result.StepId := APCharStepRec.StepId;
+  Result.StepName := APCharStepRec.StepName;
+  Result.Caption := APCharStepRec.Caption;
 end;
+
 
 function StepRecToPCharStepRec(AStepRec: TModuleStepRec): TPCharModuleStepRec;
 begin
-
-end;
-
-
-{ TPCharSubModuleInfo }
-
-constructor TPCharModuleStepInfo.Create(
-  aName, aCaption, aHint: PChar; aShowDlg, aAllowMulti,
-  aInitBeforeCall: WordBool);
-begin
-  Name:=aName;
-  Caption:=aCaption;
-  Hint:=aHint;
-  ShowDlg := aShowDlg;
-  AllowMulti := aAllowMulti;
-  InitBeforeCall := aInitBeforeCall;
-end;
-
-
-{ TPCharModuleInfo }
-
-constructor TPCharModuleInfo.Create;
-begin
-  inherited Create;
-  ModuleSteps:=TObjectList.Create;
-end;
-
-constructor TPCharModuleInfo.Create(aName, aCaption, aHint: PChar);
-begin
-  inherited Create;
-  ModuleSteps:=TObjectList.Create;
-  FName:=aName;
-  FCaption:=aCaption;
-  FHint:=aHint;
-end;
-
-destructor TPCharModuleInfo.Destroy;
-begin
-  ModuleSteps.Clear;
-  ModuleSteps.Free;
-  inherited;
-end;
-
-function TPCharModuleInfo.GetModuleStep(idx: Byte): TPCharModuleStepInfo;
-begin
-  Result:=TPCharModuleStepInfo(FModuleStepList[idx]);
-end;
-
-procedure TPCharModuleInfo.setModuleStep(idx: Byte;
-  const value: TPCharModuleStepInfo);
-begin
-  FModuleStepList[idx]:=value;
-end;
-
-function TPCharModuleInfo.Add(aPCharModuleStepInfo: TPCharModuleStepInfo): Integer;
-begin
-  Result:=-1;
-  if (aPCharModuleStepInfo<>nil) and (FModuleStepList.Count<255) then
-  begin
-    FModuleStepList.Add(aPCharModuleStepInfo);
-    Result:=FModuleStepList.Count;
-  end;
-end;
-
-function TPCharModuleInfo.Add(aName,
-  aCaption, aHint: PChar; aShowDlg, aAllowMulti, aInitBeforeCall: WordBool): Integer;
-var
-  aPCharModuleStepInfo: TPCharModuleStepInfo;
-begin
-  aPCharModuleStepInfo:=TPCharModuleStepInfo.Create(aName,aCaption,aHint,
-                         aShowDlg,aAllowMulti,aInitBeforeCall);
-  Result:=Add(aPCharModuleStepInfo);
-end;
-
-function TPCharModuleInfo.getSubModuleCount: Byte;
-begin
-  Result:=FModuleStepList.Count;
+  Result.StepId := AStepRec.StepId;
+  Result.StepName := PChar(AStepRec.StepName);
+  Result.Caption := PChar(AStepRec.Caption);
 end;
 
 

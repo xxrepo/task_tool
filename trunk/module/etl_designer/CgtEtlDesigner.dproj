@@ -179,9 +179,6 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\steps\uStepDefines.pas"/>
-        <DCCReference Include="..\..\etl\steps\uStepFactory.pas"/>
-        <DCCReference Include="..\..\etl\steps\uStepFormFactory.pas"/>
-        <DCCReference Include="..\..\etl\steps\uStepFormSettings.pas"/>
         <DCCReference Include="..\..\etl\comm\uTask.pas"/>
         <DCCReference Include="..\..\etl\comm\uTaskDefine.pas"/>
         <DCCReference Include="..\..\etl\comm\uTaskResult.pas"/>

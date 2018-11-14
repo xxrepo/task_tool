@@ -41,6 +41,8 @@ inherited StepBasicForm: TStepBasicForm
     FixedDimension = 23
     object rztbshtCommon: TRzTabSheet
       Caption = #22522#26412#35774#32622
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 673
       ExplicitHeight = 336
       object lbl1: TLabel

@@ -102,17 +102,14 @@
         </DelphiCompile>
         <DCCReference Include="..\..\..\core\basic\uBasicForm.pas">
             <Form>BasicForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\core\basic\uBasicDlgForm.pas">
             <Form>BasicDlgForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\common\uFunctions.pas"/>
         <DCCReference Include="..\..\..\etl\basic\uStepBasic.pas"/>
         <DCCReference Include="..\..\..\etl\basic\uStepBasicForm.pas">
             <Form>StepBasicForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\etl\comm\uTask.pas"/>
         <DCCReference Include="..\..\..\etl\comm\uTaskDefine.pas"/>
@@ -134,146 +131,117 @@
         <DCCReference Include="steps\common\uStepCondition.pas"/>
         <DCCReference Include="steps\common\uStepConditionForm.pas">
             <Form>StepConditionForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\common\uStepNullForm.pas">
             <Form>StepNullForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\common\uStepSubTask.pas"/>
         <DCCReference Include="steps\common\uStepSubTaskForm.pas">
             <Form>StepSubTaskForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\common\uStepTaskResult.pas"/>
         <DCCReference Include="steps\common\uStepTaskResultForm.pas">
             <Form>StepTaskResultForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\common\uStepVarDefine.pas"/>
         <DCCReference Include="steps\common\uStepVarDefineForm.pas">
             <Form>StepVarDefineForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\control\uStepExceptionCatch.pas"/>
         <DCCReference Include="steps\control\uStepExceptionCatchForm.pas">
             <Form>StepExceptionCatchForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\data\uStepDatasetSpliter.pas"/>
         <DCCReference Include="steps\data\uStepDatasetSpliterForm.pas">
             <Form>StepDatasetSpliterForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\data\uStepFieldsMap.pas"/>
         <DCCReference Include="steps\data\uStepFieldsMapForm.pas">
             <Form>StepFieldsMapForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\data\uStepFieldsOper.pas"/>
         <DCCReference Include="steps\data\uStepFieldsOperForm.pas">
             <Form>StepFieldsOperForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\data\uStepJson2DataSet.pas"/>
         <DCCReference Include="steps\data\uStepJson2DataSetForm.pas">
             <Form>StepJsonDataSetForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\database\uDBQueryResultForm.pas">
             <Form>DBQueryResultForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\database\uStepJson2Table.pas"/>
         <DCCReference Include="steps\database\uStepJson2TableForm.pas">
             <Form>StepJson2TableForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\database\uStepQuery.pas"/>
         <DCCReference Include="steps\database\uStepQueryForm.pas">
             <Form>StepQueryForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\database\uStepSQL.pas"/>
         <DCCReference Include="steps\database\uStepSQLForm.pas">
             <Form>StepSQLForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepFileDelete.pas"/>
         <DCCReference Include="steps\file\uStepFileDeleteForm.pas">
             <Form>StepFileDeleteForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepFolderCtrl.pas"/>
         <DCCReference Include="steps\file\uStepFolderCtrlForm.pas">
             <Form>StepFolderCtrlForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepIniRead.pas"/>
         <DCCReference Include="steps\file\uStepIniReadForm.pas">
             <Form>StepIniReadForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepIniWrite.pas"/>
         <DCCReference Include="steps\file\uStepIniWriteForm.pas">
             <Form>StepIniWriteForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepTxtFileReader.pas"/>
         <DCCReference Include="steps\file\uStepTxtFileReaderForm.pas">
             <Form>StepTxtFileReaderForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepTxtFileWriter.pas"/>
         <DCCReference Include="steps\file\uStepTxtFileWriterForm.pas">
             <Form>StepTxtFileWriterForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\file\uStepUnzip.pas"/>
         <DCCReference Include="steps\file\uStepUnzipForm.pas">
             <Form>StepUnzipForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\network\uStepDownloadFile.pas"/>
         <DCCReference Include="steps\network\uStepDownloadFileForm.pas">
             <Form>StepDownloadFileForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\network\uStepHttpRequest.pas"/>
         <DCCReference Include="steps\network\uStepHttpRequestForm.pas">
             <Form>StepHttpRequestForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\report\uStepFastReport.pas"/>
         <DCCReference Include="steps\report\uStepFastReportForm.pas">
             <Form>StepFastReportForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\report\uStepReportMachine.pas"/>
         <DCCReference Include="steps\report\uStepReportMachineForm.pas">
             <Form>StepReportMachineForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\tools\CVRDLL.pas"/>
         <DCCReference Include="steps\tools\uStepIdCardHS100UC.pas"/>
         <DCCReference Include="steps\tools\uStepIdCardHS100UCForm.pas">
             <Form>StepIdCardHS100UCForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\util\uStepExeCtrl.pas"/>
         <DCCReference Include="steps\util\uStepExeCtrlForm.pas">
             <Form>StepExeCtrlForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\util\uStepServiceCtrl.pas"/>
         <DCCReference Include="steps\util\uStepServiceCtrlForm.pas">
             <Form>StepServiceCtrlForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="steps\util\uStepWaitTime.pas"/>
         <DCCReference Include="steps\util\uStepWaitTimeForm.pas">
             <Form>StepWaitTimeForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\core\lib\uFileFinder.pas"/>
         <DCCReference Include="..\..\..\core\lib\uServiceUtil.pas"/>
@@ -281,33 +249,27 @@
         <DCCReference Include="..\..\..\etl\comm\uProject.pas"/>
         <DCCReference Include="..\..\..\etl\forms\uDatabaseConnectTestForm.pas">
             <Form>DatabaseConnectTestForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\etl\forms\uDatabasesForm.pas">
             <Form>DatabasesForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\etl\forms\uTaskEditForm.pas">
             <Form>TaskEditForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\core\basic\uBasicLogForm.pas">
             <Form>BasicLogForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\etl\forms\uStepTypeSelectForm.pas">
             <Form>StepTypeSelectForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\etl\forms\uTaskStepSourceForm.pas">
             <Form>TaskStepSourceForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\common\uSelectFolderForm.pas">
             <Form>SelectFolderForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\..\common\uRunInfo.pas"/>
+        <DCCReference Include="..\..\..\common\uStepMgrClass.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

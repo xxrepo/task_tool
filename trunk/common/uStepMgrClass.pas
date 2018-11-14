@@ -84,7 +84,7 @@ unit uStepMgrClass;
 interface
 
 uses
-  uRunInfo, Contnrs, Classes, System.JSON, uStepBasic, uStepBasicForm;
+  uRunInfo, Contnrs, Classes, System.JSON, uStepBasic, uStepBasicForm, uStepDefines;
 
 type
   TRunDllInfo = class
@@ -102,67 +102,44 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    function GetStep(AStepRec: TModuleStepRec): TStepBasic;
-    function GetStepDesignForm(AStepRec: TModuleStepRec): TStepBasicForm;
+    function GetStep(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasic;
+    function GetStepDesignForm(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasicForm;
   end;
 
   //每个step有自己所在的namespace，从而对不同的namespace的库进行有效的区分
   TStepMgr = class
   private
-    FModuleSteps: TJSONObject;
+    FModuleSteps: TJSONArray;
 
     FRunDllList: TStringList;
 
     function AddRunDll(ANameSpace: string): Integer;
-    function RemoveRunDll(ANameSpace): Boolean;
+    function RemoveRunDll(ANameSpace: string): Boolean;
     function GetRunDll(ANameSpace: string): TRunDllInfo;
     function ClearRunDll: Boolean;
+    procedure LoadModuleDlls(aFilePath: string);
+    procedure LoadModules(const aFilePath, aDllName: string);
   public 
     constructor Create;
     destructor Destroy; override;
 
     //获取设计阶段的所有step，如果moduleSteps为空，则需要扫描所有的注册的dll
     function GetDesigningSteps: string;
+    function GetStepDefine(AStepType: string): TStepDefine;
 
-    function GetStep(AStepRec: TModuleStepRec): string;
+    function GetStep(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasic; overload;
+    function GetStep(AStepType: string; ATaskVar: TObject): TStepBasic; overload;
 
-    function GetStepDesignForm(AStepRec: TModuleStepRec): string;
+    function GetStepDesignForm(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasicForm; overload;
+    function GetStepDesignForm(AStepType: string; ATaskVar: TObject): TStepBasicForm; overload;
 
-    //注册所有的steps，其实仅仅是提供了对外部设计阶段进行step的提供，表明设计阶段提供了哪些dll
-    //那么，一个project依赖哪些namespace/dll也就需要在project对应的文件中进行描述说明；同样，
-    //一个task在加入一个新的step后，step所对应的namespace也需要在task描述文件中进行处理，从task删除后
-    //也需要进一步进行扫描。也就是说，一个task要对内部所有引入的step进行清晰的描述，这个描述机制是采用
-    //数组的形式实现的；同样，一个project里面的需要引入的namespace，是来自对 project中各个task中引入的
-    //namespace的一个集合。project并不明确保存namespace，但是在设计工具中可以通过对task的分析，来实现
-    //对所以来的namespace的处理。而且可以很方便的看到，每个namespace被哪些task所使用
-
-    //dll通过加载把所有的Step注入到运行环境中；在设计就通过这里向外提供所有可以使用的step，在运行阶段，
-    //其实并没有实际意义，因为在系统运行时，通过task脚本中的fullId，或者直接每个Step对应的namespace，
-    //namespace alias等，通过namespace直接关联到对应的dll文件，然后直接调用对应的step或者stepform即可，
-    {*
-    由dll自身内部对step结构的stepId进行应答输出即可，也就是运行指定的代码，因此，唯一的dll进行注册，
-    实际上只需要注册namespace，运行阶段根本就不需要step的注册信息的参与
-    因此，还可以进一步进行优化，就是dll在设计阶段都附带了一个同名的abc.dll.config，这个文件用于对其
-    内部的step进行说明，由主程序进行构造处理；更进一步，甚至designForm都可以从运行时的dll中进行剥离，
-    从而使得每个运行时的包更小，代码也并不进行泄露到客户。那么，每个Dll独立成为一个包，这个包包含运行时、
-    设计时、配置这几个部分。主程序负责对每个dll进行加载。设计时的加载还需要设计时、配置这两个部分。
-    打包发布时，只需要加载发布时的dll即可。当然，也可以通过编译指令，编译不同版本的dll，简化对文件的管理。
-    因此，目前至少可以通过两个文件，一个文件是来自abc.dll.config（包含：namespace, steps等配置），
-    另一个文件这是来自abc.dll。主程序通过注册过来的abc.dll.config加载对应的模块。运行程序则是直接只对
-    abc.dll对应的命名空间进行注册即可。程序运行时，发现了对应命名空间的Step，则直接把相应的step的配置信息
-    发送给对应的dll处理即可。运行程序并不会对step做过多的干涉处理。
-    主程序可以扫描所有注册过来的abc.dll.config；设计时，获取对应的step参数，然后交由dll处理；
-    运行程序可以根据项目依赖情况，根据运行程序的配置情况加载对应的dll，然后在解析task时，遇到对应的step，
-    则把step参数传给对应的dll处理；
-    程序
-    *}
   end;
 
 
 implementation
 
 uses
-  Windows, SysUtils, uRunInfo;
+  Windows, SysUtils, uDefines, uFunctions;
 
 
 { TRunDllInfo }
@@ -183,9 +160,9 @@ begin
 end;
 
 
-function TRunDllInfo.GetStep(AStepRec: TModuleStepRec): TStepBasic;
+function TRunDllInfo.GetStep(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasic;
 type
-  TGetStepFunc = function (ARunInfo: TRunInfo; APCharModuleStepRec: TPCharModuleStepRec): TStepBasic; stdcall;
+  TGetStepFunc = function (ARunInfo: TRunInfo; APCharModuleStepRec: TPCharModuleStepRec; ATaskVar: TObject): TStepBasic; stdcall;
 var
   LEntryPointer: Pointer;
 begin
@@ -194,12 +171,14 @@ begin
   LEntryPointer := GetStepEntryPointer;
   if LEntryPointer = nil then Exit;
 
-  Result := TGetStepFunc(LEntryPointer)(RunInfo, );
+
+
+  Result := TGetStepFunc(LEntryPointer)(RunInfo, StepRecToPCharStepRec(AStepRec), ATaskVar);
 end;
 
-function TRunDllInfo.GetStepDesignForm(AStepRec: TModuleStepRec): TStepBasicForm;
+function TRunDllInfo.GetStepDesignForm(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasicForm;
 type
-  TGetStepDesignFormFunc = function (ARunInfo: TRunInfo; APCharModuleStepRec: TPCharModuleStepRec): TStepBasic; stdcall;
+  TGetStepDesignFormFunc = function (ARunInfo: TRunInfo; APCharModuleStepRec: TPCharModuleStepRec; ATaskVar: TObject): TStepBasicForm; stdcall;
 var
   LEntryPointer: Pointer;
 begin
@@ -208,7 +187,7 @@ begin
   LEntryPointer := GetStepDesignFormEntryPointer;
   if LEntryPointer = nil then Exit;
 
-  Result := TGetStepDesignFormFunc(LEntryPointer)(RunInfo, );
+  Result := TGetStepDesignFormFunc(LEntryPointer)(RunInfo, StepRecToPCharStepRec(AStepRec), ATaskVar);
 end;
 
 function TRunDllInfo.GetStepDesignFormEntryPointer: Pointer;
@@ -232,22 +211,39 @@ end;
 { TStepMgr }
 
 function TStepMgr.AddRunDll(ANameSpace: string): Integer;
+var
+  LRunDllInfo: TRunDllInfo;
+  LDllFilePath, LDllName, LFullFileName: string;
 begin
   Result := FRunDllList.IndexOfName(ANameSpace);
+
   //查看是否存在了ANameSpace，如果存在，则会直接返回
   if Result = -1 then
   begin
     //查找ANameSpace具体指向的dll文件
-
-    //文件不存在，则默认为当前路径 + steps/ + namespace.dll
+    LDllName := 'steps_' + ANameSpace + '.dll';
+    LDllFilePath := ExePath + 'steps/';
+    LFullFileName := LDllFilePath + LDllName;
+    if not FileExists(LFullFileName) then Exit;
 
     //加载dll
+    LRunDllInfo := TRunDllInfo.Create;
+    LRunDllInfo.DllHandle := LoadLibrary(PChar(LFullFileName));
+    if LRunDllInfo.DllHandle < 0 then
+    begin
+      LRunDllInfo.Free;
+      Exit;
+    end;
 
+    LRunDllInfo.FilePath := LDllFilePath;
+    LRunDllInfo.DllName := LDllName;
+    LRunDllInfo.DllNameSpace := ANameSpace;
+
+    Result := FRunDllList.AddObject(ANameSpace, LRunDllInfo);
   end;
-
 end;
 
-function TStepMgr.RemoveRunDll(ANameSpace): Boolean;
+function TStepMgr.RemoveRunDll(ANameSpace: string): Boolean;
 var
   idx: Integer;
   LRunDllObj: TObject;
@@ -318,17 +314,18 @@ function TStepMgr.GetDesigningSteps: string;
 begin
   if FModuleSteps = nil then
   begin
-    FModuleSteps := TJSONObject.Create;
+    //FModuleSteps := TJSONObject.Create;
     //依次遍历所有的dll
-
+    LoadModuleDlls(ExePath + 'steps/');
   end;
   Result := FModuleSteps.ToJSON;
 end;
 
+
 {*
 本方法在设计阶段执行
 *}
-function TStepMgr.GetStepDesignForm(AStepRec: TModuleStepRec): TStepBasicForm;
+function TStepMgr.GetStepDesignForm(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasicForm;
 var
   LRunDllInfo: TRunDllInfo;
 begin
@@ -338,13 +335,105 @@ begin
   if LRunDllInfo = nil then Exit;
 
   //由dll返回对应的指针地址对象
-  Result := LRunDllInfo.GetStepDesignForm(AStepRec);
+  Result := LRunDllInfo.GetStepDesignForm(AStepRec, ATaskVar);
+end;
+
+
+procedure TStepMgr.LoadModuleDlls(aFilePath: string);
+var
+  aSearchrec: TSearchRec;
+  findresult: integer;
+begin
+  if DirectoryExists(aFilePath) then
+  begin
+    if aFilePath[Length(aFilePath)] <> '\' then
+      aFilePath := aFilePath + '\';
+    // 本处根据配置文件的Modules来进行自动配置
+    findresult := findfirst(aFilePath + '*.dll', faAnyFile, aSearchrec);
+    while (findresult = 0) do
+    begin
+      LoadModules(aFilePath, aSearchrec.Name);
+      findresult := FindNext(aSearchrec);
+    end;
+    FindClose(aSearchrec);
+  end;
+end;
+
+procedure TStepMgr.LoadModules(const aFilePath, aDllName: string);
+type
+  TModuleRegister = function (): string; stdcall;
+var
+  h: thandle;
+  p: Pointer;
+  afullName: string;
+  LModuleStepJsonStr: string;
+  LModuleStepsJson: TJSONValue;
+  LNameSpace: string;
+begin
+  afullName := aFilePath + aDllName;
+  h := LoadLibrary(PChar(afullName));
+  if h > 0 then
+  begin
+    p := GetProcAddress(h, 'ModulesRegister');
+    if p <> nil then
+    begin
+      LModuleStepJsonStr := TModuleRegister(p)();
+
+      //尝试解析
+      LModuleStepsJson := TJSONObject.ParseJSONValue(LModuleStepJsonStr);
+      if LModuleStepsJson = nil then Exit;
+
+      //加入
+      LNameSpace := ChangeFileExt(ExtractFileName(afullName), '');
+      FModuleSteps := LModuleStepsJson as TJSONArray;
+    end;
+    FreeLibrary(h);
+  end;
+end;
+
+function TStepMgr.GetStepDefine(AStepType: string): TStepDefine;
+var
+  i: Integer;
+  LRow: TJSONObject;
+begin
+  Result.StepTypeId := 0;
+  Result.StepType := '';
+  Result.StepTypeName := '';
+  Result.StepClassName := '';
+  Result.FormClassName := '';
+
+  if AStepType = '' then
+  begin
+    raise Exception.Create('配置的StepType为空');
+  end;
+
+
+  GetDesigningSteps;
+
+  if FModuleSteps = nil then Exit;
+
+
+  //从列表中读取
+  for I := 0 to FModuleSteps.Count - 1 do
+  begin
+    LRow := FModuleSteps.Items[i] as TJSONObject;
+    if LRow = nil then Continue;
+
+    if GetJsonObjectValue(LRow, 'step_type', '') = AStepType then
+    begin
+      Result.StepTypeId := StrToIntDef(GetJsonObjectValue(LRow, 'step_type_id', '0'), 0);
+      Result.StepType := AStepType;
+      Result.StepTypeName := GetJsonObjectValue(LRow, 'step_type_name', '');
+      Result.StepClassName := GetJsonObjectValue(LRow, 'step_class_name', '');
+      Result.FormClassName := GetJsonObjectValue(LRow, 'form_class_name', '');
+    end;
+  end;
 end;
 
 {*
 本方法在设计阶段和运行阶段均会执行
 *}
-function TStepMgr.GetStep(AStepRec: TModuleStepRec): TStepBasic;
+function TStepMgr.GetStep(AStepRec: TModuleStepRec; ATaskVar: TObject): TStepBasic;
 var
   LRunDllInfo: TRunDllInfo;
 begin
@@ -354,7 +443,36 @@ begin
   if LRunDllInfo = nil then Exit;
 
   //由dll返回对应的指针地址对象
-  Result := LRunDllInfo.GetStep(AStepRec);
+  Result := LRunDllInfo.GetStep(AStepRec, ATaskVar);
+end;
+
+
+function StepTypeToStepRec(AStepType: string): TModuleStepRec;
+var
+  LStringList: TStringList;
+begin
+  LStringList := TStringList.Create;
+  try
+    LStringList.Delimiter := '|';
+    LStringList.DelimitedText := AStepType;
+
+    Result.DllNameSpace := LStringList.Strings[0];
+    Result.StepId := 0;
+    Result.StepName := LStringList.Strings[1];
+  finally
+    LStringList.Free;
+  end;
+
+end;
+
+function TStepMgr.GetStep(AStepType: string; ATaskVar: TObject): TStepBasic;
+begin
+  Result := GetStep(StepTypeToStepRec(AStepType), ATaskVar);
+end;
+
+function TStepMgr.GetStepDesignForm(AStepType: string; ATaskVar: TObject): TStepBasicForm;
+begin
+  Result := GetStepDesignForm(StepTypeToStepRec(AStepType), ATaskVar);
 end;
 
 end.

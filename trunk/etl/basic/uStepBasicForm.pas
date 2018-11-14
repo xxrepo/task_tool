@@ -38,7 +38,7 @@ var
 
 implementation
 
-uses uFunctions, uDesignTimeDefines, uFileUtil, uStepFactory;
+uses uFunctions, uDesignTimeDefines, uFileUtil, uDefines;
 
 {$R *.dfm}
 
@@ -48,7 +48,7 @@ begin
   Step := TStepBasic(TaskVar.GetStepFromStack(TaskVar.ToStep));
   if Step = nil then
   begin
-    Step := TStepFactory.GetStep(AStepType, TaskVar);
+    Step := StepMgr.GetStep(AStepType, TaskVar);
     FOwnedStep := True;
   end;
 end;

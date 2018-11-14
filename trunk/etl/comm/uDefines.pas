@@ -4,12 +4,13 @@ interface
 
 
 uses
-  uFileLogger, System.SyncObjs, Winapi.Messages;
+  uFileLogger, System.SyncObjs, Winapi.Messages, uStepMgrClass;
 
 var
   ExePath: string;
   AppLogger: TThreadFileLog;
   FileCritical: TCriticalSection;
+  StepMgr: TStepMgr;
 
 
 const

@@ -30,7 +30,7 @@ var
 
 implementation
 
-uses uDefines, uFunctions, uStepFactory;
+uses uDefines, uFunctions;
 
 {$R *.dfm}
 
@@ -62,7 +62,7 @@ end;
 
 procedure TStepTypeSelectForm.LoadData;
 begin
-  JsonToDataSet(TStepFactory.GetSysStepDefinesStr, cdsStepTypes);
+  JsonToDataSet(StepMgr.GetDesigningSteps, cdsStepTypes);
 end;
 
 

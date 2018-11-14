@@ -6,7 +6,7 @@ inherited StepTypeSelectForm: TStepTypeSelectForm
   ExplicitWidth = 413
   ExplicitHeight = 425
   PixelsPerInch = 96
-  TextHeight = 19
+  TextHeight = 17
   inherited pnlOper: TPanel
     Top = 339
     Width = 407

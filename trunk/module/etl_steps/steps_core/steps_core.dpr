@@ -15,7 +15,7 @@ uses
   System.Classes,
   Winapi.Windows,
   Vcl.Forms,
-  System.Contnrs,
+  System.JSON,
   uBasicForm in '..\..\..\core\basic\uBasicForm.pas' {BasicForm},
   uBasicDlgForm in '..\..\..\core\basic\uBasicDlgForm.pas' {BasicDlgForm},
   uFunctions in '..\..\..\common\uFunctions.pas',
@@ -106,7 +106,8 @@ uses
   uStepTypeSelectForm in '..\..\..\etl\forms\uStepTypeSelectForm.pas' {StepTypeSelectForm},
   uTaskStepSourceForm in '..\..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
   uSelectFolderForm in '..\..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
-  uRunInfo in '..\..\..\common\uRunInfo.pas';
+  uRunInfo in '..\..\..\common\uRunInfo.pas',
+  uStepMgrClass in '..\..\..\common\uStepMgrClass.pas';
 
 {$R *.res}
 
@@ -134,7 +135,7 @@ end;
 
 //需要能够运行steps，但是具体的steps也有可能是最终呈现一个form，比如报表类，当然，报表类也可以通过文件的方式进行处理
 //需要能够打开form
-function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TStepBasic; stdcall;
+function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec; ATaskVar: TObject): TStepBasic; stdcall;
 begin
   if RunInfo = nil then
   begin
@@ -150,76 +151,316 @@ begin
   Result := nil;
 end;
 
-procedure ModulesRegister(DllModuleList: TObjectList); stdcall;
+
+function ModulesRegister: PChar; stdcall;
 var
-  DllModule: TPCharModuleInfo;
+  LRowJson: TJSONObject;
+  LSteps: TJSONArray;
 begin
-  if (DllModuleList <> nil) then
-  begin
-    //common
-    DllModule:=TPCharModuleInfo.Create('common', '通用', '');
-    DllModule.Add('null', 'Null空组件', '');
-    DllModule.Add('var_define', '变量定义', '');
-    DllModule.Add('condition', '条件判断', '');
-    DllModule.Add('sub_task', '子任务', '');
-    DllModule.Add('task_result', '任务结果', '');
-    DllModuleList.Add(DllModule);
+  LSteps := TJSONArray.Create;
 
-    //control
-    DllModule:=TPCharModuleInfo.Create('control', '控制组件', '');
-    DllModule.Add('exception', '异常捕捉', '');
-    DllModuleList.Add(DllModule);
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|COMMON_NULL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '10010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '空组件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepNull'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepNullForm'));
+  LSteps.AddElement(LRowJson);
 
-    //data
-    DllModule:=TPCharModuleInfo.Create('data', '数据组件', '');
-    DllModule.Add('dataset_spliter', '数据集切割', '');
-    DllModule.Add('fields_map', '字段映射', '');
-    DllModule.Add('fields_oper', '字段操作', '');
-    DllModule.Add('json_2_dataset', 'Json转Dataset', '');
-    DllModuleList.Add(DllModule);
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|COMMON_SUB_TASK'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '10020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '子任务'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepSubTask'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepSubTaskForm'));
+  LSteps.AddElement(LRowJson);
 
-    //database
-    DllModule:=TPCharModuleInfo.Create('database', '数据库组件', '');
-    DllModule.Add('json_2_table', 'Json转Table', '');
-    DllModule.Add('query', 'Query数据库查询', '');
-    DllModule.Add('sql_execute', 'SQL执行', '');
-    DllModuleList.Add(DllModule);
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|VAR_DEFININITION'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '变量定义'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepVarDefine'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepVarDefineForm'));
+  LSteps.AddElement(LRowJson);
 
-    //file
-    DllModule:=TPCharModuleInfo.Create('file', '文件操作组件', '');
-    DllModule.Add('file_delete', '文件删除', '');
-    DllModule.Add('folder_ctrl', '文件夹控制', '');
-    DllModule.Add('ini_read', 'Ini文件读取', '');
-    DllModule.Add('ini_write', 'Ini文件保存', '');
-    DllModule.Add('txt_read', 'Text文件读取', '');
-    DllModule.Add('txt_write', 'Text文件保存', '');
-    DllModule.Add('unzip', 'Zip文件解压', '');
-    DllModuleList.Add(DllModule);
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|CONTROL_CONDITION'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '条件判断'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepCondition'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepConditionForm'));
+  LSteps.AddElement(LRowJson);
 
-    //network
-    DllModule:=TPCharModuleInfo.Create('network', '网络操作组件', '');
-    DllModule.Add('download_file', '下载文件', '');
-    DllModule.Add('http_request', 'Http请求', '');
-    DllModuleList.Add(DllModule);
-
-    //report
-    DllModule:=TPCharModuleInfo.Create('report', '报表组件', '');
-    DllModule.Add('fast_report', 'FastReport组件', '');
-    DllModule.Add('report_machine', 'RM组件', '');
-    DllModuleList.Add(DllModule);
-
-    //tools
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|CONTROL_TASKRESULT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'TaskResult任务结果'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTaskResult'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTaskResultForm'));
+  LSteps.AddElement(LRowJson);
 
 
-    //util
-    DllModule:=TPCharModuleInfo.Create('util', '实用组件', '');
-    DllModule.Add('exe_ctrl', 'Exe可执行文件控制组件', '');
-    DllModule.Add('service_ctrl', '系统服务控制组件', '');
-    DllModule.Add('wait_time', 'TimeWait组件', '');
-    DllModuleList.Add(DllModule);
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '通用'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|CONTROL_EXCEPTION_CATCH'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '60040'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '异常捕捉'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepExceptionCatch'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepExceptionCatchForm'));
+  LSteps.AddElement(LRowJson);
 
-  end;
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据库'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DB_SQLQUERY'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '20010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'SQL_Query'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepQuery'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepQueryForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据库'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DB_SQLSQL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '20011'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'SQL_SQL'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepSQL'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepSQLForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据库'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DB_JSON2TABLE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '20020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'JSON导入数据表'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepJson2Table'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepJson2TableForm'));
+  LSteps.AddElement(LRowJson);
+
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DATASET_FILEDS_OPER'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '30010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '字段处理'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFieldsOper'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFieldsOperForm'));
+  LSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DATASET_FILEDS_MAP'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '30011'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '字段映射转化'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFieldsMap'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFieldsMapForm'));
+  LSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DATASET_SPLITER'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '30020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '数据集拆分'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepDatasetSpliter'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepDatasetSpliterForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '数据集/字段'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DATASET_JSON2DATASET'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '30030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'JSON转数据集'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepJsonDataSet'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepJsonDataSetForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_READ_INI'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '读INI文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepIniRead'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepIniReadForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_WRITE_INI'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40011'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '写INI文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepIniWrite'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepIniWriteForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_WRITE_TEXT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '写文本文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTxtFileWriter'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTxtFileWriterForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_READ_TEXT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40021'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '读文本文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepTxtFileReader'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepTxtFileReaderForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_DELETE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '删除文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFileDelete'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFileDeleteForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_UNZIP'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40040'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'ZIP文件解压'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepUnzip'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepUnzipForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '文件'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|FILE_FOLDER_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '40050'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '文件夹控制'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFolderCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFolderCtrlForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '网络'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|NET_HTTP_REQUEST'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '50010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Http_Request_请求'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepHttpRequest'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepHttpRequestForm'));
+  LSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '网络'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|NET_HTTP_DOWNLOAD_FILE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '50020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Http文件下载'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepDownloadFile'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepDownloadFileForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '报表打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|PRINT_FASTREPORT'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '70010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'FastReport打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepFastReport'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepFastReportForm'));
+  LSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '报表打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|PRINT_REPORTMACHINE'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '70020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'ReportMachine打印'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepReportMachine'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepReportMachineForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|UTIL_SERVICE_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Service服务程序'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepServiceCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepServiceCtrlForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|UTIL_EXE_CTRL'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80020'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', 'Exe应用程序'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepExeCtrl'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepExeCtrlForm'));
+  LSteps.AddElement(LRowJson);
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '实用工具'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|UTIL_WAIT_TIME'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '80030'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '等待时间'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepWaitTime'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepWaitTimeForm'));
+  LSteps.AddElement(LRowJson);
+
+
+  LRowJson := TJSONObject.Create;
+  LRowJson.AddPair(TJSONPair.Create('namespace', 'core'));
+  LRowJson.AddPair(TJSONPair.Create('step_group', '设备'));
+  LRowJson.AddPair(TJSONPair.Create('step_type', 'core|DEVICE_IDCARD_HS100UC'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_id', '90010'));
+  LRowJson.AddPair(TJSONPair.Create('step_type_name', '身份证读卡器-华视100UC'));
+  LRowJson.AddPair(TJSONPair.Create('step_class_name', 'TStepIdCardHS100UC'));
+  LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepIdCardHS100UCForm'));
+  LSteps.AddElement(LRowJson);
+
+  Result := PChar(LSteps.ToJSON);
+  LSteps.Free;
 end;
+
 
 procedure NewDllProc(dwReason: DWORD);
 begin

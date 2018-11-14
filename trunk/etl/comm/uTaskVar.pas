@@ -3,7 +3,7 @@ unit uTaskVar;
 interface
 
 uses
-  uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
+  uDbConMgr, System.Classes, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
   System.SysUtils, System.JSON, uTaskResult;
 
 type
@@ -83,7 +83,7 @@ type
 
 implementation
 
-uses uStepBasic, uFunctions, uStepFactory, uExceptions;
+uses uStepBasic, uFunctions, uExceptions, uDefines;
 
 type
   TStepDataStore = class
@@ -333,7 +333,7 @@ begin
     begin
       //调用工厂类
       LStepType := GetJsonObjectValue(AStepConfigJson, 'step_type');
-      LStep := TStepFactory.GetStep(LStepType, Self);
+      LStep := StepMgr.GetStep(LStepType, Self);
       if (LStep <> nil) then
       begin
         try
