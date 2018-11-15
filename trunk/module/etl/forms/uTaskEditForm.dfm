@@ -153,7 +153,6 @@ inherited TaskEditForm: TTaskEditForm
     TabOrder = 0
   end
   object pmTaskSteps: TPopupMenu
-    OwnerDraw = True
     Left = 682
     Top = 161
     object StepAdd: TMenuItem

@@ -70,7 +70,7 @@ implementation
 uses uProject, uFileUtil, uDesignTimeDefines, uDefines, uDatabasesForm, uJobsMgrForm,
 uTaskEditForm, uFunctions, uMakeDirForm, System.IOUtils, System.JSON, System.Win.Registry,
 uServiceControlForm, uGlobalVarSettingForm, uTaskVar, uGlobalVar, uHttpServerControlForm,
-uPackageHelperForm;
+uPackageHelperForm, uRunInfo;
 
 {$R *.dfm}
 

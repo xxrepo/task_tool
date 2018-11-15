@@ -119,6 +119,7 @@ type
     function ClearRunDll: Boolean;
     procedure LoadModuleDlls(aFilePath: string);
     procedure LoadModules(const aFilePath, aDllName: string);
+    function StepTypeToStepRec(AStepType: string): TModuleStepRec;
   public 
     constructor Create;
     destructor Destroy; override;
@@ -295,6 +296,7 @@ end;
 constructor TStepMgr.Create;
 begin
   FRunDllList := TStringList.Create(False);
+  FModuleSteps := nil;
 end;
 
 destructor TStepMgr.Destroy;
@@ -312,13 +314,15 @@ end;
 *}
 function TStepMgr.GetDesigningSteps: string;
 begin
+  Result := '';
   if FModuleSteps = nil then
   begin
     //FModuleSteps := TJSONObject.Create;
     //依次遍历所有的dll
-    LoadModuleDlls(ExePath + 'steps/');
+    LoadModuleDlls(ExePath + 'steps\');
   end;
-  Result := FModuleSteps.ToJSON;
+  if FModuleSteps is TJSONArray  then
+    Result := FModuleSteps.ToJSON;
 end;
 
 
@@ -361,12 +365,12 @@ end;
 
 procedure TStepMgr.LoadModules(const aFilePath, aDllName: string);
 type
-  TModuleRegister = function (): string; stdcall;
+  TModuleRegister = procedure (var AModules: PChar); stdcall;
 var
   h: thandle;
   p: Pointer;
   afullName: string;
-  LModuleStepJsonStr: string;
+  LModuleStepJsonStr: PChar;
   LModuleStepsJson: TJSONValue;
   LNameSpace: string;
 begin
@@ -377,7 +381,7 @@ begin
     p := GetProcAddress(h, 'ModulesRegister');
     if p <> nil then
     begin
-      LModuleStepJsonStr := TModuleRegister(p)();
+      TModuleRegister(p)(LModuleStepJsonStr);
 
       //尝试解析
       LModuleStepsJson := TJSONObject.ParseJSONValue(LModuleStepJsonStr);
@@ -396,6 +400,7 @@ var
   i: Integer;
   LRow: TJSONObject;
 begin
+  Result.DllNameSpace := '';
   Result.StepTypeId := 0;
   Result.StepType := '';
   Result.StepTypeName := '';
@@ -421,6 +426,7 @@ begin
 
     if GetJsonObjectValue(LRow, 'step_type', '') = AStepType then
     begin
+      Result.DllNameSpace := GetJsonObjectValue(LRow, 'namespace', '');
       Result.StepTypeId := StrToIntDef(GetJsonObjectValue(LRow, 'step_type_id', '0'), 0);
       Result.StepType := AStepType;
       Result.StepTypeName := GetJsonObjectValue(LRow, 'step_type_name', '');
@@ -447,22 +453,17 @@ begin
 end;
 
 
-function StepTypeToStepRec(AStepType: string): TModuleStepRec;
+function TStepMgr.StepTypeToStepRec(AStepType: string): TModuleStepRec;
 var
-  LStringList: TStringList;
+  LStepDefine: TStepDefine;
 begin
-  LStringList := TStringList.Create;
-  try
-    LStringList.Delimiter := '|';
-    LStringList.DelimitedText := AStepType;
-
-    Result.DllNameSpace := LStringList.Strings[0];
-    Result.StepId := 0;
-    Result.StepName := LStringList.Strings[1];
-  finally
-    LStringList.Free;
-  end;
-
+  LStepDefine := GetStepDefine(AStepType);
+  Result.DllNameSpace := LStepDefine.DllNameSpace;
+  Result.StepId := LStepDefine.StepTypeId;
+  Result.StepName := LStepDefine.StepTypeName;
+  Result.Caption := LStepDefine.StepTypeName;
+  Result.StepClassName := LStepDefine.StepClassName;
+  Result.StepDesignFormClassName := LStepDefine.FormClassName;
 end;
 
 function TStepMgr.GetStep(AStepType: string; ATaskVar: TObject): TStepBasic;

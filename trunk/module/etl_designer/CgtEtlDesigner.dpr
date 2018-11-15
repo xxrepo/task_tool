@@ -1,6 +1,7 @@
 program CgtEtlDesigner;
 
 uses
+  ShareMem,
   Vcl.Forms,
   MidasLib,
   System.SysUtils,
@@ -57,7 +58,6 @@ uses
   uTaskStepSourceForm in '..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
   uRunInfo in '..\..\common\uRunInfo.pas',
   uStepMgrClass in '..\..\common\uStepMgrClass.pas',
-  uAppConfig in 'comm\uAppConfig.pas',
   uAppDefines in 'comm\uAppDefines.pas',
   uStepBasic in '..\..\etl\basic\uStepBasic.pas',
   uStepBasicForm in '..\..\etl\basic\uStepBasicForm.pas' {StepBasicForm};
@@ -73,6 +73,7 @@ begin
   ExePath := ExtractFilePath(Application.ExeName);
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
+  StepMgr := TStepMgr.Create;
 
 
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
@@ -80,6 +81,10 @@ begin
     Application.CreateForm(TProjectForm, ProjectForm);
     ProjectForm.WindowState := wsMaximized;
   end;
+  //创建RunInfo
+  RunInfo := TRunInfo.Create(Integer(Application),Integer(Screen),
+                   Integer(ProjectForm), ProjectForm.Handle);
+  RunInfo.SetCurrentProject(Integer(CurrentProject));
   Application.Run;
 
   //全局单实例判断释放
@@ -89,6 +94,8 @@ begin
   end;
 
 
+  StepMgr.Free;
   FileCritical.Free;
   AppLogger.Free;
+  RunInfo.Free;
 end.

@@ -25,6 +25,7 @@ type
 
   //仅仅表明一个Step的定义
   TStepDefine = record
+    DllNameSpace: string;
     StepTypeId: Integer;
     StepType: TStepType;
     StepTypeName: string;

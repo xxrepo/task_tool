@@ -95,6 +95,7 @@ inherited ProjectForm: TProjectForm
       Indent = 19
       Options = [stoAutoFill, stoVirtualFolders, stoDefaultKeyHandling, stoDynamicRefresh, stoOleDrag, stoOleDrop, stoShowHidden]
       PopupMenu = pmProjects
+      SelectionPen.Color = clBtnShadow
       ShellList = lstFiles
       TabOrder = 0
     end

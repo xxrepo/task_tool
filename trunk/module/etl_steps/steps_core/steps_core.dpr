@@ -11,11 +11,13 @@ library steps_core;
   using PChar or ShortString parameters. }
 
 uses
+  System.ShareMem,
   System.SysUtils,
   System.Classes,
   Winapi.Windows,
   Vcl.Forms,
   System.JSON,
+  System.SyncObjs,
   uBasicForm in '..\..\..\core\basic\uBasicForm.pas' {BasicForm},
   uBasicDlgForm in '..\..\..\core\basic\uBasicDlgForm.pas' {BasicDlgForm},
   uFunctions in '..\..\..\common\uFunctions.pas',
@@ -26,11 +28,8 @@ uses
   uTaskResult in '..\..\..\etl\comm\uTaskResult.pas',
   uTaskVar in '..\..\..\etl\comm\uTaskVar.pas',
   uStepDefines in '..\..\..\etl\steps\uStepDefines.pas',
-  uStepFactory in '..\..\..\etl\steps\uStepFactory.pas',
-  uStepFormFactory in '..\..\..\etl\steps\uStepFormFactory.pas',
   uStepFormSettings in '..\..\..\etl\steps\uStepFormSettings.pas',
   uDbConMgr in '..\..\..\etl\comm\uDbConMgr.pas',
-  uFileLogger in '..\..\..\core\lib\uFileLogger.pas',
   uThreadQueueUtil in '..\..\..\core\lib\uThreadQueueUtil.pas',
   uDefines in '..\..\..\etl\comm\uDefines.pas',
   uThreadSafeFile in '..\..\..\etl\comm\uThreadSafeFile.pas',
@@ -107,7 +106,9 @@ uses
   uTaskStepSourceForm in '..\..\..\etl\forms\uTaskStepSourceForm.pas' {TaskStepSourceForm},
   uSelectFolderForm in '..\..\..\common\uSelectFolderForm.pas' {SelectFolderForm},
   uRunInfo in '..\..\..\common\uRunInfo.pas',
-  uStepMgrClass in '..\..\..\common\uStepMgrClass.pas';
+  uStepMgrClass in '..\..\..\common\uStepMgrClass.pas',
+  uAppConfig in '..\..\..\etl\comm\uAppConfig.pas',
+  uFileLogger in '..\..\..\core\lib\uFileLogger.pas';
 
 {$R *.res}
 
@@ -116,9 +117,7 @@ var
   OldMainForm: TForm;
   OldScreen: TScreen;
 
-
-//需要能够打开form
-function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec): TStepBasicForm; stdcall;
+procedure AssignRunInfo(DllRunInfo: TRunInfo);
 begin
   if RunInfo = nil then
   begin
@@ -127,32 +126,166 @@ begin
     Application := TApplication(RunInfo.Application);
     OldScreen := Screen;
     Screen := TScreen(RunInfo.MainScreen);
+
+    //对本地的define和design_time_define中的全局变量进行赋值
+    ExePath := RunInfo.ExePath;
+    AppLogger := TThreadFileLog(RunInfo.AppLogger);
+    FileCritical := TCriticalSection(RunInfo.FileCritical);
+    StepMgr := TStepMgr(RunInfo.StepMgr);
   end;
+
+  if CurrentProject = nil then
+    CurrentProject := TProject(RunInfo.CurrentProject);
+end;
+
+//需要能够打开form
+function ModuleStepDesignForm(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec; ATaskVar: TTaskVar): TStepBasicForm; stdcall;
+var
+  LClass: TPersistentClass;
+begin
   Result := nil;
+  if ATaskVar = nil then Exit;
+
+  AssignRunInfo(DllRunInfo);
+
+  LClass := GetClass(DllModuleStepRec.StepDesignFormClassName);
+  if LClass <> nil then
+  begin
+    Result := LClass.NewInstance as TStepBasicForm;
+    Result := Result.Create(nil);
+    Result.TaskVar := ATaskVar;
+    Result.edtStepTitle.Text := DllModuleStepRec.StepName;
+  end;
 end;
 
 
 
 //需要能够运行steps，但是具体的steps也有可能是最终呈现一个form，比如报表类，当然，报表类也可以通过文件的方式进行处理
 //需要能够打开form
-function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec; ATaskVar: TObject): TStepBasic; stdcall;
+function ModuleStep(DllRunInfo: TRunInfo; DllModuleStepRec: TPCharModuleStepRec; ATaskVar: TTaskVar): TStepBasic; stdcall;
+var
+  LTaskVar: TTaskVar;
 begin
-  if RunInfo = nil then
-  begin
-    RunInfo := DllRunInfo;
-    OldMainForm := Application.MainForm;
-    Application := TApplication(RunInfo.Application);
-    OldScreen := Screen;
-    Screen := TScreen(RunInfo.MainScreen);
-  end;
+  Result := nil;
+  if ATaskVar = nil then Exit;
+  
+  AssignRunInfo(DllRunInfo);
 
   //接下来，可以根据传入的module的那个step来进行具体的运行
-
-  Result := nil;
+  case DllModuleStepRec.StepId of
+      10010:
+      begin
+        Result := TStepNull.Create(ATaskVar);
+      end;
+      10020:
+      begin
+        Result := TStepSubTask.Create(ATaskVar);
+      end;
+      20010:
+      begin
+        Result := TStepQuery.Create(ATaskVar);
+      end;
+      20011:
+      begin
+        Result := TStepSQL.Create(ATaskVar);
+      end;
+      20020:
+      begin
+        Result := TStepJson2Table.Create(ATaskVar);
+      end;
+      30010:
+      begin
+        Result := TStepFieldsOper.Create(ATaskVar);
+      end;
+      30011:
+      begin
+        Result := TStepFieldsMap.Create(ATaskVar);
+      end;
+      30020:
+      begin
+        Result := TStepDatasetSpliter.Create(ATaskVar);
+      end;
+      30030:
+      begin
+        Result := TStepJsonDataSet.Create(ATaskVar);
+      end;
+      40010:
+      begin
+        Result := TStepIniRead.Create(ATaskVar);
+      end;
+      40011:
+      begin
+        Result := TStepIniWrite.Create(ATaskVar);
+      end;
+      40020:
+      begin
+        Result := TStepTxtFileWriter.Create(ATaskVar);
+      end;
+      40021:
+      begin
+        Result := TStepTxtFileReader.Create(ATaskVar);
+      end;
+      40030:
+      begin
+        Result := TStepFileDelete.Create(ATaskVar);
+      end;
+      40040:
+      begin
+        Result := TStepUnzip.Create(ATaskVar);
+      end;
+      40050:
+      begin
+        Result := TStepFolderCtrl.Create(ATaskVar);
+      end;
+      50010:
+      begin
+        Result := TStepHttpRequest.Create(ATaskVar);
+      end;
+      50020:
+      begin
+        Result := TStepDownloadFile.Create(ATaskVar);
+      end;
+      60010:
+      begin
+        Result := TStepCondition.Create(ATaskVar);
+      end;
+      60020:
+      begin
+        Result := TStepVarDefine.Create(ATaskVar);
+      end;
+      60030:
+      begin
+        Result := TStepTaskResult.Create(ATaskVar);
+      end;
+      60040:
+      begin
+        Result := TStepExceptionCatch.Create(ATaskVar);
+      end;
+      70010:
+      begin
+        Result := TStepFastReport.Create(ATaskVar);
+      end;
+      70020:
+      begin
+        Result := TStepReportMachine.Create(ATaskVar);
+      end;
+      80010:
+      begin
+        Result := TStepServiceCtrl.Create(ATaskVar);
+      end;
+      80020:
+      begin
+        Result := TStepExeCtrl.Create(ATaskVar);
+      end;
+      80030:
+      begin
+        Result := TStepWaitTime.Create(ATaskVar);
+      end;
+    end;
 end;
 
 
-function ModulesRegister: PChar; stdcall;
+procedure ModulesRegister(var AModules: PChar); stdcall;
 var
   LRowJson: TJSONObject;
   LSteps: TJSONArray;
@@ -457,7 +590,7 @@ begin
   LRowJson.AddPair(TJSONPair.Create('form_class_name', 'TStepIdCardHS100UCForm'));
   LSteps.AddElement(LRowJson);
 
-  Result := PChar(LSteps.ToJSON);
+  AModules := PChar(LSteps.ToJSON);
   LSteps.Free;
 end;
 

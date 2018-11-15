@@ -24,7 +24,10 @@ type
     function GetParamValueFrom(AKind, AParamRef, AParamType: string; ADefaultValue: Variant): Variant;
     function GetStepDataFrom(AData: TStepData; AParamsRef: TStringList): TStepData; overload;
     function GetParamValueFromStepData(AStepData: TStepData; AFieldName, ADefaultValue, AParamType: string): Variant;
+    procedure SetSubStepsStr(const Value: string);
+    function GetSubSteps: TJSONArray;
   protected
+    FSubStepsStr: string;
     FSubSteps: TJSONArray;
     FTaskBlock: TTaskBlock; //表明本step运行的所在的任务块
     FTaskVar: TTaskVar;     //表明整个task的全局context环境
@@ -50,8 +53,9 @@ type
     procedure StartSelf; virtual;
     procedure StartChildren(AChildStepTitle: string = ''); virtual;
   public
+    property SubStepsStr: string read FSubStepsStr write SetSubStepsStr;
     property StepConfig: TStepConfig read FStepConfig write FStepConfig;
-    property SubSteps: TJSONArray read FSubSteps write FSubSteps;
+    property SubSteps: TJSONArray read GetSubSteps;
     property TaskBlock: TTaskBlock read FTaskBlock write FTaskBlock;
     property TaskVar: TTaskVar read GetTaskVar write SetTaskVar;
     property InData: TStepData read GetInData write SetInData;
@@ -109,6 +113,8 @@ end;
 
 destructor TStepBasic.Destroy;
 begin
+  if FSubSteps <> nil then
+    FSubSteps.Free;
   FStepConfig.Free;
   if FInDataJson <> nil then
     FInDataJson.Free;
@@ -345,6 +351,14 @@ begin
 end;
 
 
+
+function TStepBasic.GetSubSteps: TJSONArray;
+begin
+  if FSubSteps = nil then
+    FSubSteps := TJSONObject.ParseJSONValue(FSubStepsStr) as TJSONArray;
+  Result := FSubSteps;
+end;
+
 function TStepBasic.GetStepDataFrom(AData: TStepData; AParamsRef: TStringList): TStepData;
 var
   LJsonObject: TJSONObject;
@@ -423,6 +437,14 @@ begin
   FOutData := Value;
 end;
 
+procedure TStepBasic.SetSubStepsStr(const Value: string);
+begin
+  FSubStepsStr := Value;
+  //if Assigned(FSubSteps) then
+  //  FSubSteps.Free;
+  //FSubSteps := TJSONObject.ParseJSONValue(Value) as TJSONArray;
+end;
+
 procedure TStepBasic.SetTaskVar(const Value: TTaskVar);
 begin
   FTaskVar := Value;
@@ -453,11 +475,11 @@ var
   LStepConfigJson: TJSONObject;
 begin
   //对ChildrenStep进行循环调用
-  if (FSubSteps <> nil) then
+  if (SubSteps <> nil) then
   begin
-    for i := 0 to FSubSteps.Count - 1 do
+    for i := 0 to SubSteps.Count - 1 do
     begin
-      LStepConfigJson := FSubSteps.Items[i] as TJSONObject;
+      LStepConfigJson := SubSteps.Items[i] as TJSONObject;
 
       if (AChildStepTitle <> '')
           and (GetJsonObjectValue(LStepConfigJson, 'step_title') <> AChildStepTitle) then Continue;

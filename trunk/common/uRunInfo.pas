@@ -22,6 +22,8 @@ type
 
     Caption: string;
     Hint: string;
+    StepClassName: string;
+    StepDesignFormClassName: string;
   end;
 
   {*****************************************************************************
@@ -39,6 +41,8 @@ type
     //对外进行呈现的一些属性
     Caption: PChar;
     Hint: PChar;
+    StepClassName: PChar;
+    StepDesignFormClassName: PChar;
   end;
 
 
@@ -55,25 +59,42 @@ type
 
 
     //执行任务相关
+    FExePath: PChar;
+    FAppLogger: Integer;
+    FFileCritical: Integer;
     FStepMgr: Integer;
-
-
-    FThemeStyle: Byte;
-    FConfigFile: TiniFile;
-    FDebug: Integer;  // 存储VVDebug
+    FCurrentProject: Integer;
   public
     constructor Create(aApplication, aMainScreen, aMainForm: Integer; aMainFormHandle: THandle);
     destructor Destroy; override;
+
+
+    procedure SetApplication(AApplication: Integer);
+    procedure SetMainScreen(aMainScreen: Integer);
+    procedure SetMainForm(aMainForm: Integer);
+    procedure SetMainformHandle(aMainFormHandle: Integer);
+
+    procedure SetExePath(AExePath: PChar);
+    procedure SetStepMgr(AStepMgr: Integer);
+    procedure SetAppLogger(AAppLogger: Integer);
+    procedure SetFileCritical(AFileCritical: Integer);
+    procedure SetCurrentProject(ACurrentProject: Integer);
+
+
     property Application:Integer read FApplication;
     property MainScreen:Integer read FMainScreen;
-    property MainForm:Integer read FMainForm write FMainForm;
+    property MainForm:Integer read FMainForm;
     property MainFormHandle:THandle read FMainFormHandle;
 
+    //uDefines
+    property ExePath: PChar read FExePath;
     property StepMgr: Integer read FStepMgr;
+    property AppLogger: Integer read FAppLogger;
+    property FileCritical: Integer read FFileCritical;
 
-    property ThemeStyle: Byte read FThemeStyle write FThemeStyle;
-    property ConfigFile: TIniFile read FConfigFile write FConfigFile;
-    property Debug: Integer read FDebug write FDebug;
+    //uDesignTimeDefines
+    property CurrentProject: Integer read FCurrentProject;
+
   end;
 
 
@@ -94,6 +115,8 @@ begin
   Result.StepId := APCharStepRec.StepId;
   Result.StepName := APCharStepRec.StepName;
   Result.Caption := APCharStepRec.Caption;
+  Result.StepClassName := APCharStepRec.StepClassName;
+  Result.StepDesignFormClassName := APCharStepRec.StepDesignFormClassName;
 end;
 
 
@@ -102,6 +125,8 @@ begin
   Result.StepId := AStepRec.StepId;
   Result.StepName := PChar(AStepRec.StepName);
   Result.Caption := PChar(AStepRec.Caption);
+  Result.StepClassName := PChar(AStepRec.StepClassName);
+  Result.StepDesignFormClassName := PChar(AStepRec.StepDesignFormClassName);
 end;
 
 
@@ -120,6 +145,60 @@ end;
 destructor TRunInfo.Destroy;
 begin
   inherited;
+end;
+
+procedure TRunInfo.SetApplication(AApplication: Integer);
+begin
+  if FApplication = 0 then
+    FApplication := AApplication;
+end;
+
+procedure TRunInfo.SetAppLogger(AAppLogger: Integer);
+begin
+  if FAppLogger = 0 then
+    FAppLogger := AAppLogger;
+end;
+
+procedure TRunInfo.SetCurrentProject(ACurrentProject: Integer);
+begin
+  if FCurrentProject = 0 then
+    FCurrentProject := ACurrentProject;
+end;
+
+procedure TRunInfo.SetExePath(AExePath: PChar);
+begin
+  if not Assigned(AExePath) then
+    FExePath := AExePath;
+end;
+
+procedure TRunInfo.SetFileCritical(AFileCritical: Integer);
+begin
+  if FFileCritical = 0 then
+    FFileCritical := AFileCritical;
+end;
+
+procedure TRunInfo.SetMainForm(aMainForm: Integer);
+begin
+  if FMainForm = 0 then
+    FMainForm := aMainForm;
+end;
+
+procedure TRunInfo.SetMainformHandle(aMainFormHandle: Integer);
+begin
+  if FMainFormHandle = 0 then
+    FMainFormHandle := aMainFormHandle;
+end;
+
+procedure TRunInfo.SetMainScreen(aMainScreen: Integer);
+begin
+  if FMainScreen = 0 then
+    FMainScreen := aMainScreen;
+end;
+
+procedure TRunInfo.SetStepMgr(AStepMgr: Integer);
+begin
+  if FStepMgr = 0 then
+    FStepMgr := AStepMgr;
 end;
 
 end.

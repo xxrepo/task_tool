@@ -151,32 +151,26 @@
         <DCCReference Include="runners\uScheduleRunner.pas"/>
         <DCCReference Include="forms\uGlobalVarSettingForm.pas">
             <Form>GlobalVarSettingForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\core\basic\uBasicLogForm.pas">
             <Form>BasicLogForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ctrl_forms\uHttpServerControlForm.pas">
             <Form>HttpServerControlForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="runners\uHttpServerRunner.pas"/>
         <DCCReference Include="runners\uHttpServerConfig.pas"/>
         <DCCReference Include="..\..\common\uSelectFolderForm.pas">
             <Form>SelectFolderForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="comm\uJobDispatcher.pas"/>
         <DCCReference Include="..\..\common\uUserNotify.pas"/>
         <DCCReference Include="..\..\common\uUserNotifyMsgForm.pas">
             <Form>UserNotifyMsgForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="comm\uJobStarter.pas"/>
         <DCCReference Include="forms\uPackageHelperForm.pas">
             <Form>PackageHelperForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\steps\uStepDefines.pas"/>
         <DCCReference Include="..\..\etl\comm\uTask.pas"/>
@@ -192,32 +186,25 @@
         <DCCReference Include="..\..\etl\comm\uExceptions.pas"/>
         <DCCReference Include="..\..\etl\forms\uDatabaseConnectTestForm.pas">
             <Form>DatabaseConnectTestForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\forms\uDatabasesForm.pas">
             <Form>DatabasesForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\forms\uStepTypeSelectForm.pas">
             <Form>StepTypeSelectForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\forms\uTaskEditForm.pas">
             <Form>TaskEditForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\etl\forms\uTaskStepSourceForm.pas">
             <Form>TaskStepSourceForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\common\uRunInfo.pas"/>
         <DCCReference Include="..\..\common\uStepMgrClass.pas"/>
-        <DCCReference Include="comm\uAppConfig.pas"/>
         <DCCReference Include="comm\uAppDefines.pas"/>
         <DCCReference Include="..\..\etl\basic\uStepBasic.pas"/>
         <DCCReference Include="..\..\etl\basic\uStepBasicForm.pas">
             <Form>StepBasicForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
