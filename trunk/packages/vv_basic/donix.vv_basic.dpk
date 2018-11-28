@@ -1,0 +1,66 @@
+package donix.vv_basic;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  dbrtl,
+  CustomIPTransport,
+  inet,
+  IndyIPCommon,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  IndyIPClient,
+  bindengine,
+  bindcomp,
+  dsnap,
+  RESTComponents,
+  RaizeComponentsVcl,
+  dac250,
+  unidac250;
+
+contains
+  donix.basic.uAlertSound in 'donix.basic.uAlertSound.pas',
+  donix.basic.uBasicDlgForm in 'donix.basic.uBasicDlgForm.pas' {BasicDlgForm},
+  donix.basic.uBasicForm in 'donix.basic.uBasicForm.pas' {BasicForm},
+  donix.basic.uBasicLogForm in 'donix.basic.uBasicLogForm.pas' {BasicLogForm},
+  donix.basic.uExeUtil in 'donix.basic.uExeUtil.pas',
+  donix.basic.uFileCleaner in 'donix.basic.uFileCleaner.pas',
+  donix.basic.uFileFinder in 'donix.basic.uFileFinder.pas',
+  donix.basic.uFileLogger in 'donix.basic.uFileLogger.pas',
+  donix.basic.uFileUtil in 'donix.basic.uFileUtil.pas',
+  donix.basic.uFunctions in 'donix.basic.uFunctions.pas',
+  donix.basic.uNetUtil in 'donix.basic.uNetUtil.pas',
+  donix.basic.uPYCode in 'donix.basic.uPYCode.pas',
+  donix.basic.uSelectFolderForm in 'donix.basic.uSelectFolderForm.pas' {SelectFolderForm},
+  donix.basic.uServiceUtil in 'donix.basic.uServiceUtil.pas',
+  donix.basic.uThreadQueueUtil in 'donix.basic.uThreadQueueUtil.pas';
+
+end.

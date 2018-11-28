@@ -1,0 +1,88 @@
+package donix.vv_job;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  xmlrtl,
+  vcl,
+  dbrtl,
+  CustomIPTransport,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  vcldb,
+  bindengine,
+  bindcomp,
+  dsnap,
+  RESTComponents,
+  RaizeComponentsVcl,
+  EhLib250,
+  dac250,
+  dacvcl250,
+  unidacvcl250,
+  unidac250,
+  oraprovider250,
+  tdsprovider250,
+  myprovider250,
+  liteprovider250,
+  odbcprovider250,
+  accessprovider250,
+  msprovider250,
+  donix.vv_basic;
+
+contains
+  donix.job.uAppConfig in 'donix.job.uAppConfig.pas',
+  donix.job.uDatabaseConnectTestForm in 'donix.job.uDatabaseConnectTestForm.pas' {DatabaseConnectTestForm},
+  donix.job.uDatabasesForm in 'donix.job.uDatabasesForm.pas' {DatabasesForm},
+  donix.job.uDbConMgr in 'donix.job.uDbConMgr.pas',
+  donix.job.uDefines in 'donix.job.uDefines.pas',
+  donix.job.uDesignTimeDefines in 'donix.job.uDesignTimeDefines.pas',
+  donix.job.uExceptions in 'donix.job.uExceptions.pas',
+  donix.job.uGlobalVar in 'donix.job.uGlobalVar.pas',
+  donix.job.uJob in 'donix.job.uJob.pas',
+  donix.job.uJobDispatcher in 'donix.job.uJobDispatcher.pas',
+  donix.job.uJobStarter in 'donix.job.uJobStarter.pas',
+  donix.job.uProject in 'donix.job.uProject.pas',
+  donix.job.uStepBasic in 'donix.job.uStepBasic.pas',
+  donix.job.uStepBasicForm in 'donix.job.uStepBasicForm.pas' {StepBasicForm},
+  donix.job.uStepCommon in 'donix.job.uStepCommon.pas',
+  donix.job.uStepDefines in 'donix.job.uStepDefines.pas',
+  donix.job.uStepFactory in 'donix.job.uStepFactory.pas',
+  donix.job.uStepFormFactory in 'donix.job.uStepFormFactory.pas',
+  donix.job.uStepFormSettings in 'donix.job.uStepFormSettings.pas',
+  donix.job.uStepTypeSelectForm in 'donix.job.uStepTypeSelectForm.pas' {StepTypeSelectForm},
+  donix.job.uTask in 'donix.job.uTask.pas',
+  donix.job.uTaskDefine in 'donix.job.uTaskDefine.pas',
+  donix.job.uTaskEditForm in 'donix.job.uTaskEditForm.pas' {TaskEditForm},
+  donix.job.uTaskResult in 'donix.job.uTaskResult.pas',
+  donix.job.uTaskStepSourceForm in 'donix.job.uTaskStepSourceForm.pas' {TaskStepSourceForm},
+  donix.job.uTaskVar in 'donix.job.uTaskVar.pas',
+  donix.job.uThreadSafeFile in 'donix.job.uThreadSafeFile.pas';
+
+end.
