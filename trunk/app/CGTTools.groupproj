@@ -3,10 +3,13 @@
         <ProjectGuid>{D2101F0C-E2ED-4D17-BCAA-9789AC0450DB}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="..\packages\vv_basic\donix.vv_basic.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="..\packages\vv_job\donix.vv_job.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\packages\vv_basic\donix.vv_basic.dproj">
+        <Projects Include="..\packages\vv_steps\donix.vv_steps.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\module\etl_service\CgtEtlService.dproj">
@@ -41,6 +44,15 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="donix_vv_basic">
+        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj"/>
+    </Target>
+    <Target Name="donix_vv_basic:Clean">
+        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="donix_vv_basic:Make">
+        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj" Targets="Make"/>
+    </Target>
     <Target Name="donix_vv_job">
         <MSBuild Projects="..\packages\vv_job\donix.vv_job.dproj"/>
     </Target>
@@ -50,14 +62,14 @@
     <Target Name="donix_vv_job:Make">
         <MSBuild Projects="..\packages\vv_job\donix.vv_job.dproj" Targets="Make"/>
     </Target>
-    <Target Name="donix_vv_basic">
-        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj"/>
+    <Target Name="donix_vv_steps">
+        <MSBuild Projects="..\packages\vv_steps\donix.vv_steps.dproj"/>
     </Target>
-    <Target Name="donix_vv_basic:Clean">
-        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj" Targets="Clean"/>
+    <Target Name="donix_vv_steps:Clean">
+        <MSBuild Projects="..\packages\vv_steps\donix.vv_steps.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="donix_vv_basic:Make">
-        <MSBuild Projects="..\packages\vv_basic\donix.vv_basic.dproj" Targets="Make"/>
+    <Target Name="donix_vv_steps:Make">
+        <MSBuild Projects="..\packages\vv_steps\donix.vv_steps.dproj" Targets="Make"/>
     </Target>
     <Target Name="CgtEtlService">
         <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj"/>
@@ -132,13 +144,13 @@
         <MSBuild Projects="..\module\etl_tool\CgtEtlTool.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="donix_vv_job;donix_vv_basic;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;BrowserApp;CgtTest;CgtEtlDesigner;CgtEtlTool"/>
+        <CallTarget Targets="donix_vv_basic;donix_vv_job;donix_vv_steps;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;BrowserApp;CgtTest;CgtEtlDesigner;CgtEtlTool"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="donix_vv_job:Clean;donix_vv_basic:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;BrowserApp:Clean;CgtTest:Clean;CgtEtlDesigner:Clean;CgtEtlTool:Clean"/>
+        <CallTarget Targets="donix_vv_basic:Clean;donix_vv_job:Clean;donix_vv_steps:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;BrowserApp:Clean;CgtTest:Clean;CgtEtlDesigner:Clean;CgtEtlTool:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="donix_vv_job:Make;donix_vv_basic:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;BrowserApp:Make;CgtTest:Make;CgtEtlDesigner:Make;CgtEtlTool:Make"/>
+        <CallTarget Targets="donix_vv_basic:Make;donix_vv_job:Make;donix_vv_steps:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;BrowserApp:Make;CgtTest:Make;CgtEtlDesigner:Make;CgtEtlTool:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

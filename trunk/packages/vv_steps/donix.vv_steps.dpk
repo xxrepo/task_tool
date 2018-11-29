@@ -1,0 +1,127 @@
+package donix.vv_steps;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  xmlrtl,
+  vclx,
+  vcl,
+  vclimg,
+  dbrtl,
+  CustomIPTransport,
+  inet,
+  IndyIPCommon,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  IndyIPClient,
+  vcldb,
+  bindengine,
+  bindcomp,
+  dsnap,
+  RESTComponents,
+  RaizeComponentsVcl,
+  frx25,
+  frxDB25,
+  fs25,
+  SynEditR,
+  EhLib250,
+  rm_d_xe102,
+  dac250,
+  dacvcl250,
+  unidacvcl250,
+  unidac250,
+  oraprovider250,
+  tdsprovider250,
+  myprovider250,
+  liteprovider250,
+  odbcprovider250,
+  accessprovider250,
+  donix.vv_basic,
+  donix.vv_job,
+  msprovider250,
+  rm_r_xe102;
+
+contains
+  uStepCondition in 'common\uStepCondition.pas',
+  uStepConditionForm in 'common\uStepConditionForm.pas' {StepConditionForm},
+  uStepNullForm in 'common\uStepNullForm.pas' {StepNullForm},
+  uStepSubTask in 'common\uStepSubTask.pas',
+  uStepSubTaskForm in 'common\uStepSubTaskForm.pas' {StepSubTaskForm},
+  uStepTaskResult in 'common\uStepTaskResult.pas',
+  uStepTaskResultForm in 'common\uStepTaskResultForm.pas' {StepTaskResultForm},
+  uStepVarDefine in 'common\uStepVarDefine.pas',
+  uStepVarDefineForm in 'common\uStepVarDefineForm.pas' {StepVarDefineForm},
+  uStepExceptionCatch in 'control\uStepExceptionCatch.pas',
+  uStepExceptionCatchForm in 'control\uStepExceptionCatchForm.pas' {StepExceptionCatchForm},
+  uStepDatasetSpliter in 'data\uStepDatasetSpliter.pas',
+  uStepDatasetSpliterForm in 'data\uStepDatasetSpliterForm.pas' {StepDatasetSpliterForm},
+  uStepFieldsMap in 'data\uStepFieldsMap.pas',
+  uStepFieldsMapForm in 'data\uStepFieldsMapForm.pas' {StepFieldsMapForm},
+  uStepFieldsOper in 'data\uStepFieldsOper.pas',
+  uStepFieldsOperForm in 'data\uStepFieldsOperForm.pas' {StepFieldsOperForm},
+  uStepJson2DataSet in 'data\uStepJson2DataSet.pas',
+  uStepJson2DataSetForm in 'data\uStepJson2DataSetForm.pas' {StepJsonDataSetForm},
+  uDBQueryResultForm in 'database\uDBQueryResultForm.pas' {DBQueryResultForm},
+  uStepJson2Table in 'database\uStepJson2Table.pas',
+  uStepJson2TableForm in 'database\uStepJson2TableForm.pas' {StepJson2TableForm},
+  uStepQuery in 'database\uStepQuery.pas',
+  uStepQueryForm in 'database\uStepQueryForm.pas' {StepQueryForm},
+  uStepSQL in 'database\uStepSQL.pas',
+  uStepSQLForm in 'database\uStepSQLForm.pas' {StepSQLForm},
+  uStepFileDelete in 'file\uStepFileDelete.pas',
+  uStepFileDeleteForm in 'file\uStepFileDeleteForm.pas' {StepFileDeleteForm},
+  uStepFolderCtrl in 'file\uStepFolderCtrl.pas',
+  uStepFolderCtrlForm in 'file\uStepFolderCtrlForm.pas' {StepFolderCtrlForm},
+  uStepIniRead in 'file\uStepIniRead.pas',
+  uStepIniReadForm in 'file\uStepIniReadForm.pas' {StepIniReadForm},
+  uStepIniWrite in 'file\uStepIniWrite.pas',
+  uStepIniWriteForm in 'file\uStepIniWriteForm.pas' {StepIniWriteForm},
+  uStepTxtFileReader in 'file\uStepTxtFileReader.pas',
+  uStepTxtFileReaderForm in 'file\uStepTxtFileReaderForm.pas' {StepTxtFileReaderForm},
+  uStepTxtFileWriter in 'file\uStepTxtFileWriter.pas',
+  uStepTxtFileWriterForm in 'file\uStepTxtFileWriterForm.pas' {StepTxtFileWriterForm},
+  uStepUnzip in 'file\uStepUnzip.pas',
+  uStepUnzipForm in 'file\uStepUnzipForm.pas' {StepUnzipForm},
+  uStepDownloadFile in 'network\uStepDownloadFile.pas',
+  uStepDownloadFileForm in 'network\uStepDownloadFileForm.pas' {StepDownloadFileForm},
+  uStepHttpRequest in 'network\uStepHttpRequest.pas',
+  uStepHttpRequestForm in 'network\uStepHttpRequestForm.pas' {StepHttpRequestForm},
+  uStepFastReport in 'report\uStepFastReport.pas',
+  uStepFastReportForm in 'report\uStepFastReportForm.pas' {StepFastReportForm},
+  uStepReportMachine in 'report\uStepReportMachine.pas',
+  uStepReportMachineForm in 'report\uStepReportMachineForm.pas' {StepReportMachineForm},
+  uStepExeCtrl in 'util\uStepExeCtrl.pas',
+  uStepExeCtrlForm in 'util\uStepExeCtrlForm.pas' {StepExeCtrlForm},
+  uStepServiceCtrl in 'util\uStepServiceCtrl.pas',
+  uStepServiceCtrlForm in 'util\uStepServiceCtrlForm.pas' {StepServiceCtrlForm},
+  uStepWaitTime in 'util\uStepWaitTime.pas',
+  uStepWaitTimeForm in 'util\uStepWaitTimeForm.pas' {StepWaitTimeForm};
+
+end.
