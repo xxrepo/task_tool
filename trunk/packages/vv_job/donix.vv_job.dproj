@@ -195,7 +195,6 @@
         <DCCReference Include="donix.job.uStepCommon.pas"/>
         <DCCReference Include="donix.job.uStepDefines.pas"/>
         <DCCReference Include="donix.job.uStepFactory.pas"/>
-        <DCCReference Include="donix.job.uStepFormFactory.pas"/>
         <DCCReference Include="donix.job.uStepFormSettings.pas"/>
         <DCCReference Include="donix.job.uStepTypeSelectForm.pas">
             <Form>StepTypeSelectForm</Form>
@@ -214,6 +213,7 @@
         </DCCReference>
         <DCCReference Include="donix.job.uTaskVar.pas"/>
         <DCCReference Include="donix.job.uThreadSafeFile.pas"/>
+        <DCCReference Include="donix.job.uStepsRegisterBasic.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -74,7 +74,6 @@ contains
   donix.job.uStepCommon in 'donix.job.uStepCommon.pas',
   donix.job.uStepDefines in 'donix.job.uStepDefines.pas',
   donix.job.uStepFactory in 'donix.job.uStepFactory.pas',
-  donix.job.uStepFormFactory in 'donix.job.uStepFormFactory.pas',
   donix.job.uStepFormSettings in 'donix.job.uStepFormSettings.pas',
   donix.job.uStepTypeSelectForm in 'donix.job.uStepTypeSelectForm.pas' {StepTypeSelectForm},
   donix.job.uTask in 'donix.job.uTask.pas',
@@ -83,6 +82,7 @@ contains
   donix.job.uTaskResult in 'donix.job.uTaskResult.pas',
   donix.job.uTaskStepSourceForm in 'donix.job.uTaskStepSourceForm.pas' {TaskStepSourceForm},
   donix.job.uTaskVar in 'donix.job.uTaskVar.pas',
-  donix.job.uThreadSafeFile in 'donix.job.uThreadSafeFile.pas';
+  donix.job.uThreadSafeFile in 'donix.job.uThreadSafeFile.pas',
+  donix.job.uStepsRegisterBasic in 'donix.job.uStepsRegisterBasic.pas';
 
 end.

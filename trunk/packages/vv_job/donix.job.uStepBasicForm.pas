@@ -8,6 +8,8 @@ uses
   Vcl.ExtCtrls, uBasicForm, uStepBasic, RzTabs, uTaskVar, uStepDefines;
 
 type
+  TStepFormClass = class of TStepBasicForm;
+
   TStepBasicForm = class(TBasicDlgForm)
     rzpgcntrlStepSettings: TRzPageControl;
     rztbshtCommon: TRzTabSheet;

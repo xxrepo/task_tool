@@ -128,7 +128,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <DCC_Namespace>donix.basic;donix.job;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>donix.basic;donix.job;donix.steps;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
@@ -181,144 +181,145 @@
         <DCCReference Include="donix.vv_job.dcp"/>
         <DCCReference Include="msprovider250.dcp"/>
         <DCCReference Include="rm_r_xe102.dcp"/>
-        <DCCReference Include="common\uStepCondition.pas"/>
-        <DCCReference Include="common\uStepConditionForm.pas">
+        <DCCReference Include="common\donix.steps.uStepCondition.pas"/>
+        <DCCReference Include="common\donix.steps.uStepConditionForm.pas">
             <Form>StepConditionForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="common\uStepNullForm.pas">
+        <DCCReference Include="common\donix.steps.uStepNullForm.pas">
             <Form>StepNullForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="common\uStepSubTask.pas"/>
-        <DCCReference Include="common\uStepSubTaskForm.pas">
+        <DCCReference Include="common\donix.steps.uStepSubTask.pas"/>
+        <DCCReference Include="common\donix.steps.uStepSubTaskForm.pas">
             <Form>StepSubTaskForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="common\uStepTaskResult.pas"/>
-        <DCCReference Include="common\uStepTaskResultForm.pas">
+        <DCCReference Include="common\donix.steps.uStepTaskResult.pas"/>
+        <DCCReference Include="common\donix.steps.uStepTaskResultForm.pas">
             <Form>StepTaskResultForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="common\uStepVarDefine.pas"/>
-        <DCCReference Include="common\uStepVarDefineForm.pas">
+        <DCCReference Include="common\donix.steps.uStepVarDefine.pas"/>
+        <DCCReference Include="common\donix.steps.uStepVarDefineForm.pas">
             <Form>StepVarDefineForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="control\uStepExceptionCatch.pas"/>
-        <DCCReference Include="control\uStepExceptionCatchForm.pas">
+        <DCCReference Include="control\donix.steps.uStepExceptionCatch.pas"/>
+        <DCCReference Include="control\donix.steps.uStepExceptionCatchForm.pas">
             <Form>StepExceptionCatchForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="data\uStepDatasetSpliter.pas"/>
-        <DCCReference Include="data\uStepDatasetSpliterForm.pas">
+        <DCCReference Include="data\donix.steps.uStepDatasetSpliter.pas"/>
+        <DCCReference Include="data\donix.steps.uStepDatasetSpliterForm.pas">
             <Form>StepDatasetSpliterForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="data\uStepFieldsMap.pas"/>
-        <DCCReference Include="data\uStepFieldsMapForm.pas">
+        <DCCReference Include="data\donix.steps.uStepFieldsMap.pas"/>
+        <DCCReference Include="data\donix.steps.uStepFieldsMapForm.pas">
             <Form>StepFieldsMapForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="data\uStepFieldsOper.pas"/>
-        <DCCReference Include="data\uStepFieldsOperForm.pas">
+        <DCCReference Include="data\donix.steps.uStepFieldsOper.pas"/>
+        <DCCReference Include="data\donix.steps.uStepFieldsOperForm.pas">
             <Form>StepFieldsOperForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="data\uStepJson2DataSet.pas"/>
-        <DCCReference Include="data\uStepJson2DataSetForm.pas">
+        <DCCReference Include="data\donix.steps.uStepJson2DataSet.pas"/>
+        <DCCReference Include="data\donix.steps.uStepJson2DataSetForm.pas">
             <Form>StepJsonDataSetForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="database\uDBQueryResultForm.pas">
+        <DCCReference Include="database\donix.steps.uDBQueryResultForm.pas">
             <Form>DBQueryResultForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="database\uStepJson2Table.pas"/>
-        <DCCReference Include="database\uStepJson2TableForm.pas">
+        <DCCReference Include="database\donix.steps.uStepJson2Table.pas"/>
+        <DCCReference Include="database\donix.steps.uStepJson2TableForm.pas">
             <Form>StepJson2TableForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="database\uStepQuery.pas"/>
-        <DCCReference Include="database\uStepQueryForm.pas">
+        <DCCReference Include="database\donix.steps.uStepQuery.pas"/>
+        <DCCReference Include="database\donix.steps.uStepQueryForm.pas">
             <Form>StepQueryForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="database\uStepSQL.pas"/>
-        <DCCReference Include="database\uStepSQLForm.pas">
+        <DCCReference Include="database\donix.steps.uStepSQL.pas"/>
+        <DCCReference Include="database\donix.steps.uStepSQLForm.pas">
             <Form>StepSQLForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepFileDelete.pas"/>
-        <DCCReference Include="file\uStepFileDeleteForm.pas">
+        <DCCReference Include="file\donix.steps.uStepFileDelete.pas"/>
+        <DCCReference Include="file\donix.steps.uStepFileDeleteForm.pas">
             <Form>StepFileDeleteForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepFolderCtrl.pas"/>
-        <DCCReference Include="file\uStepFolderCtrlForm.pas">
+        <DCCReference Include="file\donix.steps.uStepFolderCtrl.pas"/>
+        <DCCReference Include="file\donix.steps.uStepFolderCtrlForm.pas">
             <Form>StepFolderCtrlForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepIniRead.pas"/>
-        <DCCReference Include="file\uStepIniReadForm.pas">
+        <DCCReference Include="file\donix.steps.uStepIniRead.pas"/>
+        <DCCReference Include="file\donix.steps.uStepIniReadForm.pas">
             <Form>StepIniReadForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepIniWrite.pas"/>
-        <DCCReference Include="file\uStepIniWriteForm.pas">
+        <DCCReference Include="file\donix.steps.uStepIniWrite.pas"/>
+        <DCCReference Include="file\donix.steps.uStepIniWriteForm.pas">
             <Form>StepIniWriteForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepTxtFileReader.pas"/>
-        <DCCReference Include="file\uStepTxtFileReaderForm.pas">
+        <DCCReference Include="file\donix.steps.uStepTxtFileReader.pas"/>
+        <DCCReference Include="file\donix.steps.uStepTxtFileReaderForm.pas">
             <Form>StepTxtFileReaderForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepTxtFileWriter.pas"/>
-        <DCCReference Include="file\uStepTxtFileWriterForm.pas">
+        <DCCReference Include="file\donix.steps.uStepTxtFileWriter.pas"/>
+        <DCCReference Include="file\donix.steps.uStepTxtFileWriterForm.pas">
             <Form>StepTxtFileWriterForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="file\uStepUnzip.pas"/>
-        <DCCReference Include="file\uStepUnzipForm.pas">
+        <DCCReference Include="file\donix.steps.uStepUnzip.pas"/>
+        <DCCReference Include="file\donix.steps.uStepUnzipForm.pas">
             <Form>StepUnzipForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="network\uStepDownloadFile.pas"/>
-        <DCCReference Include="network\uStepDownloadFileForm.pas">
+        <DCCReference Include="network\donix.steps.uStepDownloadFile.pas"/>
+        <DCCReference Include="network\donix.steps.uStepDownloadFileForm.pas">
             <Form>StepDownloadFileForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="network\uStepHttpRequest.pas"/>
-        <DCCReference Include="network\uStepHttpRequestForm.pas">
+        <DCCReference Include="network\donix.steps.uStepHttpRequest.pas"/>
+        <DCCReference Include="network\donix.steps.uStepHttpRequestForm.pas">
             <Form>StepHttpRequestForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="report\uStepFastReport.pas"/>
-        <DCCReference Include="report\uStepFastReportForm.pas">
+        <DCCReference Include="report\donix.steps.uStepFastReport.pas"/>
+        <DCCReference Include="report\donix.steps.uStepFastReportForm.pas">
             <Form>StepFastReportForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="report\uStepReportMachine.pas"/>
-        <DCCReference Include="report\uStepReportMachineForm.pas">
+        <DCCReference Include="report\donix.steps.uStepReportMachine.pas"/>
+        <DCCReference Include="report\donix.steps.uStepReportMachineForm.pas">
             <Form>StepReportMachineForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="util\uStepExeCtrl.pas"/>
-        <DCCReference Include="util\uStepExeCtrlForm.pas">
+        <DCCReference Include="util\donix.steps.uStepExeCtrl.pas"/>
+        <DCCReference Include="util\donix.steps.uStepExeCtrlForm.pas">
             <Form>StepExeCtrlForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="util\uStepServiceCtrl.pas"/>
-        <DCCReference Include="util\uStepServiceCtrlForm.pas">
+        <DCCReference Include="util\donix.steps.uStepServiceCtrl.pas"/>
+        <DCCReference Include="util\donix.steps.uStepServiceCtrlForm.pas">
             <Form>StepServiceCtrlForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="util\uStepWaitTime.pas"/>
-        <DCCReference Include="util\uStepWaitTimeForm.pas">
+        <DCCReference Include="util\donix.steps.uStepWaitTime.pas"/>
+        <DCCReference Include="util\donix.steps.uStepWaitTimeForm.pas">
             <Form>StepWaitTimeForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="donix.steps.uStepsRegisterCore.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

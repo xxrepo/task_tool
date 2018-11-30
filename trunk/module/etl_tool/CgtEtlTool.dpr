@@ -8,20 +8,17 @@ uses
   System.SyncObjs,
   donix.job.uDefines,
   donix.basic.uFileLogger,
+  donix.steps.uStepsRegisterCore,
   uJobsMgrForm in 'forms\uJobsMgrForm.pas' {JobsForm},
   uSettingForm in 'forms\uSettingForm.pas' {SettingsForm},
   uProjectForm in 'forms\uProjectForm.pas' {ProjectForm},
-  uStepDefines in 'steps\uStepDefines.pas',
-  uStepFormFactory in 'steps\uStepFormFactory.pas',
   uJobScheduleForm in 'forms\uJobScheduleForm.pas' {JobScheduleForm},
-  uStepFactory in 'steps\uStepFactory.pas',
   uEnterForm in 'forms\uEnterForm.pas' {EnterForm},
   uServiceControlForm in 'ctrl_forms\uServiceControlForm.pas' {ServiceControlForm},
   uMakeDirForm in 'forms\uMakeDirForm.pas' {MakeDirForm},
   uScheduleConfig in 'runners\uScheduleConfig.pas',
   uScheduleRunner in 'runners\uScheduleRunner.pas',
   uGlobalVarSettingForm in 'forms\uGlobalVarSettingForm.pas' {GlobalVarSettingForm},
-  uStepFormSettings in 'steps\uStepFormSettings.pas',
   uHttpServerControlForm in 'ctrl_forms\uHttpServerControlForm.pas' {HttpServerControlForm},
   uHttpServerRunner in 'runners\uHttpServerRunner.pas',
   uHttpServerConfig in 'runners\uHttpServerConfig.pas',
@@ -43,7 +40,7 @@ begin
   FileCritical := TCriticalSection.Create;
 
 
-
+  TStepsRegisterCore.RegSteps;
 
 
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then

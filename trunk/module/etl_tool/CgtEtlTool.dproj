@@ -91,7 +91,7 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <BT_BuildType>Debug</BT_BuildType>
-        <DCC_Namespace>donix.basic;donix.job;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>donix.basic;donix.job;donix.steps;$(DCC_Namespace)</DCC_Namespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -120,12 +120,9 @@
         <DCCReference Include="forms\uProjectForm.pas">
             <Form>ProjectForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepDefines.pas"/>
-        <DCCReference Include="steps\uStepFormFactory.pas"/>
         <DCCReference Include="forms\uJobScheduleForm.pas">
             <Form>JobScheduleForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepFactory.pas"/>
         <DCCReference Include="forms\uEnterForm.pas">
             <Form>EnterForm</Form>
         </DCCReference>
@@ -140,7 +137,6 @@
         <DCCReference Include="forms\uGlobalVarSettingForm.pas">
             <Form>GlobalVarSettingForm</Form>
         </DCCReference>
-        <DCCReference Include="steps\uStepFormSettings.pas"/>
         <DCCReference Include="ctrl_forms\uHttpServerControlForm.pas">
             <Form>HttpServerControlForm</Form>
         </DCCReference>

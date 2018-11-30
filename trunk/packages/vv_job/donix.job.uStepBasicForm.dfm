@@ -19,11 +19,11 @@ inherited StepBasicForm: TStepBasicForm
     inherited btnOK: TBitBtn
       Left = 450
       OnClick = btnOKClick
-      ExplicitLeft = 460
+      ExplicitLeft = 450
     end
     inherited btnCancel: TBitBtn
       Left = 560
-      ExplicitLeft = 570
+      ExplicitLeft = 560
     end
   end
   object rzpgcntrlStepSettings: TRzPageControl
@@ -36,15 +36,9 @@ inherited StepBasicForm: TStepBasicForm
     Align = alClient
     TabIndex = 0
     TabOrder = 1
-    ExplicitWidth = 677
-    ExplicitHeight = 363
     FixedDimension = 23
     object rztbshtCommon: TRzTabSheet
       Caption = #22522#26412#35774#32622
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 673
-      ExplicitHeight = 336
       object lbl1: TLabel
         Left = 52
         Top = 26
