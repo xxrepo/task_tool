@@ -9,6 +9,7 @@ uses
   donix.job.uDefines,
   donix.basic.uFileLogger,
   donix.steps.uStepsRegisterCore,
+  donix.steps.uStepsRegisterExt,
   uJobsMgrForm in 'forms\uJobsMgrForm.pas' {JobsForm},
   uSettingForm in 'forms\uSettingForm.pas' {SettingsForm},
   uProjectForm in 'forms\uProjectForm.pas' {ProjectForm},
@@ -22,10 +23,7 @@ uses
   uHttpServerControlForm in 'ctrl_forms\uHttpServerControlForm.pas' {HttpServerControlForm},
   uHttpServerRunner in 'runners\uHttpServerRunner.pas',
   uHttpServerConfig in 'runners\uHttpServerConfig.pas',
-  uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm},
-  uStepIdCardHS100UCForm in 'steps\tools\uStepIdCardHS100UCForm.pas' {StepIdCardHS100UCForm},
-  uStepIdCardHS100UC in 'steps\tools\uStepIdCardHS100UC.pas',
-  CVRDLL in 'steps\tools\CVRDLL.pas';
+  uPackageHelperForm in 'forms\uPackageHelperForm.pas' {PackageHelperForm};
 
 {$R *.res}
 
@@ -39,14 +37,9 @@ begin
   AppLogger := TThreadFileLog.Create(1,  ExePath + 'log\app\', 'yyyymmdd\hh');
   FileCritical := TCriticalSection.Create;
 
-
-  TStepsRegisterCore.RegSteps;
-
-
   if (FormatDateTime('yyyymmdd', Now) < '20191231') then
   begin
     Application.CreateForm(TProjectForm, ProjectForm);
-  Application.CreateForm(TStepIdCardHS100UCForm, StepIdCardHS100UCForm);
   ProjectForm.WindowState := wsMaximized;
   end;
   Application.Run;

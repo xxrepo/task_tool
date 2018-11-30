@@ -331,4 +331,7 @@ begin
   TStepFactory.RegsiterStep(LStepRegisterRec);
 end;
 
+initialization
+  TStepsRegisterCore.RegSteps;
+
 end.

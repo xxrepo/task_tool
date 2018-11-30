@@ -1,0 +1,61 @@
+package donix.vv_steps_ext;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  dbrtl,
+  CustomIPTransport,
+  IndySystem,
+  IndyProtocols,
+  IndyCore,
+  bindengine,
+  bindcomp,
+  dsnap,
+  RESTComponents,
+  RaizeComponentsVcl,
+  dac250,
+  unidac250,
+  oraprovider250,
+  tdsprovider250,
+  myprovider250,
+  liteprovider250,
+  odbcprovider250,
+  accessprovider250,
+  donix.vv_basic,
+  donix.vv_job,
+  msprovider250;
+
+contains
+  donix.steps.CVRDLL in 'hsid\donix.steps.CVRDLL.pas',
+  donix.steps.uStepIdCardHS100UC in 'hsid\donix.steps.uStepIdCardHS100UC.pas',
+  donix.steps.uStepIdCardHS100UCForm in 'hsid\donix.steps.uStepIdCardHS100UCForm.pas' {StepIdCardHS100UCForm},
+  donix.steps.uStepsRegisterExt in 'donix.steps.uStepsRegisterExt.pas';
+
+end.
