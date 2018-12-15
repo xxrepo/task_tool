@@ -3,7 +3,7 @@ inherited TaskEditForm: TTaskEditForm
   ClientHeight = 612
   ClientWidth = 858
   WindowState = wsMaximized
-  OnDestroy = FormDestroy
+  OnClose = FormClose
   ExplicitWidth = 874
   ExplicitHeight = 651
   PixelsPerInch = 96
@@ -86,14 +86,29 @@ inherited TaskEditForm: TTaskEditForm
         OnClick = btnStartClick
       end
       object chkInteractive: TCheckBox
-        Left = 232
-        Top = 20
+        Left = 408
+        Top = 18
         Width = 177
         Height = 17
         Caption = 'Interactive'#29992#25143#20132#20114
         TabOrder = 3
         Visible = False
         OnClick = chkInteractiveClick
+      end
+      object btnStop: TBitBtn
+        Left = 218
+        Top = 11
+        Width = 89
+        Height = 33
+        Caption = #20572#27490
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -14
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 4
+        OnClick = btnStopClick
       end
     end
     object chktrTaskSteps: TRzCheckTree [1]

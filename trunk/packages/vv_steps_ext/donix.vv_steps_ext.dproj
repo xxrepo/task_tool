@@ -131,6 +131,7 @@
         <DCC_Namespace>donix.basic;donix.job;donix.steps;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Debugger_HostApplication>D:\Dev\delphi\task_tool\bin\dev\CgtEtlTool.exe</Debugger_HostApplication>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>

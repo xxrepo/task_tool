@@ -20,6 +20,9 @@ type
     { Private declarations }
   public
     { Public declarations }
+    procedure LogMsg(AMsg: string; AColor: TColor = clWindowText);
+    procedure LogErrorMsg(AMsg: string);
+    procedure LogSuccessMsg(AMsg: string);
   end;
 
 var
@@ -67,5 +70,28 @@ begin
     SetRichEditLineColor(redtLog, LLine, clWebGreen);
   end;
 end;
+
+
+procedure TBasicLogForm.LogMsg(AMsg: string; AColor: TColor = clWindowText);
+var
+  LLine: Integer;
+begin
+  AMsg := FormatDateTime('[yyyy.mm.dd hh:nn:ss.zzz]', Now) + ': ' + AMsg;
+  LLine := redtLog.Lines.Add(AMsg);
+  SetRichEditLineColor(redtLog, LLine, AColor);
+end;
+
+
+procedure TBasicLogForm.LogSuccessMsg(AMsg: string);
+begin
+  LogMsg(AMsg, clWebGreen);
+end;
+
+
+procedure TBasicLogForm.LogErrorMsg(AMsg: string);
+begin
+  LogMsg(AMsg, clWebRed);
+end;
+
 
 end.

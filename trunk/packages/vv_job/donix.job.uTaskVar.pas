@@ -43,6 +43,7 @@ type
     function PushStep(const ATaskStep: TTaskStep; const AStep: TObject): Integer;
     procedure PopStep(const ATaskStep: TTaskStep);
     function GetTaskStepIdxName(ATaskStep: TTaskStep): string;
+    function GetFinished: Boolean;
   public
     TaskVarRec: TTaskVarRec;
     GlobalVar: TGlobalVar;
@@ -80,6 +81,7 @@ type
     property Owner: TObject read FOwner;
     property RegistedObjectList: TStringList read FRegistedObjectList;
     property ToStep: TTaskStep read FToStep;
+    property Finished: Boolean read GetFinished;
   end;
 
 implementation
@@ -116,6 +118,7 @@ end;
 constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
   Interactive := 0;
+  TaskStatus := trsCreate;
   TaskResult := TTaskResult.Create;
   FStepStack := TStringList.Create;
 
@@ -262,6 +265,11 @@ begin
       end;
     end;
   end;
+end;
+
+function TTaskVar.GetFinished: Boolean;
+begin
+  Result := (TaskStatus = trsCreate) or (TaskStatus = trsFinish);
 end;
 
 function TTaskVar.GetObject(ARef: string): TObject;

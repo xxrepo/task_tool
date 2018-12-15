@@ -71,10 +71,20 @@ end;
 
 
 procedure TStepTest.OnTimerEvent(Sender: TObject);
+var
+  LEventDataRec: PEventDataRec;
 begin
   Count := Count + 1;
+  New(LEventDataRec);
+  LEventDataRec.JobName := 'aa';
+  LEventDataRec.EventName := 'onTimer';
+  LEventDataRec.ContentLength := -1;
+  LEventDataRec.ContentBody := '你好' + IntToStr(Count);
+
+  TaskVar.EventDataPool.Add(LEventDataRec);
+
   //发送数据出来消息，或者定时保存文件数据
-  FIniFile.WriteDateTime('data', 'date' + IntToStr(Count), Now);
+  //FIniFile.WriteDateTime('data', 'date' + IntToStr(Count), Now);
 end;
 
 

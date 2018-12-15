@@ -9,7 +9,7 @@ uses
   RzListVw, Vcl.Menus, RzCommon, Data.DB, Datasnap.DBClient, DBGridEhGrouping,
   ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh,
   DBGridEh, RzTreeVw, System.JSON, uStepDefines, Vcl.Mask, RzEdit, RzBtnEdt, uTask,
-  Vcl.Buttons, uBasicLogForm, uTaskVar, uTaskDefine, System.Generics.Collections;
+  Vcl.Buttons, uBasicLogForm, uTaskVar, uTaskDefine, System.Generics.Collections, uThreadQueueUtil;
 
 type
   TTaskEditForm = class(TBasicLogForm)
@@ -35,6 +35,7 @@ type
     AddParentNode: TMenuItem;
     N5: TMenuItem;
     chkInteractive: TCheckBox;
+    btnStop: TBitBtn;
     procedure StepAddClick(Sender: TObject);
     procedure chktrTaskStepsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -51,13 +52,15 @@ type
     procedure CopyNodeClick(Sender: TObject);
     procedure PasteNodeClick(Sender: TObject);
     procedure RunToStepClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure ViewStepConfigSourceClick(Sender: TObject);
     procedure btnStartClick(Sender: TObject);
     procedure AddParentNodeClick(Sender: TObject);
     procedure chkInteractiveClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnStopClick(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
+    EventDataPool: TThreadPool;
     TaskBlock: TTaskBlock; //标记当前的任务块
     EditingTaskConfigRec: TTaskConfigRec;    //表明当前正在编辑的资料
     EntryTaskConfigRec: TTaskConfigRec;
@@ -70,6 +73,7 @@ type
     procedure AddTreeChildNode(AParentNode: TTreeNode;
       ANodeJson: TJSONObject); overload;
     function AddStepTo(LParentNode: TTreeNode): TTreeNode;
+    procedure OnTaskEventDataPop(Data: Pointer; AThread: TThread);
     { Private declarations }
   public
     { Public declarations }
@@ -433,8 +437,12 @@ begin
   EditingTaskConfigRec := ParseTaskConfig(ATaskFile);
   EntryTaskConfigRec := ParseTaskConfig(TaskBlock._ENTRY_FILE);
 
+  //创建EventDataPool，处理方式为对这个事件进行内容的日志记录
+  EventDataPool := TThreadPool.Create(OnTaskEventDataPop, 1);
+
   CurrentTask := TTask.Create(EntryTaskConfigRec);
   //同时加载任务执行需要依赖的GlobalVar
+  CurrentTask.TaskVar.EventDataPool := EventDataPool;
   CurrentTask.TaskVar.GlobalVar := CurrentProject.GlobalVar;
   CurrentTask.TaskVar.Logger.NoticeHandle := Handle;
 
@@ -448,10 +456,16 @@ begin
 end;
 
 
-procedure TTaskEditForm.FormDestroy(Sender: TObject);
+procedure TTaskEditForm.OnTaskEventDataPop(Data: Pointer; AThread: TThread);
+var
+  LEventDataRec: PEventDataRec;
 begin
-  inherited;
-  FreeAndNil(CurrentTask);
+  LEventDataRec := Data;
+  try
+    LogMsg(LEventDataRec.ContentBody);
+  finally
+    Dispose(LEventDataRec);
+  end;
 end;
 
 
@@ -470,6 +484,14 @@ begin
   Clipboard.SetTextBuf(PChar(LNodeStr));
 end;
 
+
+
+procedure TTaskEditForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  FreeAndNil(CurrentTask);
+  FreeAndNil(EventDataPool);
+end;
 
 
 //实现画图
@@ -610,6 +632,12 @@ begin
       AppLogger.Fatal('执行工作异常退出，原因：' + E.Message);
     end;
   end;
+end;
+
+procedure TTaskEditForm.btnStopClick(Sender: TObject);
+begin
+  inherited;
+  CurrentTask.Stop;
 end;
 
 end.

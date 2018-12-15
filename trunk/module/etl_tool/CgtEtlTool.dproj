@@ -81,7 +81,6 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DCC_DebugDCUs>false</DCC_DebugDCUs>
         <DCC_DebugInfoInExe>false</DCC_DebugInfoInExe>
         <DCC_Define>PROJECT_DESIGN_MODE;$(DCC_Define)</DCC_Define>
         <VerInfo_Locale>1033</VerInfo_Locale>

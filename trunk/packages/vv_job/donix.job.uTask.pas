@@ -27,7 +27,7 @@ type
     //ÔËÐÐ
     procedure Start(AInitData: PStepData = nil);
 
-
+    procedure Stop;
   end;
 
 implementation
@@ -146,7 +146,7 @@ begin
       end;
     finally
       LTaskConfigJson.Free;
-      TaskVar.TaskStatus := trsStop;
+      TaskVar.TaskStatus := trsFinish;
     end;
   finally
     if AInitData <> nil then
@@ -159,5 +159,11 @@ begin
   end;
 end;
 
+
+procedure TTask.Stop;
+begin
+  if (TaskVar.TaskStatus = trsRunning) or (TaskVar.TaskStatus = trsSuspend) then
+    TaskVar.TaskStatus := trsStop;
+end;
 
 end.

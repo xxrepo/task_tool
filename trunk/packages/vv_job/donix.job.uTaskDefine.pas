@@ -3,7 +3,7 @@ unit donix.job.uTaskDefine;
 interface
 
 type
-  TTaskRunStatus = (trsUnknown, trsRunning, trsStop, trsSuspend);
+  TTaskRunStatus = (trsUnknown, trsCreate, trsRunning, trsStop, trsSuspend, trsFinish);
 
   TTaskConfigRec = record
     FileName: string;
@@ -26,8 +26,8 @@ type
     JobName: string;
     EventName: string;
 
-    EventDataLength: Integer;
-    EventData: string;
+    ContentLength: Integer;
+    ContentBody: string;
   end;
 
 

@@ -204,7 +204,10 @@ begin
   while FThreadQueue.Pop(Data) and (not TSimpleThread(Thread).Terminated) do
   begin
     try
-      FHandlePoolEvent(Data, Thread);
+      if Assigned(FHandlePoolEvent) then
+        FHandlePoolEvent(Data, Thread)
+      else
+        Dispose(Data);
     except
 
     end;
