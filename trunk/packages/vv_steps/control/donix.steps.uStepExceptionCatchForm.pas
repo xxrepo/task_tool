@@ -53,11 +53,6 @@ begin
   rzrdgrpCtrlType.ItemIndex := LStep.Act;
 end;
 
-initialization
-RegisterClass(TStepExceptionCatchForm);
-
-finalization
-UnRegisterClass(TStepExceptionCatchForm);
 
 end.
 

@@ -107,11 +107,4 @@ begin
   end;
 end;
 
-
-initialization
-RegisterClass(TStepSubTask);
-
-finalization
-UnRegisterClass(TStepSubTask);
-
 end.

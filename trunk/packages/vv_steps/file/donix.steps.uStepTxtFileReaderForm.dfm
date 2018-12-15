@@ -7,16 +7,9 @@ inherited StepTxtFileReaderForm: TStepTxtFileReaderForm
   inherited pnlOper: TPanel
     Top = 284
     ExplicitTop = 284
-    inherited btnOK: TBitBtn
-      ExplicitLeft = 450
-    end
-    inherited btnCancel: TBitBtn
-      ExplicitLeft = 560
-    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 284
-    ExplicitWidth = 667
     ExplicitHeight = 284
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet

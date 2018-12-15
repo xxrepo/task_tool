@@ -239,14 +239,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepJson2Table);
-
-
-finalization
-UnRegisterClass(TStepJson2Table);
-
-
-
-
 end.

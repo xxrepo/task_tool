@@ -141,16 +141,4 @@ begin
   end;
 end;
 
-
-
-initialization
-RegisterClass(TStepQuery);
-
-
-finalization
-UnRegisterClass(TStepQuery);
-
-
-
-
 end.

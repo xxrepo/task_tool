@@ -140,11 +140,4 @@ begin
   Result := LServerStatusStr = AToStatus;
 end;
 
-
-initialization
-RegisterClass(TStepServiceCtrl);
-
-finalization
-UnRegisterClass(TStepServiceCtrl);
-
 end.

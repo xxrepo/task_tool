@@ -147,11 +147,4 @@ begin
   end;
 end;
 
-
-initialization
-RegisterClass(TStepHttpRequest);
-
-finalization
-UnRegisterClass(TStepHttpRequest);
-
 end.

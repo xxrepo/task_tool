@@ -56,11 +56,4 @@ begin
   end;
 end;
 
-
-initialization
-RegisterClass(TStepWaitTime);
-
-finalization
-UnRegisterClass(TStepWaitTime);
-
 end.

@@ -15,25 +15,7 @@
         <Projects Include="..\packages\vv_steps_ext\donix.vv_steps_ext.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\module\etl_service\CgtEtlService.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\module\etl_ctrler\CgtEtlCtrler.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\module\etl_once\CgtEtlOnce.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\module\etl_calendar\CgtEtlCalendar.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\module\browser_app\BrowserApp.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="..\module\http\CgtTest.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\module\etl_designer\CgtEtlDesigner.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\module\etl_tool\CgtEtlTool.dproj">
@@ -83,51 +65,6 @@
     <Target Name="donix_vv_steps_ext:Make">
         <MSBuild Projects="..\packages\vv_steps_ext\donix.vv_steps_ext.dproj" Targets="Make"/>
     </Target>
-    <Target Name="CgtEtlService">
-        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj"/>
-    </Target>
-    <Target Name="CgtEtlService:Clean">
-        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CgtEtlService:Make">
-        <MSBuild Projects="..\module\etl_service\CgtEtlService.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CgtEtlCtrler">
-        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj"/>
-    </Target>
-    <Target Name="CgtEtlCtrler:Clean">
-        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CgtEtlCtrler:Make">
-        <MSBuild Projects="..\module\etl_ctrler\CgtEtlCtrler.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CgtEtlOnce">
-        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj"/>
-    </Target>
-    <Target Name="CgtEtlOnce:Clean">
-        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CgtEtlOnce:Make">
-        <MSBuild Projects="..\module\etl_once\CgtEtlOnce.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CgtEtlCalendar">
-        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj"/>
-    </Target>
-    <Target Name="CgtEtlCalendar:Clean">
-        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CgtEtlCalendar:Make">
-        <MSBuild Projects="..\module\etl_calendar\CgtEtlCalendar.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="BrowserApp">
-        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj"/>
-    </Target>
-    <Target Name="BrowserApp:Clean">
-        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="BrowserApp:Make">
-        <MSBuild Projects="..\module\browser_app\BrowserApp.dproj" Targets="Make"/>
-    </Target>
     <Target Name="CgtTest">
         <MSBuild Projects="..\module\http\CgtTest.dproj"/>
     </Target>
@@ -136,15 +73,6 @@
     </Target>
     <Target Name="CgtTest:Make">
         <MSBuild Projects="..\module\http\CgtTest.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CgtEtlDesigner">
-        <MSBuild Projects="..\module\etl_designer\CgtEtlDesigner.dproj"/>
-    </Target>
-    <Target Name="CgtEtlDesigner:Clean">
-        <MSBuild Projects="..\module\etl_designer\CgtEtlDesigner.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CgtEtlDesigner:Make">
-        <MSBuild Projects="..\module\etl_designer\CgtEtlDesigner.dproj" Targets="Make"/>
     </Target>
     <Target Name="CgtEtlTool">
         <MSBuild Projects="..\module\etl_tool\CgtEtlTool.dproj"/>
@@ -156,13 +84,13 @@
         <MSBuild Projects="..\module\etl_tool\CgtEtlTool.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="donix_vv_basic;donix_vv_job;donix_vv_steps;donix_vv_steps_ext;CgtEtlService;CgtEtlCtrler;CgtEtlOnce;CgtEtlCalendar;BrowserApp;CgtTest;CgtEtlDesigner;CgtEtlTool"/>
+        <CallTarget Targets="donix_vv_basic;donix_vv_job;donix_vv_steps;donix_vv_steps_ext;CgtTest;CgtEtlTool"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="donix_vv_basic:Clean;donix_vv_job:Clean;donix_vv_steps:Clean;donix_vv_steps_ext:Clean;CgtEtlService:Clean;CgtEtlCtrler:Clean;CgtEtlOnce:Clean;CgtEtlCalendar:Clean;BrowserApp:Clean;CgtTest:Clean;CgtEtlDesigner:Clean;CgtEtlTool:Clean"/>
+        <CallTarget Targets="donix_vv_basic:Clean;donix_vv_job:Clean;donix_vv_steps:Clean;donix_vv_steps_ext:Clean;CgtTest:Clean;CgtEtlTool:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="donix_vv_basic:Make;donix_vv_job:Make;donix_vv_steps:Make;donix_vv_steps_ext:Make;CgtEtlService:Make;CgtEtlCtrler:Make;CgtEtlOnce:Make;CgtEtlCalendar:Make;BrowserApp:Make;CgtTest:Make;CgtEtlDesigner:Make;CgtEtlTool:Make"/>
+        <CallTarget Targets="donix_vv_basic:Make;donix_vv_job:Make;donix_vv_steps:Make;donix_vv_steps_ext:Make;CgtTest:Make;CgtEtlTool:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

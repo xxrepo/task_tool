@@ -137,16 +137,4 @@ begin
   end;
 end;
 
-
-
-initialization
-RegisterClass(TStepSQL);
-
-
-finalization
-UnRegisterClass(TStepSQL);
-
-
-
-
 end.

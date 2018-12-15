@@ -7,16 +7,9 @@ inherited StepFieldsOperForm: TStepFieldsOperForm
   inherited pnlOper: TPanel
     Top = 447
     ExplicitTop = 447
-    inherited btnOK: TBitBtn
-      ExplicitLeft = 450
-    end
-    inherited btnCancel: TBitBtn
-      ExplicitLeft = 560
-    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 447
-    ExplicitWidth = 667
     ExplicitHeight = 447
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet

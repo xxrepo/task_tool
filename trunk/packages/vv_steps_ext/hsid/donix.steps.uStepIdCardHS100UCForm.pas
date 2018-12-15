@@ -56,10 +56,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepIdCardHS100UCForm);
-
-finalization
-UnRegisterClass(TStepIdCardHS100UCForm);
-
 end.

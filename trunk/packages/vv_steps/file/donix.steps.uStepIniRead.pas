@@ -134,10 +134,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepIniRead);
-
-finalization
-UnRegisterClass(TStepIniRead);
-
 end.

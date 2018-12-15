@@ -52,12 +52,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepWaitTimeForm);
-
-finalization
-UnRegisterClass(TStepWaitTimeForm);
-
 end.
 
 

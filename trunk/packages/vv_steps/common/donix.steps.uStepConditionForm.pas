@@ -62,12 +62,6 @@ begin
   JsonToDataSet(LStep.ConditionResults, cdsConditionResults);
 end;
 
-initialization
-RegisterClass(TStepConditionForm);
-
-finalization
-UnRegisterClass(TStepConditionForm);
-
 end.
 
 

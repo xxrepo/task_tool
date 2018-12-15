@@ -71,12 +71,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepUnzipForm);
-
-finalization
-UnRegisterClass(TStepUnzipForm);
-
 end.
 
 

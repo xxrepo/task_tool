@@ -2,7 +2,7 @@ unit uHttpServerRunner;
 
 interface
 
-uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uJobDispatcher;
+uses IdContext, IdCustomHTTPServer, IdHTTPServer, System.JSON, uHttpServerConfig, uSyncJobStarter;
 
 type
   TRunnerStatus = (rsNone, rsRunning, rsStop, rsDestroy);
@@ -14,7 +14,7 @@ type
     FStatus: TRunnerStatus;
     FLastInteractiveRequestTime: TDateTime;
 
-    FJobDispatchers: TJobDispatcherList;
+    FJobStarters: TSyncJobStarterList;
 
     procedure OnServerCommandGet(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -56,7 +56,7 @@ begin
   FServer.OnCommandGet := OnServerCommandGet;
   FServer.OnCommandOther := OnServerCommandOther;
 
-  FJobDispatchers := TJobDispatcherList.Create;
+  FJobStarters := TSyncJobStarterList.Create;
 end;
 
 
@@ -66,7 +66,7 @@ begin
   FStatus := rsDestroy;
   try
     try
-      FJobDispatchers.Free;
+      FJobStarters.Free;
     finally
 //      FBlockUIJobDispatcher.ClearNotificationForms;
 //      FBlockUIJobDispatcher.ClearTaskStacks;
@@ -187,8 +187,8 @@ var
   LLocalDoc: string;
   LDocPath: string;
   LDisStrings: TStringList;
-  LJobDispatcherRec: PJobDispatcherRec;
-  LSyncJobDispatcher: TJobDispatcher;
+  LJobStarterRec: PJobStarterRec;
+  LSyncJobStarter: TSyncJobStarter;
   LOutResult: TOutResult;
 begin
   LLocalDoc := ExpandFilename(FServerConfigRec.AbsDocRoot + ARequestInfo.Document);
@@ -197,7 +197,7 @@ begin
   if (ARequestInfo.Params.Values['dis'].Length > 0) then
   begin
     LDocPath := ExtractFilePath(LLocalDoc);
-    New(LJobDispatcherRec);
+    New(LJobStarterRec);
 
     //对请求进行解析
     LDisStrings := TStringList.Create;
@@ -206,14 +206,14 @@ begin
       LDisStrings.DelimitedText := ARequestInfo.Params.Values['dis'];
       if LDisStrings.Count = 2 then
       begin
-        LJobDispatcherRec^.ProjectFile := LDocPath + LDisStrings.Strings[0] + '\project.jobs';
-        LJobDispatcherRec^.JobName := LDisStrings.Strings[1];
-        LJobDispatcherRec^.InParams := GetRequestParams(ARequestInfo);
-        LJobDispatcherRec^.LogLevel := FServerConfigRec.LogLevel;
-        LJobDispatcherRec^.LogNoticeHandle := LogNoticeHandle;
+        LJobStarterRec^.ProjectFile := LDocPath + LDisStrings.Strings[0] + '\project.jobs';
+        LJobStarterRec^.JobName := LDisStrings.Strings[1];
+        LJobStarterRec^.InParams := GetRequestParams(ARequestInfo);
+        LJobStarterRec^.LogLevel := FServerConfigRec.LogLevel;
+        LJobStarterRec^.LogNoticeHandle := LogNoticeHandle;
       end
       else
-        Dispose(LJobDispatcherRec);
+        Dispose(LJobStarterRec);
     finally
       LDisStrings.Free;
     end;
@@ -222,7 +222,7 @@ begin
     LOutResult.Msg := '处理失败';
     LOutResult.Data := '';
 
-    if LJobDispatcherRec = nil then
+    if LJobStarterRec = nil then
     begin
       //输出错误结果
       LOutResult.Msg := 'dis参数异常';
@@ -240,27 +240,27 @@ begin
         begin
           FLastInteractiveRequestTime := Now;
           //激活application
-          PostMessage(Application.MainFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, Integer(LJobDispatcherRec), 0);
+          PostMessage(Application.MainFormHandle, VVMSG_INTERACTIVE_JOB_REQUEST, Integer(LJobStarterRec), 0);
         end
         else
         begin
           LOutResult.Code := -1;
           LOutResult.Msg := '操作太频繁，稍后处理';
-          Dispose(LJobDispatcherRec);
+          Dispose(LJobStarterRec);
         end;
       end
       else
       begin
         //这里可以引入临时变量尝试
-        LSyncJobDispatcher := FJobDispatchers.NewDispatcher;
+        LSyncJobStarter := FJobStarters.NewStarter;
         try
-          LSyncJobDispatcher.StartProjectJob(LJobDispatcherRec, True);
+          LSyncJobStarter.StartProjectJob(LJobStarterRec, True);
 
-          if LSyncJobDispatcher <> nil then
-            LOutResult := LSyncJobDispatcher.OutResult;
+          if LSyncJobStarter <> nil then
+            LOutResult := LSyncJobStarter.OutResult;
         finally
           if FStatus <> rsDestroy then
-            FJobDispatchers.FreeDispatcher(LSyncJobDispatcher);
+            FJobStarters.FreeStarter(LSyncJobStarter);
         end;
       end;
     end;

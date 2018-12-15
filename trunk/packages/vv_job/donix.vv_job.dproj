@@ -184,7 +184,7 @@
         <DCCReference Include="donix.job.uExceptions.pas"/>
         <DCCReference Include="donix.job.uGlobalVar.pas"/>
         <DCCReference Include="donix.job.uJob.pas"/>
-        <DCCReference Include="donix.job.uJobDispatcher.pas"/>
+        <DCCReference Include="donix.job.uSyncJobStarter.pas"/>
         <DCCReference Include="donix.job.uJobStarter.pas"/>
         <DCCReference Include="donix.job.uProject.pas"/>
         <DCCReference Include="donix.job.uStepBasic.pas"/>

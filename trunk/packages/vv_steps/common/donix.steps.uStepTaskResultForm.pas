@@ -67,11 +67,6 @@ begin
   chkExitTask.Checked := LStep.ExitTask;
 end;
 
-initialization
-RegisterClass(TStepTaskResultForm);
-
-finalization
-UnRegisterClass(TStepTaskResultForm);
 
 end.
 

@@ -26,10 +26,4 @@ uses uStepBasic;
 {$R *.dfm}
 
 
-initialization
-RegisterClass(TStepNullForm);
-
-finalization
-UnRegisterClass(TStepNullForm);
-
 end.

@@ -55,11 +55,6 @@ begin
   JsonToDataSet(LStep.FieldParams, cdsParams);
 end;
 
-initialization
-RegisterClass(TStepVarDefineForm);
-
-finalization
-UnRegisterClass(TStepVarDefineForm);
 
 end.
 

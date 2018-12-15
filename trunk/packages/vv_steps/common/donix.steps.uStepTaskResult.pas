@@ -93,10 +93,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepTaskResult);
-
-finalization
-UnRegisterClass(TStepTaskResult);
-
 end.

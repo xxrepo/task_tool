@@ -88,10 +88,4 @@ begin
 end;
 
 
-initialization
-System.Classes.RegisterClass(TStepExeCtrl);
-
-finalization
-System.Classes.UnRegisterClass(TStepExeCtrl);
-
 end.

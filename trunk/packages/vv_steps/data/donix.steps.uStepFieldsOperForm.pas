@@ -71,12 +71,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepFieldsOperForm);
-
-finalization
-UnRegisterClass(TStepFieldsOperForm);
-
 end.
 
 

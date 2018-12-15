@@ -95,12 +95,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepExeCtrlForm);
-
-finalization
-UnRegisterClass(TStepExeCtrlForm);
-
 end.
 
 

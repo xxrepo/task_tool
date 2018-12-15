@@ -63,10 +63,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepUnzip);
-
-finalization
-UnRegisterClass(TStepUnzip);
-
 end.

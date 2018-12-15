@@ -81,10 +81,5 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepVarDefine);
-
-finalization
-UnRegisterClass(TStepVarDefine);
 
 end.

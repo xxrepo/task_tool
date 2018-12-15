@@ -106,10 +106,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepDownloadFile);
-
-finalization
-UnRegisterClass(TStepDownloadFile);
-
 end.

@@ -64,10 +64,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepTxtFileReader);
-
-finalization
-UnRegisterClass(TStepTxtFileReader);
-
 end.

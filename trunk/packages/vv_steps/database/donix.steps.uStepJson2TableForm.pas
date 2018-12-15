@@ -110,10 +110,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepJson2TableForm);
-
-finalization
-UnRegisterClass(TStepJson2TableForm);
-
 end.

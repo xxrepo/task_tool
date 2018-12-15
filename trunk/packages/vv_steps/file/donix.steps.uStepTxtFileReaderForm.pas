@@ -63,12 +63,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepTxtFileReaderForm);
-
-finalization
-UnRegisterClass(TStepTxtFileReaderForm);
-
 end.
 
 

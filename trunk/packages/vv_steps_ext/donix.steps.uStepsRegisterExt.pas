@@ -14,7 +14,9 @@ implementation
 
 uses uFunctions, uDefines,
   uStepIdCardHS100UC,
-  uStepIdCardHS100UCForm;
+  uStepIdCardHS100UCForm,
+  uStepTest,
+  uStepTestForm;
 
 { TStepsRegisterCore }
 
@@ -23,12 +25,22 @@ var
   LStepRegisterRec: TStepRegisterRec;
 begin
   LStepRegisterRec.StepGroup := '设备';
-  LStepRegisterRec.StepType := 'core|DEVICE_IDCARD_HS100UC';
+  LStepRegisterRec.StepType := 'ext|DEVICE_IDCARD_HS100UC';
   LStepRegisterRec.StepTypeName := '身份证读卡器-华视100UC';
   LStepRegisterRec.StepClassName := 'TStepIdCardHS100UC';
   LStepRegisterRec.StepClass := TStepIdCardHS100UC;
   LStepRegisterRec.FormClassName := 'TStepIdCardHS100UCForm';
   LStepRegisterRec.FormClass := TStepIdCardHS100UCForm;
+  TStepFactory.RegsiterStep(LStepRegisterRec);
+
+
+  LStepRegisterRec.StepGroup := '测试';
+  LStepRegisterRec.StepType := 'ext|TEST_EVENT_TIMER';
+  LStepRegisterRec.StepTypeName := '测试时间';
+  LStepRegisterRec.StepClassName := 'TStepTest';
+  LStepRegisterRec.StepClass := TStepTest;
+  LStepRegisterRec.FormClassName := 'TStepTestForm';
+  LStepRegisterRec.FormClass := TStepTestForm;
   TStepFactory.RegsiterStep(LStepRegisterRec);
 end;
 

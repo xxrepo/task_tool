@@ -110,12 +110,6 @@ begin
   end;
 end;
 
-initialization
-RegisterClass(TStepFolderCtrlForm);
-
-finalization
-UnRegisterClass(TStepFolderCtrlForm);
-
 end.
 
 

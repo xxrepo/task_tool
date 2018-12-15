@@ -13,8 +13,8 @@ inherited StepServiceCtrlForm: TStepServiceCtrlForm
     ExplicitHeight = 329
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 25
+      ExplicitLeft = 1
+      ExplicitTop = 24
       ExplicitHeight = 302
       inherited lblDescription: TLabel
         Left = 52

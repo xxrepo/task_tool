@@ -76,13 +76,6 @@ begin
   edtDeleteBeforeTime.Text := IntToStr(LStep.DeleteBeforeTime);
 end;
 
-
-initialization
-RegisterClass(TStepFileDeleteForm);
-
-finalization
-UnRegisterClass(TStepFileDeleteForm);
-
 end.
 
 

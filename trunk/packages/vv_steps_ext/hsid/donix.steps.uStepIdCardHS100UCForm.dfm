@@ -9,7 +9,7 @@ inherited StepIdCardHS100UCForm: TStepIdCardHS100UCForm
   inherited pnlOper: TPanel
     Top = 316
     Width = 679
-    ExplicitTop = 245
+    ExplicitTop = 316
     ExplicitWidth = 679
     inherited btnOK: TBitBtn
       Left = 462
@@ -24,7 +24,7 @@ inherited StepIdCardHS100UCForm: TStepIdCardHS100UCForm
     Width = 679
     Height = 316
     ExplicitWidth = 679
-    ExplicitHeight = 245
+    ExplicitHeight = 316
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       object lbl2: TLabel [2]

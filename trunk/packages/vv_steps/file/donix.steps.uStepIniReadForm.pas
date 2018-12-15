@@ -120,11 +120,6 @@ begin
   JsonToDataSet(LStep.FieldParams, cdsParams);
 end;
 
-initialization
-RegisterClass(TStepIniReadForm);
-
-finalization
-UnRegisterClass(TStepIniReadForm);
 
 end.
 

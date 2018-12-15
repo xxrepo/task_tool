@@ -67,12 +67,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepFieldsMapForm);
-
-finalization
-UnRegisterClass(TStepFieldsMapForm);
-
 end.
 
 

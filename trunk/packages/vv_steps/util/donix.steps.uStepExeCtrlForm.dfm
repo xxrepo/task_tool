@@ -6,16 +6,16 @@ inherited StepExeCtrlForm: TStepExeCtrlForm
   TextHeight = 17
   inherited pnlOper: TPanel
     Top = 293
-    ExplicitTop = 277
+    ExplicitTop = 293
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 293
-    ExplicitHeight = 277
+    ExplicitHeight = 293
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 16
-      ExplicitHeight = 328
+      ExplicitLeft = 1
+      ExplicitTop = 24
+      ExplicitHeight = 266
       inherited lblDescription: TLabel
         Left = 52
         ExplicitLeft = 52

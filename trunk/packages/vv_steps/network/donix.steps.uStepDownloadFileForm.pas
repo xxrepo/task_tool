@@ -81,12 +81,6 @@ begin
   btnSaveToPath.Text := LStep.SaveToPath;
 end;
 
-initialization
-RegisterClass(TStepDownloadFileForm);
-
-finalization
-UnRegisterClass(TStepDownloadFileForm);
-
 end.
 
 

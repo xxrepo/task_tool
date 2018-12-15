@@ -112,14 +112,4 @@ begin
   end;
 end;
 
-
-
-
-
-initialization
-RegisterClass(TStepFileDelete);
-
-finalization
-UnRegisterClass(TStepFileDelete);
-
 end.

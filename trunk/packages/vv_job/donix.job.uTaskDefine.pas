@@ -20,6 +20,16 @@ type
     DBsConfigFile: string;
   end;
 
+  PEventDataRec = ^TEventDataRec;
+
+  TEventDataRec = record
+    JobName: string;
+    EventName: string;
+
+    EventDataLength: Integer;
+    EventData: string;
+  end;
+
 
 implementation
 

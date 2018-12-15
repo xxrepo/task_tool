@@ -1,4 +1,4 @@
-unit donix.steps.uStepIniWriteForm;
+unit donix.steps.uStepTestForm;
 
 interface
 
@@ -10,16 +10,16 @@ uses
   DynVarsEh, EhLibVCL, GridsEh, DBAxisGridsEh, DBGridEh, Vcl.DBCtrls, System.IniFiles;
 
 type
-  TStepIniWriteForm = class(TStepBasicForm)
+  TStepTestForm = class(TStepBasicForm)
     lbl2: TLabel;
     btnIniFileName: TRzButtonEdit;
     dlgOpenFileName: TOpenDialog;
     dsParams: TDataSource;
     cdsParams: TClientDataSet;
     lblParams: TLabel;
+    dbgrdhInputParams: TDBGridEh;
     btnGetValues: TBitBtn;
     dbnvgrParams: TDBNavigator;
-    dbgrdhInputParams: TDBGridEh;
     btnClearParams: TBitBtn;
     procedure btnOKClick(Sender: TObject);
     procedure btnIniFileNameButtonClick(Sender: TObject);
@@ -36,32 +36,32 @@ type
   end;
 
 var
-  StepIniWriteForm: TStepIniWriteForm;
+  StepTestForm: TStepTestForm;
 
 implementation
 
-uses uStepIniWrite, uFunctions, uDesignTimeDefines;
+uses uStepTest, uFunctions, uDesignTimeDefines, uProject;
 
 {$R *.dfm}
 
-procedure TStepIniWriteForm.btnOKClick(Sender: TObject);
+procedure TStepTestForm.btnOKClick(Sender: TObject);
 begin
   inherited;
-  with Step as TStepIniWrite do
+  with Step as TStepTest do
   begin
     FileName := btnIniFileName.Text;
     FieldParams := DataSetToJsonStr(cdsParams);
   end;
 end;
 
-procedure TStepIniWriteForm.btnClearParamsClick(Sender: TObject);
+procedure TStepTestForm.btnClearParamsClick(Sender: TObject);
 begin
   inherited;
   if ShowMsg('您真的要清空所有参数吗？', MB_OKCANCEL) = mrOK then
     cdsParams.EmptyDataSet;
 end;
 
-procedure TStepIniWriteForm.btnGetValuesClick(Sender: TObject);
+procedure TStepTestForm.btnGetValuesClick(Sender: TObject);
 var
   LFileName: string;
   LIniFile: TIniFile;
@@ -84,7 +84,7 @@ begin
         for j := 0 to LSectionStrings.Count - 1 do
         begin
           cdsParams.Append;
-          cdsParams.FieldByName('param_name').AsString := LSections.Strings[i]
+          cdsParams.FieldByName('param_value_ref').AsString := 'self.' + LSections.Strings[i]
                               + '.' + LSectionStrings.Strings[j];
           cdsParams.FieldByName('param_type').AsString := 'string';
           cdsParams.FieldByName('default_value').AsString := '';
@@ -99,7 +99,7 @@ begin
   end;
 end;
 
-procedure TStepIniWriteForm.btnIniFileNameButtonClick(Sender: TObject);
+procedure TStepTestForm.btnIniFileNameButtonClick(Sender: TObject);
 begin
   inherited;
   dlgOpenFileName.InitialDir := ExtractFileDir(btnIniFileName.Text);
@@ -109,16 +109,17 @@ begin
   end;
 end;
 
-procedure TStepIniWriteForm.ParseStepConfig(AConfigJsonStr: string);
+procedure TStepTestForm.ParseStepConfig(AConfigJsonStr: string);
 var
-  LStep: TStepIniWrite;
+  LStep: TStepTest;
 begin
   inherited ParseStepConfig(AConfigJsonStr);
 
-  LStep := TStepIniWrite(Step);
+  LStep := TStepTest(Step);
   btnIniFileName.Text := LStep.FileName;
   JsonToDataSet(LStep.FieldParams, cdsParams);
 end;
+
 
 end.
 

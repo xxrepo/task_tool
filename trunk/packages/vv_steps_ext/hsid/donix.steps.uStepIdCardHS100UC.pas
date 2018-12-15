@@ -207,12 +207,4 @@ begin
 end;
 
 
-
-
-initialization
-RegisterClass(TStepIdCardHS100UC);
-
-finalization
-UnRegisterClass(TStepIdCardHS100UC);
-
 end.

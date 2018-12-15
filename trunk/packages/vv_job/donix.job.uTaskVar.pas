@@ -4,7 +4,7 @@ interface
 
 uses
   uDbConMgr, System.Classes, uDefines, uTaskDefine, uStepDefines, uFileLogger, uGlobalVar,
-  System.SysUtils, System.JSON, uTaskResult;
+  System.SysUtils, System.JSON, uTaskResult, uThreadQueueUtil;
 
 type
   TTaskVarRec = record
@@ -46,6 +46,7 @@ type
   public
     TaskVarRec: TTaskVarRec;
     GlobalVar: TGlobalVar;
+    EventDataPool: TThreadPool;
 
     Logger: TThreadFileLog;
 
@@ -161,6 +162,7 @@ begin
 
   //这另个类共享来自jobmgr中的方法
   GlobalVar := nil;
+  EventDataPool := nil;
 
   TaskResult.Free;
   inherited;

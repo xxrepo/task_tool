@@ -88,11 +88,6 @@ begin
   end;
 end;
 
-initialization
-RegisterClass(TStepDatasetSpliterForm);
-
-finalization
-UnRegisterClass(TStepDatasetSpliterForm);
 
 end.
 

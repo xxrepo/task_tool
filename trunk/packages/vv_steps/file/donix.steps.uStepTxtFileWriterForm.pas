@@ -70,12 +70,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepTxtFileWriterForm);
-
-finalization
-UnRegisterClass(TStepTxtFileWriterForm);
-
 end.
 
 

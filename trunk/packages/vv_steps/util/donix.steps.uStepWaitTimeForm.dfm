@@ -6,16 +6,16 @@ inherited StepWaitTimeForm: TStepWaitTimeForm
   TextHeight = 17
   inherited pnlOper: TPanel
     Top = 253
-    ExplicitTop = 284
+    ExplicitTop = 253
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
     Height = 253
-    ExplicitHeight = 284
+    ExplicitHeight = 253
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
-      ExplicitHeight = 257
+      ExplicitHeight = 226
       object lbl2: TLabel [1]
         Left = 52
         Top = 122

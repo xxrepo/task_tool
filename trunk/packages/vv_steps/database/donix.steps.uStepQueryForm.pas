@@ -152,11 +152,4 @@ begin
   JsonToDataSet((Step as TStepQuery).SqlParamsConfigJsonStr, cdsInputParams);
 end;
 
-
-initialization
-RegisterClass(TStepQueryForm);
-
-finalization
-UnRegisterClass(TStepQueryForm);
-
 end.

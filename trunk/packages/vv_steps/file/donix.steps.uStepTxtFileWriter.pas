@@ -90,10 +90,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepTxtFileWriter);
-
-finalization
-UnRegisterClass(TStepTxtFileWriter);
-
 end.

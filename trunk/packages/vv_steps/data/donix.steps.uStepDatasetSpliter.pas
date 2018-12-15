@@ -135,11 +135,4 @@ begin
 end;
 
 
-
-initialization
-RegisterClass(TStepDatasetSpliter);
-
-finalization
-UnRegisterClass(TStepDatasetSpliter);
-
 end.

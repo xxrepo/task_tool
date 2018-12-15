@@ -78,12 +78,6 @@ begin
   JsonToDataSet(LStep.ResponseParams, cdsRspParams);
 end;
 
-initialization
-RegisterClass(TStepHttpRequestForm);
-
-finalization
-UnRegisterClass(TStepHttpRequestForm);
-
 end.
 
 

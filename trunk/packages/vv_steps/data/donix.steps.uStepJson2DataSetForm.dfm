@@ -10,15 +10,13 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
   inherited pnlOper: TPanel
     Top = 526
     Width = 719
-    ExplicitTop = 473
+    ExplicitTop = 526
     ExplicitWidth = 719
     inherited btnOK: TBitBtn
       Left = 502
-      ExplicitLeft = 450
     end
     inherited btnCancel: TBitBtn
       Left = 612
-      ExplicitLeft = 560
     end
     object btnTest: TButton
       Left = 12
@@ -33,14 +31,13 @@ inherited StepJsonDataSetForm: TStepJsonDataSetForm
   inherited rzpgcntrlStepSettings: TRzPageControl
     Width = 719
     Height = 526
-    ExplicitWidth = 667
-    ExplicitHeight = 473
+    ExplicitHeight = 526
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
-      ExplicitWidth = 663
-      ExplicitHeight = 446
+      ExplicitWidth = 715
+      ExplicitHeight = 499
       object lbl2: TLabel [1]
         Left = 52
         Top = 232

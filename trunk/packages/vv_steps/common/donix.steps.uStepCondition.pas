@@ -298,11 +298,4 @@ begin
 end;
 
 
-
-initialization
-RegisterClass(TStepCondition);
-
-finalization
-UnRegisterClass(TStepCondition);
-
 end.

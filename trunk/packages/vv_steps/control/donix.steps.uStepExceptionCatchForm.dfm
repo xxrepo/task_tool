@@ -9,7 +9,7 @@ inherited StepExceptionCatchForm: TStepExceptionCatchForm
   inherited pnlOper: TPanel
     Top = 203
     Width = 710
-    ExplicitTop = 479
+    ExplicitTop = 203
     ExplicitWidth = 710
     inherited btnOK: TBitBtn
       Left = 493
@@ -24,13 +24,13 @@ inherited StepExceptionCatchForm: TStepExceptionCatchForm
     Width = 710
     Height = 203
     ExplicitWidth = 710
-    ExplicitHeight = 479
+    ExplicitHeight = 203
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
       ExplicitWidth = 706
-      ExplicitHeight = 452
+      ExplicitHeight = 176
       inherited lblDescription: TLabel
         Left = 52
         ExplicitLeft = 52

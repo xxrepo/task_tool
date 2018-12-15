@@ -9,7 +9,7 @@ inherited StepDownloadFileForm: TStepDownloadFileForm
   inherited pnlOper: TPanel
     Top = 499
     Width = 723
-    ExplicitTop = 472
+    ExplicitTop = 499
     ExplicitWidth = 723
     inherited btnOK: TBitBtn
       Left = 506
@@ -24,13 +24,13 @@ inherited StepDownloadFileForm: TStepDownloadFileForm
     Width = 723
     Height = 499
     ExplicitWidth = 723
-    ExplicitHeight = 472
+    ExplicitHeight = 499
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
       ExplicitLeft = 1
       ExplicitTop = 24
       ExplicitWidth = 719
-      ExplicitHeight = 445
+      ExplicitHeight = 472
       object lbl2: TLabel [1]
         Left = 50
         Top = 114

@@ -184,12 +184,4 @@ begin
 end;
 
 
-
-
-initialization
-System.Classes.RegisterClass(TStepFolderCtrl);
-
-finalization
-System.Classes.UnRegisterClass(TStepFolderCtrl);
-
 end.

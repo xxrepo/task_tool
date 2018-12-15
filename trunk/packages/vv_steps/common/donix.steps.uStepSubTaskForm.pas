@@ -95,13 +95,6 @@ begin
   btnFileName.Text := LStep.SubTaskFile;
 end;
 
-
-initialization
-RegisterClass(TStepSubTaskForm);
-
-finalization
-UnRegisterClass(TStepSubTaskForm);
-
 end.
 
 

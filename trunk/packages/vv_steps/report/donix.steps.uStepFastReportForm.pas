@@ -104,12 +104,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepFastReportForm);
-
-finalization
-UnRegisterClass(TStepFastReportForm);
-
 end.
 
 

@@ -1,63 +1,80 @@
-inherited StepFieldsMapForm: TStepFieldsMapForm
-  Caption = 'Fields'#23383#27573#26144#23556
-  ClientHeight = 512
-  ExplicitHeight = 551
+inherited StepTestForm: TStepTestForm
+  Caption = #35835#21462'INI'#25991#20214
+  ClientHeight = 476
+  ClientWidth = 710
+  ExplicitWidth = 726
+  ExplicitHeight = 515
   PixelsPerInch = 96
   TextHeight = 17
   inherited pnlOper: TPanel
-    Top = 455
-    ExplicitTop = 455
+    Top = 419
+    Width = 710
+    ExplicitTop = 419
+    ExplicitWidth = 710
+    inherited btnOK: TBitBtn
+      Left = 493
+      ExplicitLeft = 493
+    end
+    inherited btnCancel: TBitBtn
+      Left = 603
+      ExplicitLeft = 603
+    end
   end
   inherited rzpgcntrlStepSettings: TRzPageControl
-    Height = 455
-    ExplicitHeight = 455
+    Width = 710
+    Height = 419
+    ExplicitWidth = 710
+    ExplicitHeight = 419
     FixedDimension = 23
     inherited rztbshtCommon: TRzTabSheet
-      ExplicitHeight = 428
+      ExplicitLeft = 1
+      ExplicitTop = 24
+      ExplicitWidth = 706
+      ExplicitHeight = 392
       object lbl2: TLabel [1]
-        Left = 19
-        Top = 115
-        Width = 89
+        Left = 52
+        Top = 116
+        Width = 56
         Height = 17
-        Caption = 'JsonArray'#25968#25454
+        Caption = #30446#26631#25991#20214
       end
       object lblParams: TLabel [2]
         Left = 52
-        Top = 156
+        Top = 160
         Width = 56
         Height = 17
         Caption = #36755#20986#21442#25968
       end
-      inherited edtDescription: TEdit
-        TabOrder = 4
+      inherited lblDescription: TLabel
+        Left = 52
+        ExplicitLeft = 52
       end
-      inherited chkRegDataToTask: TCheckBox
+      inherited edtDescription: TEdit
         TabOrder = 5
       end
-      object edtDataRef: TEdit
-        Left = 142
-        Top = 112
-        Width = 305
-        Height = 25
-        TabOrder = 1
+      inherited chkRegDataToTask: TCheckBox
+        TabOrder = 6
       end
-      object dbnvgrParams: TDBNavigator
+      object btnIniFileName: TRzButtonEdit
         Left = 142
-        Top = 152
-        Width = 240
+        Top = 113
+        Width = 307
         Height = 25
-        DataSource = dsParams
-        TabOrder = 2
+        Text = ''
+        TabOrder = 1
+        AltBtnWidth = 15
+        ButtonWidth = 15
+        OnButtonClick = btnIniFileNameButtonClick
       end
       object dbgrdhInputParams: TDBGridEh
         Left = 142
-        Top = 178
+        Top = 182
         Width = 469
-        Height = 241
+        Height = 159
         DataSource = dsParams
         DynProps = <>
         HorzScrollBar.Height = 10
-        TabOrder = 3
+        TabOrder = 2
         VertScrollBar.Width = 10
         Columns = <
           item
@@ -79,17 +96,12 @@ inherited StepFieldsMapForm: TStepFieldsMapForm
             Footers = <>
             PickList.Strings = (
               'parent.'
-              'self.MAX'
-              'self.MIN'
-              'self.SUM'
-              'self.COUNT'
-              'self.CONCAT'
-              'self.MD5'
+              'self.'
               'task.'
               'system.time'
               'system.timestamp')
             Title.Caption = #21442#25968#20540
-            Width = 142
+            Width = 177
           end
           item
             CellButtons = <>
@@ -100,9 +112,7 @@ inherited StepFieldsMapForm: TStepFieldsMapForm
             PickList.Strings = (
               'int'
               'string'
-              'float'
-              'currency'
-              'datetime')
+              'float')
             Title.Caption = #21442#25968#31867#22411
             Width = 90
           end
@@ -123,7 +133,45 @@ inherited StepFieldsMapForm: TStepFieldsMapForm
         object RowDetailData: TRowDetailPanelControlEh
         end
       end
+      object btnGetValues: TBitBtn
+        Left = 142
+        Top = 356
+        Width = 101
+        Height = 25
+        Caption = #33719#21462'INI'#37197#32622
+        TabOrder = 3
+        OnClick = btnGetValuesClick
+      end
+      object dbnvgrParams: TDBNavigator
+        Left = 142
+        Top = 156
+        Width = 240
+        Height = 25
+        DataSource = dsParams
+        TabOrder = 4
+      end
+      object btnClearParams: TBitBtn
+        Left = 258
+        Top = 356
+        Width = 81
+        Height = 25
+        Caption = #28165#38500
+        TabOrder = 7
+        OnClick = btnClearParamsClick
+      end
     end
+  end
+  object dlgOpenFileName: TOpenDialog
+    DefaultExt = 'ini'
+    Filter = 'INI'#37197#32622#25991#20214#65288'*.ini'#65289'|*.ini'
+    Options = [ofReadOnly, ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Left = 541
+    Top = 90
+  end
+  object dsParams: TDataSource
+    DataSet = cdsParams
+    Left = 608
+    Top = 188
   end
   object cdsParams: TClientDataSet
     PersistDataPacket.Data = {
@@ -159,12 +207,7 @@ inherited StepFieldsMapForm: TStepFieldsMapForm
     IndexDefs = <>
     Params = <>
     StoreDefs = True
-    Left = 532
-    Top = 88
-  end
-  object dsParams: TDataSource
-    DataSet = cdsParams
-    Left = 474
-    Top = 88
+    Left = 610
+    Top = 246
   end
 end

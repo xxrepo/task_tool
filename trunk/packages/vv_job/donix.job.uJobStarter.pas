@@ -11,11 +11,12 @@ type
   TJobStarter = class
   private
     FJobs: TStringList;
-    FThreadPool: TThreadPool;
+    FJobThreadPool: TThreadPool;
     FThreadCount: Integer;
 
+    FEventDataPool: TThreadPool;
+
     function GetDbsConfigFile: string;
-    procedure HandleJobRequest(Data: Pointer; AThread: TThread); virtual;
     function GetUnHandledCount: Integer;
 
   protected
@@ -31,7 +32,12 @@ type
     procedure StopJob(AJob: TJobConfig); overload;
 
     function GetTaskInitParams: PStepData; virtual;
+
+
+    procedure OnJobThreadPoolPop(Data: Pointer; AThread: TThread); virtual;
+    procedure OnEventDataPoolPop(Data: Pointer; AThread: TThread); virtual;
   public
+    OnJobEvent: TThreadPoolEvent;
     LogNoticeHandle: THandle;
     constructor Create(AThreadCount: Integer = 1; const ALogLevel: TLogLevel = llAll); virtual;
     destructor Destroy; override;
@@ -95,8 +101,12 @@ begin
   FJobs := TStringList.Create;
   FUnHandledCount := 0;
   FThreadCount := AThreadCount;
+
+  //对于事件数据，启动一个线程进行循环读取来自各个任务中的数据，在这个onEventDataPoolPop中，无需线程安全
+  FEventDataPool := TThreadPool.Create(OnEventDataPoolPop, 1);
+
   if FThreadCount > 0 then
-    FThreadPool := TThreadPool.Create(HandleJobRequest, FThreadCount);
+    FJobThreadPool := TThreadPool.Create(OnJobThreadPoolPop, FThreadCount);
 end;
 
 
@@ -106,8 +116,11 @@ var
 begin
   Stop;
 
-  if FThreadPool <> nil then
-    FreeAndNil(FThreadPool);
+  if FJobThreadPool <> nil then
+    FreeAndNil(FJobThreadPool);
+
+  if FEventDataPool <> nil then
+    FreeAndNil(FEventDataPool);
 
   //循环遍历释放task中的配置类
   for i := 0 to FJobs.Count - 1 do
@@ -246,9 +259,25 @@ begin
 end;
 
 
+
+procedure TJobStarter.OnEventDataPoolPop(Data: Pointer; AThread: TThread);
+var
+  LEventDataRec: PEventDataRec;
+begin
+  //Data的结构必须要定义清楚，然后进行内存的释放
+  LEventDataRec := Data;
+  try
+
+  finally
+    if LEventDataRec <> nil then
+      Dispose(LEventDataRec);
+  end;
+end;
+
+
 //这里必须线程安全，因为会存在若干的线程来操作同一段代码，要么都是局部变量
 //要么是线程安全的变量
-procedure TJobStarter.HandleJobRequest(Data: Pointer; AThread: TThread);
+procedure TJobStarter.OnJobThreadPoolPop(Data: Pointer; AThread: TThread);
 var
   LRequest: PJobRequest;
   LJob: TJobConfig;
@@ -275,6 +304,7 @@ begin
     LJob.HandleStatus := jhsRun;
     LJob.Task.TaskVar.Interactive := LJob.Interactive;
     LJob.Task.TaskVar.GlobalVar := FGlobalVar;
+    LJob.Task.TaskVar.EventDataPool := FEventDataPool;
     LJob.Task.TaskVar.Logger.LogLevel := FLogLevel;
     {$IFDEF PROJECT_DESIGN_MODE}
     LJob.Task.TaskVar.Logger.NoticeHandle := LogNoticeHandle;
@@ -384,12 +414,12 @@ begin
 
     AppLogger.Debug('[StartJob]' + AJob.ToString);
 
-    if FThreadPool <> nil then
+    if FJobThreadPool <> nil then
     begin
-      FThreadPool.Add(LRequest);
+      FJobThreadPool.Add(LRequest);
     end
     else
-      HandleJobRequest(LRequest, nil);
+      OnJobThreadPoolPop(LRequest, nil);
   end;
 end;
 

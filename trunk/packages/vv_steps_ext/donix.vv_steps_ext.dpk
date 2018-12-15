@@ -50,12 +50,15 @@ requires
   accessprovider250,
   donix.vv_basic,
   donix.vv_job,
-  msprovider250;
+  msprovider250,
+  donix.vv_steps;
 
 contains
   donix.steps.CVRDLL in 'hsid\donix.steps.CVRDLL.pas',
   donix.steps.uStepIdCardHS100UC in 'hsid\donix.steps.uStepIdCardHS100UC.pas',
   donix.steps.uStepIdCardHS100UCForm in 'hsid\donix.steps.uStepIdCardHS100UCForm.pas' {StepIdCardHS100UCForm},
-  donix.steps.uStepsRegisterExt in 'donix.steps.uStepsRegisterExt.pas';
+  donix.steps.uStepsRegisterExt in 'donix.steps.uStepsRegisterExt.pas',
+  donix.steps.uStepTest in 'test\donix.steps.uStepTest.pas',
+  donix.steps.uStepTestForm in 'test\donix.steps.uStepTestForm.pas' {StepTestForm};
 
 end.

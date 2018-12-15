@@ -117,10 +117,4 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepIniWrite);
-
-finalization
-UnRegisterClass(TStepIniWrite);
-
 end.

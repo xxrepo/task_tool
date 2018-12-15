@@ -1,4 +1,4 @@
-unit donix.job.uJobDispatcher;
+unit donix.job.uSyncJobStarter;
 
 interface
 
@@ -7,9 +7,9 @@ uses uJobStarter, uJob, uFileLogger, System.Classes, uStepDefines, System.Contnr
 
 
 type
-  PJobDispatcherRec = ^TJobdispatcherRec;
+  PJobStarterRec = ^TJobStarterRec;
 
-  TJobDispatcherRec = record
+  TJobStarterRec = record
     ProjectFile: string;
     JobName: string;
     InParams: string;
@@ -26,7 +26,7 @@ type
 
 
   //仅支持单线程模式，支持对结果的输出，支持入参，仅仅单实例支持启动一个任务
-  TJobDispatcher = class(TJobStarter)
+  TSyncJobStarter = class(TJobStarter)
   private
     FInParams: string;
     FOutResult: TOutResult;
@@ -38,20 +38,20 @@ type
   public
     constructor Create(const ALogLevel: TLogLevel = llAll); overload;
 
-    procedure StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
+    procedure StartProjectJob(const AJobStarterRec: PJobStarterRec; const AWithResult: Boolean = True);
 
     property OutResult: TOutResult read FOutResult;
   end;
 
-  TJobDispatcherList = class
+  TSyncJobStarterList = class
   private
     FCritical: TCriticalSection;
     FList: TObjectList;
   public
     constructor Create;
     destructor Destroy; override;
-    function NewDispatcher: TJobDispatcher;
-    procedure FreeDispatcher(ADispatcher: TJobDispatcher);
+    function NewStarter: TSyncJobStarter;
+    procedure FreeStarter(AStarter: TSyncJobStarter);
     procedure Clear;
   end;
 
@@ -62,7 +62,7 @@ uses
 
 { TJobDispatcher }
 
-constructor TJobDispatcher.Create(const ALogLevel: TLogLevel = llAll);
+constructor TSyncJobStarter.Create(const ALogLevel: TLogLevel = llAll);
 begin
   inherited Create(0, ALogLevel);
   FOutResult.Code := -1;
@@ -70,7 +70,7 @@ begin
 end;
 
 
-function TJobDispatcher.GetTaskInitParams: PStepData;
+function TSyncJobStarter.GetTaskInitParams: PStepData;
 begin
   FCritical.Enter;
   try
@@ -83,7 +83,7 @@ begin
 end;
 
 
-procedure TJobDispatcher.StartJobWithResult(AJobName: string);
+procedure TSyncJobStarter.StartJobWithResult(AJobName: string);
 var
   LTaskConfigRec: TTaskConfigRec;
   LJob: TJobConfig;
@@ -151,24 +151,24 @@ end;
 
 
 
-procedure TJobDispatcher.StartProjectJob(const AJobDispatcherRec: PJobDispatcherRec; const AWithResult: Boolean = True);
+procedure TSyncJobStarter.StartProjectJob(const AJobStarterRec: PJobStarterRec; const AWithResult: Boolean = True);
 begin
   //在这里进行释放
   try
-    if LoadConfigFrom(AJobDispatcherRec.ProjectFile, AJobDispatcherRec.JobName) then
+    if LoadConfigFrom(AJobStarterRec.ProjectFile, AJobStarterRec.JobName) then
     begin
-      FInParams := AJobDispatcherRec.InParams;
-      FLogLevel := AJobDispatcherRec.LogLevel;
-      LogNoticeHandle := AJobDispatcherRec.LogNoticeHandle;
+      FInParams := AJobStarterRec.InParams;
+      FLogLevel := AJobStarterRec.LogLevel;
+      LogNoticeHandle := AJobStarterRec.LogNoticeHandle;
 
       //TODO 在这里进行blockui属性的设置，根据预先设计好的属性，走不同的调用方法
 
       if AWithResult then
       begin
-        StartJobWithResult(AJobDispatcherRec.JobName);
+        StartJobWithResult(AJobStarterRec.JobName);
       end
       else
-        StartJob(AJobDispatcherRec.JobName);
+        StartJob(AJobStarterRec.JobName);
     end
     else
     begin
@@ -176,14 +176,14 @@ begin
       AppLogger.Fatal(FOutResult.Msg);
     end;
   finally
-    if AJobDispatcherRec <> nil then
-      Dispose(AJobDispatcherRec);
+    if AJobStarterRec <> nil then
+      Dispose(AJobStarterRec);
   end;
 end;
 
 { TJobDispatcherList }
 
-constructor TJobDispatcherList.Create;
+constructor TSyncJobStarterList.Create;
 begin
   inherited;
   FCritical := TCriticalSection.Create;
@@ -191,11 +191,11 @@ begin
 end;
 
 
-function TJobDispatcherList.NewDispatcher: TJobDispatcher;
+function TSyncJobStarterList.NewStarter: TSyncJobStarter;
 begin
   FCritical.Enter;
   try
-    Result := TJobDispatcher.Create;
+    Result := TSyncJobStarter.Create;
     if Result <> nil then
     FList.Add(Result);
   finally
@@ -204,25 +204,25 @@ begin
 end;
 
 
-procedure TJobDispatcherList.FreeDispatcher(ADispatcher: TJobDispatcher);
+procedure TSyncJobStarterList.FreeStarter(AStarter: TSyncJobStarter);
 var
   idx: Integer;
 begin
   FCritical.Enter;
   try
-    if ADispatcher = nil then Exit;
+    if AStarter = nil then Exit;
 
-    idx := FList.IndexOf(ADispatcher);
+    idx := FList.IndexOf(AStarter);
     FList.Delete(idx);
 
-    if ADispatcher <> nil then
+    if AStarter <> nil then
     begin
 //      ADispatcher.ClearNotificationForms;
 //      ADispatcher.ClearTaskStacks;
 //
 //      Sleep(200);
 
-      ADispatcher.Free;
+      AStarter.Free;
     end;
   finally
     FCritical.Leave;
@@ -230,19 +230,19 @@ begin
 end;
 
 
-procedure TJobDispatcherList.Clear;
+procedure TSyncJobStarterList.Clear;
 var
   i: Integer;
 begin
   for i := FList.Count - 1 downto 0 do
   begin
-    if FList.Items[i] is TJobDispatcher then
-      FreeDispatcher(TJobDispatcher(FList.Items[i]));
+    if FList.Items[i] is TSyncJobStarter then
+      FreeStarter(TSyncJobStarter(FList.Items[i]));
   end;
 end;
 
 
-destructor TJobDispatcherList.Destroy;
+destructor TSyncJobStarterList.Destroy;
 begin
   Clear;
   FList.Free;

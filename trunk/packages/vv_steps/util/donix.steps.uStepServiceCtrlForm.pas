@@ -99,11 +99,6 @@ begin
   end;
 end;
 
-initialization
-RegisterClass(TStepServiceCtrlForm);
-
-finalization
-UnRegisterClass(TStepServiceCtrlForm);
 
 end.
 

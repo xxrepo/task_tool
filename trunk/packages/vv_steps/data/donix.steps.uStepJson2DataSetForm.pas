@@ -91,12 +91,6 @@ begin
 end;
 
 
-initialization
-RegisterClass(TStepJsonDataSetForm);
-
-finalization
-UnRegisterClass(TStepJsonDataSetForm);
-
 end.
 
 

@@ -110,13 +110,6 @@ begin
            TStepFormSettings.GetRegistedObjectStrings(TaskVar).PickList;
 end;
 
-
-initialization
-RegisterClass(TStepReportMachineForm);
-
-finalization
-UnRegisterClass(TStepReportMachineForm);
-
 end.
 
 

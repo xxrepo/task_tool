@@ -67,11 +67,4 @@ begin
 end;
 
 
-
-initialization
-RegisterClass(TStepExceptionCatch);
-
-finalization
-UnRegisterClass(TStepExceptionCatch);
-
 end.
