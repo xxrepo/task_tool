@@ -299,7 +299,7 @@ begin
   end;
 
   //重新生成task，执行
-  LJob.Task := TTask.Create(LRequest.TaskConfig);
+  LJob.Task := TTask.Create(LRequest.TaskConfig, LRequest.JobName);
   try
     LJob.HandleStatus := jhsRun;
     LJob.Task.TaskVar.Interactive := LJob.Interactive;

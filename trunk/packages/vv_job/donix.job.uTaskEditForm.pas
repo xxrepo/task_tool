@@ -440,7 +440,8 @@ begin
   //创建EventDataPool，处理方式为对这个事件进行内容的日志记录
   EventDataPool := TThreadPool.Create(OnTaskEventDataPop, 1);
 
-  CurrentTask := TTask.Create(EntryTaskConfigRec);
+  CurrentTask := TTask.Create(EntryTaskConfigRec, 'CURRENT_TASK_' + EntryTaskConfigRec.TaskName);
+
   //同时加载任务执行需要依赖的GlobalVar
   CurrentTask.TaskVar.EventDataPool := EventDataPool;
   CurrentTask.TaskVar.GlobalVar := CurrentProject.GlobalVar;

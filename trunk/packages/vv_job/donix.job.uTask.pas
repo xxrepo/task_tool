@@ -21,7 +21,7 @@ type
   public
     TaskVar: TTaskVar;
 
-    constructor Create(ATaskCongfigRec: TTaskConfigRec);
+    constructor Create(ATaskCongfigRec: TTaskConfigRec; ARunInJob: string);
     destructor Destroy; override;
 
     //ÔËÐÐ
@@ -87,7 +87,7 @@ end;
 
 { TTask }
 
-constructor TTask.Create(ATaskCongfigRec: TTaskConfigRec);
+constructor TTask.Create(ATaskCongfigRec: TTaskConfigRec; ARunInJob: string);
 var
   LTaskVarRec: TTaskVarRec;
 begin
@@ -99,6 +99,7 @@ begin
   LTaskVarRec.TaskName := TaskConfigRec.TaskName;
   LTaskVarRec.RunBasePath := TaskConfigRec.RunBasePath;
   TaskVar := TTaskVar.Create(self, LTaskVarRec);
+  TaskVar.RunInJob := ARunInJob;
 end;
 
 destructor TTask.Destroy;

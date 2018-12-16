@@ -102,7 +102,7 @@ begin
   LTaskConfigRec.RunBasePath := FRunBasePath;
   LTaskConfigRec.DBsConfigFile := DbsConfigFile;
 
-  LJob.Task := TTask.Create(LTaskConfigRec);
+  LJob.Task := TTask.Create(LTaskConfigRec, AJobName);
   try
     LJob.HandleStatus := jhsRun;
     LJob.LastStartTime := Now;

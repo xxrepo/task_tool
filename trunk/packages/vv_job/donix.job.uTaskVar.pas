@@ -45,7 +45,9 @@ type
     function GetTaskStepIdxName(ATaskStep: TTaskStep): string;
     function GetFinished: Boolean;
   public
+    RunInJob: string;
     TaskVarRec: TTaskVarRec;
+
     GlobalVar: TGlobalVar;
     EventDataPool: TThreadPool;
 
@@ -118,6 +120,7 @@ end;
 constructor TTaskVar.Create(AOwner: TObject; ATaskVarRec: TTaskVarRec);
 begin
   Interactive := 0;
+  RunInJob := ATaskVarRec.TaskName;
   TaskStatus := trsCreate;
   TaskResult := TTaskResult.Create;
   FStepStack := TStringList.Create;

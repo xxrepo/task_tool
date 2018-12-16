@@ -3,9 +3,12 @@ unit donix.job.uTaskDefine;
 interface
 
 type
+
   TTaskRunStatus = (trsUnknown, trsCreate, trsRunning, trsStop, trsSuspend, trsFinish);
 
   TTaskConfigRec = record
+    JobName: string;       //Ä¬ÈÏÎªTaskName
+
     FileName: string;
     TaskName: string;
     Interactive: integer;
@@ -19,6 +22,14 @@ type
     RunBasePath: string;
     DBsConfigFile: string;
   end;
+
+  PJobRequest = ^TJobRequest;
+
+  TJobRequest = record
+    JobName: string;
+    TaskConfig: TTaskConfigRec;
+  end;
+
 
   PEventDataRec = ^TEventDataRec;
 

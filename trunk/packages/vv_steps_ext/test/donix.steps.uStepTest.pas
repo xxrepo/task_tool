@@ -76,10 +76,10 @@ var
 begin
   Count := Count + 1;
   New(LEventDataRec);
-  LEventDataRec.JobName := 'aa';
+  LEventDataRec.JobName := TaskVar.RunInJob;
   LEventDataRec.EventName := 'onTimer';
   LEventDataRec.ContentLength := -1;
-  LEventDataRec.ContentBody := 'ÄãºÃ' + IntToStr(Count);
+  LEventDataRec.ContentBody := TaskVar.RunInJob + '.' + LEventDataRec.EventName + '£ºÄãºÃ' + IntToStr(Count);
 
   TaskVar.EventDataPool.Add(LEventDataRec);
 

@@ -6,13 +6,6 @@ uses System.Classes, uThreadQueueUtil, System.JSON, System.SysUtils, uTask, uSte
     System.SyncObjs, uFileLogger, uGlobalVar, uTaskDefine;
 
 type
-  PJobRequest = ^TJobRequest;
-
-  TJobRequest = record
-    JobName: string;
-    TaskConfig: TTaskConfigRec;
-  end;
-
   TJobHandleStatus = (jhsNone, jhsWaited, jhsRun);
 
   TJobConfig = class
