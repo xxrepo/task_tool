@@ -34,7 +34,7 @@ implementation
 
 uses
   uDefines, uFunctions, System.Classes, System.SysUtils, uExceptions,
-  uStepDefines, uThreadSafeFile, uTaskDefine, Vcl.Forms;
+  uStepDefines, uThreadSafeFile, uTaskDefine, Vcl.Forms, Winapi.Windows;
 
 { TStepQuery }
 
@@ -91,6 +91,7 @@ end;
 procedure TStepTest.StartSelf;
 var
   i: Integer;
+  LMsg: TMsg;
 begin
   try
     CheckTaskStatus;
@@ -105,6 +106,21 @@ begin
     while FTaskVar.TaskStatus <> trsStop do
     begin
       Application.ProcessMessages;
+      //获取消息，然后进行事物的处理
+      if PeekMessage(LMsg, 0, 0, 0, PM_REMOVE) then
+      begin
+        case LMsg.message of
+          2024:
+          begin
+
+          end
+          else
+          begin
+            TranslateMessage(LMsg);
+            DispatchMessage(LMsg);
+          end;
+        end;
+      end;
     end;
 
   finally

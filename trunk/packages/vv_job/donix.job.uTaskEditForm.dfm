@@ -3,7 +3,7 @@ inherited TaskEditForm: TTaskEditForm
   ClientHeight = 612
   ClientWidth = 858
   WindowState = wsMaximized
-  OnClose = FormClose
+  OnDestroy = FormDestroy
   ExplicitWidth = 874
   ExplicitHeight = 651
   PixelsPerInch = 96

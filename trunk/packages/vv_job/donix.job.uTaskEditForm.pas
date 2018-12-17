@@ -56,8 +56,8 @@ type
     procedure btnStartClick(Sender: TObject);
     procedure AddParentNodeClick(Sender: TObject);
     procedure chkInteractiveClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnStopClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     CurrentTask: TTask; //所在的主任务
     EventDataPool: TThreadPool;
@@ -487,13 +487,12 @@ end;
 
 
 
-procedure TTaskEditForm.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TTaskEditForm.FormDestroy(Sender: TObject);
 begin
   inherited;
   FreeAndNil(CurrentTask);
   FreeAndNil(EventDataPool);
 end;
-
 
 //实现画图
 procedure TTaskEditForm.MakeTaskTree(ATaskStepsJsonStr: string);
